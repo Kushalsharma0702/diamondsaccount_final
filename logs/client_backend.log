@@ -1,0 +1,371 @@
+INFO:     Will watch for changes in these directories: ['/home/cyberdude/Documents/Projects/CA-final/client_side']
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+INFO:     Started reloader process [92167] using WatchFiles
+2025-12-04 14:39:48,591 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [92178]
+INFO:     Waiting for application startup.
+2025-12-04 14:39:48,649 - main - INFO - Database tables created/verified
+2025-12-04 14:39:48,649 - main - INFO - TaxEase API started successfully
+2025-12-04 14:39:48,649 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 14:39:48,649 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+INFO:     127.0.0.1:55530 - "GET /health HTTP/1.1" 200 OK
+2025-12-04 14:39:49,040 - main - INFO - OTP verification attempt for test@example.com: code='123456', purpose=email_verification, developer_otp='123456'
+2025-12-04 14:39:49,040 - main - INFO - ✅ Developer OTP matched! Verifying for test@example.com: email_verification
+2025-12-04 14:39:49,040 - main - INFO -    Normalized code: '123456' == Developer OTP: '123456'
+2025-12-04 14:39:49,056 - main - INFO - ✅ User test@example.com marked as verified
+2025-12-04 14:39:49,056 - main - INFO - ✅ OTP verified (developer bypass) for test@example.com: email_verification
+INFO:     127.0.0.1:55538 - "POST /api/v1/auth/verify-otp HTTP/1.1" 200 OK
+INFO:     106.219.228.135:0 - "POST /api/v1/auth/register HTTP/1.1" 400 Bad Request
+INFO:     106.219.228.135:0 - "POST /api/v1/auth/register HTTP/1.1" 400 Bad Request
+INFO:     106.219.228.135:0 - "POST /api/v1/auth/register HTTP/1.1" 400 Bad Request
+INFO:     106.219.228.135:0 - "POST /api/v1/auth/register HTTP/1.1" 400 Bad Request
+INFO:     106.219.228.135:0 - "POST /api/v1/auth/register HTTP/1.1" 400 Bad Request
+INFO:     106.219.228.135:0 - "POST /api/v1/auth/register HTTP/1.1" 400 Bad Request
+INFO:     106.219.228.135:0 - "POST /api/v1/auth/register HTTP/1.1" 400 Bad Request
+INFO:     106.219.230.177:0 - "POST /api/v1/auth/register HTTP/1.1" 400 Bad Request
+WARNING:  WatchFiles detected changes in 'create_default_user.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 15:40:46,329 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [92178]
+WARNING:  WatchFiles detected changes in 'create_default_user.py'. Reloading...
+2025-12-04 15:40:47,670 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [133220]
+INFO:     Waiting for application startup.
+2025-12-04 15:40:47,740 - main - INFO - Database tables created/verified
+2025-12-04 15:40:47,740 - main - INFO - TaxEase API started successfully
+2025-12-04 15:40:47,740 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 15:40:47,740 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+INFO:     127.0.0.1:38138 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+WARNING:  WatchFiles detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 15:41:26,157 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [133220]
+2025-12-04 15:41:26,867 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [133771]
+INFO:     Waiting for application startup.
+2025-12-04 15:41:26,930 - main - INFO - Database tables created/verified
+2025-12-04 15:41:26,930 - main - INFO - TaxEase API started successfully
+2025-12-04 15:41:26,930 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 15:41:26,930 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+2025-12-04 15:41:26,949 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-12-04 15:41:27,346 - main - INFO - User logged in: developer@aurocode.app
+INFO:     127.0.0.1:45432 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'main.py', 'create_default_user.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 15:41:59,712 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [133771]
+2025-12-04 15:42:00,263 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [134182]
+INFO:     Waiting for application startup.
+2025-12-04 15:42:00,308 - main - INFO - Database tables created/verified
+2025-12-04 15:42:00,308 - main - INFO - TaxEase API started successfully
+2025-12-04 15:42:00,308 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 15:42:00,308 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+2025-12-04 15:45:22,440 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-12-04 15:45:22,832 - main - INFO - User logged in: developer@aurocode.app
+INFO:     106.219.230.177:0 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     106.219.230.177:0 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'shared/t1_enhanced_schemas.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 16:15:36,628 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [134182]
+2025-12-04 16:15:37,331 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [160271]
+INFO:     Waiting for application startup.
+2025-12-04 16:15:37,383 - main - INFO - Database tables created/verified
+2025-12-04 16:15:37,383 - main - INFO - TaxEase API started successfully
+2025-12-04 16:15:37,383 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 16:15:37,383 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'shared/t1_enhanced_schemas.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 16:15:45,630 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [160271]
+Process SpawnProcess-7:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.10/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/uvicorn/_subprocess.py", line 76, in subprocess_started
+    target(sockets=sockets)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/uvicorn/server.py", line 61, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/uvicorn/server.py", line 68, in serve
+    config.load()
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/uvicorn/config.py", line 467, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/uvicorn/importer.py", line 21, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/cyberdude/Documents/Projects/CA-final/client_side/main.py", line 40, in <module>
+    from shared.t1_routes import router as t1_router
+  File "/home/cyberdude/Documents/Projects/CA-final/client_side/shared/t1_routes.py", line 18, in <module>
+    from shared.t1_enhanced_schemas import (
+  File "/home/cyberdude/Documents/Projects/CA-final/client_side/shared/t1_enhanced_schemas.py", line 200, in <module>
+    class T1PersonalFormBase(BaseT1Schema):
+  File "/home/cyberdude/Documents/Projects/CA-final/client_side/shared/t1_enhanced_schemas.py", line 243, in T1PersonalFormBase
+    @validator('foreignProperties')
+NameError: name 'validator' is not defined
+WARNING:  WatchFiles detected changes in 'shared/t1_enhanced_schemas.py'. Reloading...
+2025-12-04 16:16:10,247 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [160855]
+INFO:     Waiting for application startup.
+2025-12-04 16:16:10,318 - main - INFO - Database tables created/verified
+2025-12-04 16:16:10,319 - main - INFO - TaxEase API started successfully
+2025-12-04 16:16:10,319 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 16:16:10,319 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'shared/t1_enhanced_schemas.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 16:16:14,642 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [160855]
+2025-12-04 16:16:15,285 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [160918]
+INFO:     Waiting for application startup.
+2025-12-04 16:16:15,337 - main - INFO - Database tables created/verified
+2025-12-04 16:16:15,337 - main - INFO - TaxEase API started successfully
+2025-12-04 16:16:15,337 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 16:16:15,337 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'shared/t1_enhanced_schemas.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 16:16:47,511 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [160918]
+2025-12-04 16:16:48,124 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [161338]
+INFO:     Waiting for application startup.
+2025-12-04 16:16:48,174 - main - INFO - Database tables created/verified
+2025-12-04 16:16:48,174 - main - INFO - TaxEase API started successfully
+2025-12-04 16:16:48,174 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 16:16:48,174 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'shared/t1_enhanced_schemas.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 16:17:09,690 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [161338]
+2025-12-04 16:17:10,287 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [161731]
+INFO:     Waiting for application startup.
+2025-12-04 16:17:10,341 - main - INFO - Database tables created/verified
+2025-12-04 16:17:10,341 - main - INFO - TaxEase API started successfully
+2025-12-04 16:17:10,341 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 16:17:10,341 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'shared/t1_enhanced_schemas.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 16:17:22,103 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [161731]
+2025-12-04 16:17:22,618 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [161937]
+INFO:     Waiting for application startup.
+2025-12-04 16:17:22,665 - main - INFO - Database tables created/verified
+2025-12-04 16:17:22,665 - main - INFO - TaxEase API started successfully
+2025-12-04 16:17:22,665 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 16:17:22,665 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+INFO:     106.219.230.177:0 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     106.219.230.177:0 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+2025-12-04 16:51:08,379 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-12-04 16:51:08,808 - main - INFO - User logged in: developer@aurocode.app
+INFO:     127.0.0.1:57760 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57776 - "GET /api/v1/t1-forms/ HTTP/1.1" 200 OK
+2025-12-04 16:53:07,124 - main - INFO - User logged in: developer@aurocode.app
+INFO:     127.0.0.1:49290 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49302 - "GET /api/v1/t1-forms/ HTTP/1.1" 200 OK
+2025-12-04 16:53:16,088 - main - INFO - User logged in: developer@aurocode.app
+INFO:     127.0.0.1:54496 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54504 - "GET /api/v1/t1-forms/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35892 - "GET / HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 17:25:23,735 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [161937]
+2025-12-04 17:25:24,469 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [222667]
+INFO:     Waiting for application startup.
+2025-12-04 17:25:24,522 - main - INFO - Database tables created/verified
+2025-12-04 17:25:24,522 - main - INFO - TaxEase API started successfully
+2025-12-04 17:25:24,522 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 17:25:24,522 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'shared/sync_to_admin.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 17:26:58,927 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [222667]
+2025-12-04 17:26:59,661 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [224446]
+INFO:     Waiting for application startup.
+2025-12-04 17:26:59,720 - main - INFO - Database tables created/verified
+2025-12-04 17:26:59,720 - main - INFO - TaxEase API started successfully
+2025-12-04 17:26:59,720 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 17:26:59,720 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 17:27:02,133 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [224446]
+2025-12-04 17:27:02,900 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [224498]
+INFO:     Waiting for application startup.
+2025-12-04 17:27:02,966 - main - INFO - Database tables created/verified
+2025-12-04 17:27:02,966 - main - INFO - TaxEase API started successfully
+2025-12-04 17:27:02,966 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 17:27:02,966 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'main.py', 'shared/sync_to_admin.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 17:30:54,321 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [224498]
+2025-12-04 17:30:54,882 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [228226]
+INFO:     Waiting for application startup.
+2025-12-04 17:30:54,939 - main - INFO - Database tables created/verified
+2025-12-04 17:30:54,939 - main - INFO - TaxEase API started successfully
+2025-12-04 17:30:54,939 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 17:30:54,939 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+INFO:     106.219.229.32:0 - "POST /api/v1/files/upload HTTP/1.1" 401 Unauthorized
+INFO:     106.219.229.32:0 - "POST /api/v1/files/upload HTTP/1.1" 401 Unauthorized
+2025-12-04 17:46:05,731 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-12-04 17:46:06,151 - main - INFO - User logged in: developer@aurocode.app
+INFO:     127.0.0.1:37040 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37040 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-12-04 17:47:28,057 - main - INFO - User logged in: developer@aurocode.app
+INFO:     127.0.0.1:40554 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40570 - "POST /api/v1/files/upload HTTP/1.1" 400 Bad Request
+WARNING:  WatchFiles detected changes in 'shared/auth.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 17:47:35,603 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [228226]
+2025-12-04 17:47:36,382 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [243458]
+INFO:     Waiting for application startup.
+2025-12-04 17:47:36,450 - main - INFO - Database tables created/verified
+2025-12-04 17:47:36,450 - main - INFO - TaxEase API started successfully
+2025-12-04 17:47:36,450 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 17:47:36,450 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'shared/auth.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 17:47:44,392 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [243458]
+2025-12-04 17:47:45,116 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [243577]
+INFO:     Waiting for application startup.
+2025-12-04 17:47:45,183 - main - INFO - Database tables created/verified
+2025-12-04 17:47:45,184 - main - INFO - TaxEase API started successfully
+2025-12-04 17:47:45,184 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 17:47:45,184 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'shared/auth.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 17:47:47,898 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [243577]
+2025-12-04 17:47:48,606 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [243677]
+INFO:     Waiting for application startup.
+2025-12-04 17:47:48,680 - main - INFO - Database tables created/verified
+2025-12-04 17:47:48,680 - main - INFO - TaxEase API started successfully
+2025-12-04 17:47:48,680 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 17:47:48,680 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'shared/auth.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 17:48:13,611 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [243677]
+2025-12-04 17:48:14,324 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/storage/uploads
+INFO:     Started server process [244093]
+INFO:     Waiting for application startup.
+2025-12-04 17:48:14,388 - main - INFO - Database tables created/verified
+2025-12-04 17:48:14,388 - main - INFO - TaxEase API started successfully
+2025-12-04 17:48:14,388 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-04 17:48:14,388 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+INFO:     Application startup complete.
+2025-12-04 17:48:14,404 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-12-04 17:48:14,837 - main - INFO - User logged in: developer@aurocode.app
+INFO:     127.0.0.1:35566 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35572 - "POST /api/v1/files/upload HTTP/1.1" 400 Bad Request
+2025-12-04 17:48:27,877 - main - INFO - User logged in: developer@aurocode.app
+INFO:     127.0.0.1:57930 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57944 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-12-04 17:48:27,959 - shared.utils - INFO - File uploaded to local storage: /home/cyberdude/Documents/Projects/CA-final/storage/uploads/user_bd7f906b-f548-423e-9bf0-ebf5cea5ff84/20251204_121827_WlqtrrMJBVQ.pdf
+2025-12-04 17:48:27,959 - main - INFO - File uploaded successfully: user_bd7f906b-f548-423e-9bf0-ebf5cea5ff84/20251204_121827_WlqtrrMJBVQ.pdf
+sys:1: SAWarning: relationship 'AuditLog.performed_by_admin' will copy column admin_users.id to column audit_logs.performed_by_id, which conflicts with relationship(s): 'AdminUser.created_audit_logs' (copies admin_users.id to audit_logs.performed_by_id). If this is not the intention, consider if these relationships should be linked with back_populates, or if viewonly=True should be applied to one or more if they are read-only. For the less common case that foreign key constraints are partially overlapping, the orm.foreign() annotation can be used to isolate the columns that should be written towards.   To silence this warning, add the parameter 'overlaps="created_audit_logs"' to the 'AuditLog.performed_by_admin' relationship. (Background on this warning at: https://sqlalche.me/e/20/qzyx) (This warning originated from the `configure_mappers()` process, which was invoked automatically in response to a user-initiated operation.)
+2025-12-04 17:48:28,054 - httpx - INFO - HTTP Request: POST http://localhost:8002/api/v1/documents "HTTP/1.1 403 Forbidden"
+2025-12-04 17:48:28,054 - shared.sync_to_admin - ERROR - Failed to sync to admin: 403 - {"detail":"Not authenticated"}
+INFO:     127.0.0.1:57958 - "POST /api/v1/files/upload HTTP/1.1" 201 Created
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-12-04 17:48:49,424 - main - INFO - TaxEase API shutting down...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [244093]
+INFO:     Stopping reloader process [92167]

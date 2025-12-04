@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick T1 Form Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-4">
+        <h2 class="text-center mb-4">Quick T1 Form Test</h2>
+        
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Test Form Submission</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="status" class="alert alert-info">
+                            Ready to test...
+                        </div>
+                        
+                        <form id="testForm">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" class="form-control" placeholder="First Name (Individual)" value="Test">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" placeholder="Last Name (Individual)" value="User">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" placeholder="Individual Email" value="test@example.com">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Are you a Canadian Citizen?</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="canadianCitizen" value="yes" checked>
+                                        <label class="form-check-label">Yes</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="canadianCitizen" value="no">
+                                        <label class="form-check-label">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Do you have any Medical Expenses?</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="medicalExpenses" value="yes" checked>
+                                        <label class="form-check-label">Yes</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="medicalExpenses" value="no">
+                                        <label class="form-check-label">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Submit T1 Form</button>
+                        </form>
+                        
+                        <hr>
+                        
+                        <div>
+                            <h6>Direct API Tests</h6>
+                            <button class="btn btn-secondary btn-sm" onclick="testBackend()">Test Backend</button>
+                            <button class="btn btn-info btn-sm" onclick="testAuth()">Test Auth</button>
+                            <button class="btn btn-success btn-sm" onclick="testFormSubmission()">Test Direct API</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="t1_form_api.js"></script>
+    <script>
+        function updateStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.className = `alert alert-${type}`;
+            status.textContent = message;
+        }
+        
+        async function testBackend() {
+            try {
+                updateStatus('Testing backend...', 'info');
+                const response = await fetch('http://localhost:8000/health');
+                const data = await response.json();
+                updateStatus(`Backend: ${data.status}`, 'success');
+            } catch (error) {
+                updateStatus(`Backend Error: ${error.message}`, 'danger');
+            }
+        }
+        
+        async function testAuth() {
+            try {
+                updateStatus('Testing authentication...', 'info');
+                const result = await window.T1FormAPI.API.register({
+                    first_name: 'Quick',
+                    last_name: 'Test',
+                    email: `quicktest_${Date.now()}@example.com`,
+                    password: 'TestPass123!'
+                });
+                
+                await window.T1FormAPI.API.login(result.email, 'TestPass123!');
+                updateStatus('Authentication: Success', 'success');
+            } catch (error) {
+                updateStatus(`Auth Error: ${error.message}`, 'danger');
+            }
+        }
+        
+        async function testFormSubmission() {
+            try {
+                updateStatus('Testing form submission...', 'info');
+                
+                // Ensure authenticated
+                if (!window.T1FormAPI.TokenManager.isAuthenticated()) {
+                    await testAuth();
+                }
+                
+                const formData = {
+                    tax_year: 2023,
+                    status: 'draft',
+                    first_name: 'Quick',
+                    last_name: 'Test',
+                    email: 'quicktest@example.com',
+                    has_foreign_property: false,
+                    has_medical_expenses: true,
+                    has_charitable_donations: false,
+                    has_moving_expenses: false,
+                    is_self_employed: false,
+                    is_first_home_buyer: false,
+                    is_first_time_filer: false,
+                    form_data: {
+                        personalInfo: { firstName: 'Quick', lastName: 'Test' },
+                        questionnaire: { hasMedicalExpenses: true }
+                    },
+                    employment_income: 0,
+                    self_employment_income: 0,
+                    investment_income: 0,
+                    other_income: 0,
+                    total_income: 0,
+                    rrsp_contributions: 0,
+                    charitable_donations: 0,
+                    federal_tax: 0,
+                    provincial_tax: 0,
+                    total_tax: 0,
+                    refund_or_owing: 0
+                };
+                
+                const result = await window.T1FormAPI.API.createT1Form(formData);
+                updateStatus(`Form Submitted! ID: ${result.id}`, 'success');
+            } catch (error) {
+                updateStatus(`Form Error: ${error.message}`, 'danger');
+            }
+        }
+        
+        // Handle form submission
+        document.getElementById('testForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            updateStatus('Form submitted! Processing...', 'warning');
+            
+            try {
+                // Use the form handler from our API
+                await window.T1FormAPI.FormHandler.handleSubmit(e);
+                updateStatus('Form submitted successfully via API!', 'success');
+            } catch (error) {
+                updateStatus(`Form submission failed: ${error.message}`, 'danger');
+            }
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus('Quick test page loaded. Click buttons to test!', 'info');
+        });
+    </script>
+</body>
+</html>

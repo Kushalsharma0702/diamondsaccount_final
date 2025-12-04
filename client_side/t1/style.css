@@ -1,0 +1,248 @@
+body {
+    background-color: #f0f2f5; /* Lighter, modern background */
+    font-family: 'Inter', sans-serif; /* Modern sans-serif font */
+    color: #34495e; /* Darker text for readability */
+    overflow-x: hidden; /* Prevent horizontal scroll due to animations */
+}
+
+.container {
+    max-width: 960px; /* Slightly wider container */
+}
+
+.form-title {
+    color: #2c3e50; /* Deep blue-gray for heading */
+    font-weight: 700; /* Bolder title */
+    letter-spacing: -0.5px;
+}
+
+.form-subtitle {
+    color: #7f8c8d; /* Muted gray for subtitle */
+    font-style: italic;
+    font-size: 1.05rem;
+}
+
+.form-section {
+    background-color: #ffffff;
+    border-radius: 20px; /* More curved corners for main sections */
+    border: none; /* Remove default border */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); /* Enhanced shadow for depth */
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Smooth transition for steps */
+    opacity: 0; /* Hidden by default for initial animation */
+    transform: translateX(100%); /* Start off-screen to the right */
+    position: absolute; /* Allow steps to overlap during transition */
+    top: 0;
+    left: 0;
+    width: 100%; /* Ensure full width within container */
+}
+
+.form-step.active {
+    opacity: 1;
+    transform: translateX(0); /* Slide into view */
+    position: relative; /* Take up space once active */
+}
+
+.form-step.leaving {
+    opacity: 0;
+    transform: translateX(-100%); /* Slide out to the left */
+}
+
+.form-step:not(.active) {
+    display: none; /* Hide non-active steps to prevent content overflow and interaction */
+}
+
+
+.form-label {
+    font-weight: 600; /* Bolder labels */
+    color: #2c3e50;
+    margin-bottom: 8px; /* More space below labels */
+}
+
+.form-control,
+.form-select {
+    border-radius: 12px; /* Curved corners for inputs */
+    border: 1px solid #dfe6e9; /* Light, subtle border */
+    padding: 10px 15px; /* More padding for inputs */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #3498db; /* Blue focus border */
+    box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25); /* Blue glow on focus */
+}
+
+.form-check-input:checked {
+    background-color: #3498db;
+    border-color: #3498db;
+}
+
+.btn-primary,
+.btn-secondary {
+    border-radius: 12px; /* Curved corners for buttons */
+    padding: 10px 25px; /* More padding for buttons */
+    font-weight: 600;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    border-color: #3498db;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+    transform: translateY(-2px); /* Slight lift on hover */
+}
+
+.btn-secondary {
+    background-color: #7f8c8d;
+    border-color: #7f8c8d;
+}
+
+.btn-secondary:hover {
+    background-color: #6c7a89;
+    border-color: #6c7a89;
+    transform: translateY(-2px);
+}
+
+.btn-outline-primary,
+.btn-outline-secondary {
+    border-radius: 10px; /* Curved corners for outline buttons */
+    font-weight: 500;
+}
+
+.conditional-section {
+    border: 1px solid #dbe7f2; /* Light blue border */
+    background-color: #f7f9fc; /* Very light blue background */
+    border-radius: 15px;
+    padding: 20px !important; /* Ensure consistent padding */
+}
+
+.conditional-subsection {
+    border: 1px dashed #cce5ff; /* Dashed border for nested conditional sections */
+    background-color: #eaf3fd; /* Even lighter blue background */
+    border-radius: 10px;
+}
+
+.table-responsive .table {
+    border-radius: 10px; /* Curved corners for tables */
+    overflow: hidden; /* Ensures corners are respected */
+}
+
+.table-bordered th, .table-bordered td {
+    border-color: #e0e6ed; /* Lighter table borders */
+}
+
+/* Progress Bar Styling */
+.progress-container {
+    width: 100%;
+    position: relative;
+    padding: 0 15px; /* Align with container content padding */
+}
+
+.progress {
+    height: 8px; /* Thinner progress bar */
+    background-color: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden; /* Ensure progress bar itself has rounded corners */
+}
+
+.progress-bar {
+    background-color: #3498db; /* Blue progress */
+    transition: width 0.5s ease-in-out; /* Smooth width transition */
+    border-radius: 5px; /* Inherit border radius */
+}
+
+.progress-labels {
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.step-label {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #95a5a6; /* Muted color for inactive labels */
+    transition: color 0.3s ease;
+}
+
+.step-label.active-label {
+    color: #3498db; /* Active label color */
+}
+
+
+/* Smooth Scrolling (JavaScript will handle the scroll behavior) */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    .form-section {
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 15px; /* Slightly less curve on smaller screens */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .form-title {
+        font-size: 1.8rem;
+    }
+
+    .form-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 30px !important;
+    }
+
+    .card-title {
+        font-size: 1.35rem;
+    }
+
+    .btn-primary, .btn-secondary {
+        padding: 8px 18px;
+        font-size: 0.95rem;
+    }
+
+    .table-responsive .table {
+        font-size: 0.8em; /* Smaller font for table content */
+    }
+
+    .progress-container {
+        padding: 0 5px;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-section {
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+    }
+
+    .form-title {
+        font-size: 1.6rem;
+    }
+
+    .form-subtitle {
+        font-size: 0.85rem;
+        margin-bottom: 25px !important;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+    }
+
+    .btn {
+        font-size: 0.85rem;
+        padding: 6px 15px;
+    }
+
+    .progress-labels {
+        font-size: 0.75em;
+    }
+}

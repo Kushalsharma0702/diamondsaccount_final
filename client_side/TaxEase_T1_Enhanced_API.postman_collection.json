@@ -1,0 +1,338 @@
+{
+  "info": {
+    "name": "TaxEase - T1 Enhanced Forms API",
+    "description": "Complete API collection for T1 Personal Tax Forms with comprehensive validation and encryption",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "form_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.environment.set('test_email', pm.request.body.json.email);",
+                  "    console.log('User registered successfully');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"first_name\": \"Test\",\n  \"last_name\": \"User\",\n  \"phone\": \"+14165550100\",\n  \"accept_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('access_token', jsonData.access_token);",
+                  "    pm.collectionVariables.set('access_token', jsonData.access_token);",
+                  "    console.log('Token saved:', jsonData.access_token.substring(0, 20) + '...');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Encryption Setup",
+      "item": [
+        {
+          "name": "Setup Encryption",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"T1TestPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/encrypted-files/setup",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "encrypted-files", "setup"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. T1 Enhanced Forms",
+      "item": [
+        {
+          "name": "Create T1 Form (Minimal)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('form_id', jsonData.id);",
+                  "    console.log('Form created:', jsonData.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"draft\",\n  \"personalInfo\": {\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Doe\",\n    \"sin\": \"123456789\",\n    \"dateOfBirth\": \"1990-05-20\",\n    \"address\": \"123 Main St, Toronto, ON\",\n    \"phoneNumber\": \"+14165550123\",\n    \"email\": \"jane@example.com\",\n    \"isCanadianCitizen\": true,\n    \"maritalStatus\": \"single\"\n  },\n  \"hasForeignProperty\": false,\n  \"hasMedicalExpenses\": true,\n  \"hasCharitableDonations\": true,\n  \"isSelfEmployed\": false,\n  \"isFirstTimeFiler\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/t1-forms/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "t1-forms", ""]
+            }
+          }
+        },
+        {
+          "name": "Create T1 Form (Comprehensive)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('form_id', jsonData.id);",
+                  "    console.log('Comprehensive form created:', jsonData.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"draft\",\n  \"personalInfo\": {\n    \"firstName\": \"Jane\",\n    \"middleName\": \"Q\",\n    \"lastName\": \"Doe\",\n    \"sin\": \"123456789\",\n    \"dateOfBirth\": \"1990-05-20\",\n    \"address\": \"123 Main St, Toronto, ON\",\n    \"phoneNumber\": \"+14165550123\",\n    \"email\": \"jane@example.com\",\n    \"isCanadianCitizen\": true,\n    \"maritalStatus\": \"married\",\n    \"spouseInfo\": {\n      \"firstName\": \"John\",\n      \"lastName\": \"Doe\",\n      \"sin\": \"987654321\",\n      \"dateOfBirth\": \"1989-09-09\"\n    },\n    \"children\": [\n      {\n        \"firstName\": \"Kid\",\n        \"lastName\": \"Doe\",\n        \"sin\": \"001122334\",\n        \"dateOfBirth\": \"2018-03-15\"\n      }\n    ]\n  },\n  \"hasForeignProperty\": true,\n  \"foreignProperties\": [\n    {\n      \"investmentDetails\": \"US ETF\",\n      \"grossIncome\": 1200.5,\n      \"gainLossOnSale\": 100.0,\n      \"maxCostDuringYear\": 12000.0,\n      \"costAmountYearEnd\": 11500.0,\n      \"country\": \"US\"\n    }\n  ],\n  \"hasMedicalExpenses\": true,\n  \"hasCharitableDonations\": true,\n  \"hasMovingExpenses\": true,\n  \"movingExpenseForIndividual\": true,\n  \"movingExpenseIndividual\": {\n    \"individual\": \"Jane Doe\",\n    \"oldAddress\": \"Old Address\",\n    \"newAddress\": \"New Address\",\n    \"distanceFromOldToNew\": \"550 km\",\n    \"distanceFromNewToOffice\": \"12 km\",\n    \"airTicketCost\": 350.75,\n    \"moversAndPackers\": 800.0,\n    \"mealsAndOtherCost\": 120.0,\n    \"anyOtherCost\": 0.0,\n    \"dateOfTravel\": \"2024-06-01\",\n    \"dateOfJoining\": \"2024-06-15\",\n    \"companyName\": \"NewCo Inc.\",\n    \"newEmployerAddress\": \"456 King St\",\n    \"grossIncomeAfterMoving\": 65000.0\n  },\n  \"isSelfEmployed\": true,\n  \"selfEmployment\": {\n    \"businessTypes\": [\"general\"],\n    \"generalBusiness\": {\n      \"clientName\": \"Jane Doe\",\n      \"businessName\": \"JD Consulting\",\n      \"salesCommissionsFees\": 50000.0,\n      \"minusHstCollected\": 6500.0,\n      \"advertising\": 500.0,\n      \"mealsEntertainment\": 300.0,\n      \"insurance\": 250.0,\n      \"officeExpenses\": 900.0,\n      \"supplies\": 400.0,\n      \"legalAccountingFees\": 700.0,\n      \"travel\": 600.0,\n      \"telephoneUtilities\": 720.0,\n      \"areaOfHomeForBusiness\": \"200 sqft\",\n      \"totalAreaOfHome\": \"1000 sqft\",\n      \"heat\": 200.0,\n      \"electricity\": 300.0,\n      \"houseInsurance\": 350.0,\n      \"homeMaintenance\": 150.0,\n      \"houseRent\": 18000.0,\n      \"kmDrivenForBusiness\": 1200.0,\n      \"totalKmDrivenInYear\": 8000.0\n    }\n  },\n  \"isFirstHomeBuyer\": true,\n  \"hasWorkFromHomeExpense\": true,\n  \"wasStudentLastYear\": true,\n  \"isFirstTimeFiler\": true,\n  \"hasRrspFhsaInvestment\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/t1-forms/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "t1-forms", ""]
+            }
+          }
+        },
+        {
+          "name": "List All T1 Forms",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/t1-forms/?offset=0&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "t1-forms", ""],
+              "query": [
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get T1 Form by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/t1-forms/{{form_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "t1-forms", "{{form_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update T1 Form",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"submitted\",\n  \"hasCharitableDonations\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/t1-forms/{{form_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "t1-forms", "{{form_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete T1 Form",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/t1-forms/{{form_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "t1-forms", "{{form_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Schema Validation Tests",
+      "item": [
+        {
+          "name": "Test Invalid SIN (Should Fail)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"draft\",\n  \"personalInfo\": {\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Doe\",\n    \"sin\": \"12345\",\n    \"address\": \"123 Main St\",\n    \"phoneNumber\": \"+14165550123\",\n    \"email\": \"jane@example.com\",\n    \"maritalStatus\": \"single\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/t1-forms/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "t1-forms", ""]
+            }
+          }
+        },
+        {
+          "name": "Test Invalid Phone (Should Fail)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"draft\",\n  \"personalInfo\": {\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Doe\",\n    \"sin\": \"123456789\",\n    \"address\": \"123 Main St\",\n    \"phoneNumber\": \"invalid\",\n    \"email\": \"jane@example.com\",\n    \"maritalStatus\": \"single\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/t1-forms/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "t1-forms", ""]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

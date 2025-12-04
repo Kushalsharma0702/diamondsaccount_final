@@ -1,0 +1,721 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "TaxEase Backend API",
+    "description": "Comprehensive API for Canadian tax preparation and filing system with Flutter mobile app integration",
+    "version": "1.0.0",
+    "contact": {
+      "name": "TaxEase Support",
+      "email": "support@taxease.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Development server"
+    },
+    {
+      "url": "https://api.taxease.com",
+      "description": "Production server"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "John"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+1234567890"
+          },
+          "email_verified": {
+            "type": "boolean",
+            "example": true
+          },
+          "is_active": {
+            "type": "boolean",
+            "example": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-11-06T08:00:00.000000"
+          }
+        }
+      },
+      "TaxForm": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tax_year": {
+            "type": "integer",
+            "example": 2024
+          },
+          "status": {
+            "type": "string",
+            "enum": ["draft", "calculated", "submitted", "accepted"],
+            "example": "calculated"
+          },
+          "sin": {
+            "type": "string",
+            "example": "123456789"
+          },
+          "total_income": {
+            "type": "number",
+            "format": "decimal",
+            "example": 77500.00
+          },
+          "total_tax": {
+            "type": "number",
+            "format": "decimal",
+            "example": 15000.00
+          },
+          "refund_or_owing": {
+            "type": "number",
+            "format": "decimal",
+            "example": -2500.00
+          }
+        }
+      },
+      "FileUpload": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "filename": {
+            "type": "string",
+            "example": "t4_2024_company.pdf"
+          },
+          "original_filename": {
+            "type": "string",
+            "example": "T4-2024-Company.pdf"
+          },
+          "file_type": {
+            "type": "string",
+            "example": "application/pdf"
+          },
+          "file_size": {
+            "type": "integer",
+            "example": 245760
+          },
+          "upload_status": {
+            "type": "string",
+            "enum": ["uploading", "completed", "failed"],
+            "example": "completed"
+          }
+        }
+      },
+      "Report": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "report_type": {
+            "type": "string",
+            "enum": ["tax_summary", "detailed_calculation", "receipt_summary"],
+            "example": "tax_summary"
+          },
+          "title": {
+            "type": "string",
+            "example": "2024 Tax Summary"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["generating", "completed", "failed"],
+            "example": "completed"
+          },
+          "file_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://taxease-reports.s3.amazonaws.com/reports/123e4567.pdf"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "API Information",
+        "description": "Get basic API information and available endpoints",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "API information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "service": {
+                      "type": "string",
+                      "example": "TaxEase Backend API"
+                    },
+                    "version": {
+                      "type": "string",
+                      "example": "1.0.0"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "healthy"
+                    },
+                    "endpoints": {
+                      "type": "object",
+                      "properties": {
+                        "auth": {"type": "string", "example": "/api/v1/auth/*"},
+                        "tax": {"type": "string", "example": "/api/v1/tax/*"},
+                        "files": {"type": "string", "example": "/api/v1/files/*"},
+                        "reports": {"type": "string", "example": "/api/v1/reports/*"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "description": "Check API health status",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "API health status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {"type": "string", "example": "healthy"},
+                    "timestamp": {"type": "string", "format": "date-time"},
+                    "service": {"type": "string", "example": "taxease-api"},
+                    "version": {"type": "string", "example": "1.0.0"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "summary": "User Registration",
+        "description": "Register a new user account",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password", "first_name", "last_name", "accept_terms"],
+                "properties": {
+                  "email": {"type": "string", "format": "email", "example": "user@example.com"},
+                  "password": {"type": "string", "minLength": 8, "example": "SecurePassword123!"},
+                  "first_name": {"type": "string", "example": "John"},
+                  "last_name": {"type": "string", "example": "Doe"},
+                  "phone": {"type": "string", "example": "+1234567890"},
+                  "accept_terms": {"type": "boolean", "example": true}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {"type": "string", "example": "User registered successfully"},
+                    "user": {"$ref": "#/components/schemas/User"},
+                    "otp_sent": {"type": "boolean", "example": true}
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Email already registered or validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {"type": "string", "example": "Email already registered"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "User Login",
+        "description": "Login with email and password to get JWT tokens",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": {"type": "string", "format": "email", "example": "user@example.com"},
+                  "password": {"type": "string", "example": "SecurePassword123!"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "access_token": {"type": "string", "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."},
+                    "refresh_token": {"type": "string", "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."},
+                    "token_type": {"type": "string", "example": "bearer"},
+                    "expires_in": {"type": "integer", "example": 3600},
+                    "user": {"$ref": "#/components/schemas/User"}
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {"type": "string", "example": "Invalid email or password"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/profile": {
+      "get": {
+        "summary": "Get User Profile",
+        "description": "Get current user's profile information",
+        "responses": {
+          "200": {
+            "description": "User profile",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/User"}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {"type": "string", "example": "Not authenticated"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update User Profile",
+        "description": "Update current user's profile information",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "first_name": {"type": "string", "example": "John"},
+                  "last_name": {"type": "string", "example": "Smith"},
+                  "phone": {"type": "string", "example": "+1234567891"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {"type": "string", "example": "Profile updated successfully"},
+                    "user": {"$ref": "#/components/schemas/User"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tax/forms": {
+      "get": {
+        "summary": "List Tax Forms",
+        "description": "Get all tax forms for the current user",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {"type": "integer", "default": 10},
+            "description": "Number of forms to return"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {"type": "integer", "default": 0},
+            "description": "Number of forms to skip"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of tax forms",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "forms": {
+                      "type": "array",
+                      "items": {"$ref": "#/components/schemas/TaxForm"}
+                    },
+                    "total": {"type": "integer", "example": 1},
+                    "limit": {"type": "integer", "example": 10},
+                    "offset": {"type": "integer", "example": 0}
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Tax Form",
+        "description": "Create a new T1 personal tax form",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["tax_year", "sin"],
+                "properties": {
+                  "tax_year": {"type": "integer", "example": 2024},
+                  "sin": {"type": "string", "example": "123456789"},
+                  "date_of_birth": {"type": "string", "format": "date", "example": "1990-01-15"},
+                  "marital_status": {"type": "string", "enum": ["single", "married", "common_law", "divorced"], "example": "single"},
+                  "employment_income": {"type": "number", "example": 75000.00},
+                  "self_employment_income": {"type": "number", "example": 0.00},
+                  "investment_income": {"type": "number", "example": 2500.00},
+                  "rrsp_contributions": {"type": "number", "example": 5000.00},
+                  "charitable_donations": {"type": "number", "example": 500.00}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Tax form created successfully",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/TaxForm"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tax/forms/{form_id}": {
+      "get": {
+        "summary": "Get Tax Form",
+        "description": "Get details of a specific tax form",
+        "parameters": [
+          {
+            "name": "form_id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string", "format": "uuid"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tax form details",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/TaxForm"}
+              }
+            }
+          },
+          "404": {
+            "description": "Tax form not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Tax Form",
+        "description": "Update an existing tax form",
+        "parameters": [
+          {
+            "name": "form_id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string", "format": "uuid"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "employment_income": {"type": "number", "example": 80000.00},
+                  "charitable_donations": {"type": "number", "example": 1000.00}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tax form updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/TaxForm"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tax/forms/{form_id}/calculate": {
+      "post": {
+        "summary": "Calculate Tax",
+        "description": "Calculate taxes for a specific form",
+        "parameters": [
+          {
+            "name": "form_id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string", "format": "uuid"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tax calculation results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "calculation": {
+                      "type": "object",
+                      "properties": {
+                        "total_income": {"type": "number", "example": 82500.00},
+                        "taxable_income": {"type": "number", "example": 77500.00},
+                        "federal_tax": {"type": "number", "example": 11625.00},
+                        "provincial_tax": {"type": "number", "example": 3875.00},
+                        "total_tax": {"type": "number", "example": 15500.00},
+                        "refund_or_owing": {"type": "number", "example": -2500.00}
+                      }
+                    },
+                    "status": {"type": "string", "example": "calculated"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/upload": {
+      "post": {
+        "summary": "Upload File",
+        "description": "Upload a file (tax documents, receipts, etc.)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {"type": "string", "format": "binary"},
+                  "description": {"type": "string", "example": "T4 slip for 2024"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "File uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/FileUpload"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files": {
+      "get": {
+        "summary": "List Files",
+        "description": "Get all files for the current user",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {"type": "integer", "default": 10}
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {"type": "integer", "default": 0}
+          },
+          {
+            "name": "file_type",
+            "in": "query",
+            "schema": {"type": "string", "example": "application/pdf"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of files",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "files": {
+                      "type": "array",
+                      "items": {"$ref": "#/components/schemas/FileUpload"}
+                    },
+                    "total": {"type": "integer"},
+                    "limit": {"type": "integer"},
+                    "offset": {"type": "integer"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/generate": {
+      "post": {
+        "summary": "Generate Report",
+        "description": "Generate a PDF report",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["report_type", "title"],
+                "properties": {
+                  "report_type": {"type": "string", "enum": ["tax_summary", "detailed_calculation"], "example": "tax_summary"},
+                  "title": {"type": "string", "example": "2024 Tax Summary"},
+                  "form_id": {"type": "string", "format": "uuid"},
+                  "include_calculations": {"type": "boolean", "example": true}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Report generation started",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/Report"}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "User authentication and profile management"
+    },
+    {
+      "name": "Tax Forms",
+      "description": "Canadian T1 tax form management and calculations"
+    },
+    {
+      "name": "File Management",
+      "description": "Document upload and storage with S3 integration"
+    },
+    {
+      "name": "Reports",
+      "description": "PDF report generation and management"
+    }
+  ]
+}

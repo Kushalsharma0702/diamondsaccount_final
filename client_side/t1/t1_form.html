@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T1 Tax Filing Information Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container my-4">
+        <h2 class="text-center mb-4 form-title">T1 Tax Filing Information Form</h2>
+        <p class="text-center mb-5 form-subtitle">PLEASE READ AND FILL ENTIRE SHEET SO YOU DON'T MISS OUT ANY CREDITS OR DEDUCTIONS</p>
+
+        <div class="progress-container mb-4">
+            <div class="progress" role="progressbar" aria-label="Form Progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" style="width: 0%"></div>
+            </div>
+            <div class="progress-labels d-flex justify-content-between mt-2">
+                <span class="step-label" id="label-step-1">Personal Info</span>
+                <span class="step-label" id="label-step-2">Questionnaire</span>
+            </div>
+        </div>
+
+        <form id="multiStepForm">
+            <div class="form-step card p-4 mb-4 form-section shadow-sm active" data-step="1">
+                <h4 class="card-title mb-3">Personal Information</h4>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Name as per SIN Document</label>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" placeholder="First Name (Individual)">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" placeholder="Middle Name (Individual)">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" placeholder="Last Name (Individual)">
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">SIN (Individual)</label>
+                        <input type="text" class="form-control" placeholder="Individual SIN">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Date of Birth (DD/MM/YYYY) (Individual)</label>
+                        <input type="date" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Current Address with Postal Code (Individual)</label>
+                    <input type="text" class="form-control" placeholder="Individual Address">
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Phone number (Individual)</label>
+                        <input type="tel" class="form-control" placeholder="Individual Phone">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email (Individual)</label>
+                        <input type="email" class="form-control" placeholder="Individual Email">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Are you a Canadian Citizen?</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="canadianCitizen" id="canadianCitizenYes" value="yes">
+                            <label class="form-check-label" for="canadianCitizenYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="canadianCitizen" id="canadianCitizenNo" value="no">
+                            <label class="form-check-label" for="canadianCitizenNo">No</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Marital Status</label>
+                    <select class="form-select" id="maritalStatus">
+                        <option value="">Select...</option>
+                        <option value="single">Single</option>
+                        <option value="married">Married</option>
+                        <option value="common-law">Common-Law</option>
+                        <option value="separated">Separated</option>
+                        <option value="divorced">Divorced</option>
+                        <option value="widowed">Widowed</option>
+                    </select>
+                </div>
+
+                <div id="spouseDetails" class="conditional-section mt-4 p-3 bg-light rounded-3" style="display: none;">
+                    <h5 class="mb-3">Spouse Details</h5>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Name as per SIN Document (Spouse)</label>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" placeholder="First Name (Spouse)">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" placeholder="Middle Name (Spouse)">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" placeholder="Last Name (Spouse)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">SIN (Spouse)</label>
+                            <input type="text" class="form-control" placeholder="Spouse SIN">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Date of Birth (DD/MM/YYYY) (Spouse)</label>
+                            <input type="date" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h5 class="mb-3">Children Details</h5>
+                    <div id="childrenContainer">
+                        </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="addChildBtn">Add Another Child</button>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="button" class="btn btn-primary next-step-btn" data-step="1">Next: Questionnaire</button>
+                </div>
+            </div>
+
+            <div class="form-step card p-4 mb-4 form-section shadow-sm" data-step="2">
+                <h4 class="card-title mb-3">Questionnaire</h4>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">1. Did taxpayer own specified foreign property at any time in 2023 with a total cost of more than CAN$100,000?</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="foreignProperty" id="foreignPropertyYes" value="yes">
+                            <label class="form-check-label" for="foreignPropertyYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="foreignProperty" id="foreignPropertyNo" value="no" checked>
+                            <label class="form-check-label" for="foreignPropertyNo">No</label>
+                        </div>
+                    </div>
+                    <div id="foreignPropertyDetails" class="conditional-section mt-3 p-3 bg-light rounded-3" style="display: none;">
+                        <h6 class="mb-3">Foreign Property Details</h6>
+                        <small class="text-muted mb-3 d-block">Please fill the table below.</small>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Investments Details</th>
+                                        <th>Gross Income</th>
+                                        <th>Gain/Loss on Sale</th>
+                                        <th>Maximum Cost during the year</th>
+                                        <th>Cost amount at the year end</th>
+                                        <th>Country</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="addForeignPropertyRow">Add Row</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">2. Do you have any Medical Expenses?</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="medicalExpenses" id="medicalExpensesYes" value="yes">
+                            <label class="form-check-label" for="medicalExpensesYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="medicalExpenses" id="medicalExpensesNo" value="no" checked>
+                            <label class="form-check-label" for="medicalExpensesNo">No</label>
+                        </div>
+                    </div>
+                    <div id="medicalExpensesDetails" class="conditional-section mt-3 p-3 bg-light rounded-3" style="display: none;">
+                        <h6 class="mb-3">Medical Expenses Details</h6>
+                        <small class="text-muted mb-3 d-block">Please provide details for each medical expense.</small>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>PAYMENT DATE</th>
+                                        <th>NAME OF PATIENT</th>
+                                        <th>PAYMENT MADE TO</th>
+                                        <th>DESCRIPTION OF EXPENSE</th>
+                                        <th>INSURANCE COVERED</th>
+                                        <th>AMOUNT PAID FROM POCKET</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="date" class="form-control form-control-sm"></td>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="addMedicalExpenseRow">Add Row</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">3. Do you have any Charitable Donations?</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="charitableDonations" id="charitableDonationsYes" value="yes">
+                            <label class="form-check-label" for="charitableDonationsYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="charitableDonations" id="charitableDonationsNo" value="no" checked>
+                            <label class="form-check-label" for="charitableDonationsNo">No</label>
+                        </div>
+                    </div>
+                    <div id="charitableDonationsDetails" class="conditional-section mt-3 p-3 bg-light rounded-3" style="display: none;">
+                        <h6 class="mb-3">Charitable Donations Details</h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>NAME OF ORGANIZATION</th>
+                                        <th>AMOUNT PAID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="addCharitableDonationRow">Add Row</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">4. If your province or territory of residence changed in 2023, enter the date of your move. Do you have any moving expenses?</label>
+                    <div class="mb-3">
+                        <label class="form-label">Date of move (if applicable)</label>
+                        <input type="date" class="form-control" id="dateOfMove">
+                    </div>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="movingExpenses" id="movingExpensesYes" value="yes">
+                            <label class="form-check-label" for="movingExpensesYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="movingExpenses" id="movingExpensesNo" value="no" checked>
+                            <label class="form-check-label" for="movingExpensesNo">No</label>
+                        </div>
+                    </div>
+                    <div id="movingExpenseDetails" class="conditional-section mt-3 p-3 bg-light rounded-3" style="display: none;">
+                        <h6 class="mb-3">Moving Expense Details</h6>
+                        <small class="text-muted mb-3 d-block">(New address should be at least 40 KM closer to office than old address to claim this)</small>
+                        <div class="row g-3">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Old address (Individual)</label>
+                                <input type="text" class="form-control" placeholder="Individual Old Address">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Old address (Spouse)</label>
+                                <input type="text" class="form-control" placeholder="Spouse Old Address">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">New address (Individual)</label>
+                                <input type="text" class="form-control" placeholder="Individual New Address">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">New address (Spouse)</label>
+                                <input type="text" class="form-control" placeholder="Spouse New Address">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Distance from old address to New office (KM) (Individual)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Distance from old address to New office (KM) (Spouse)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Distance from new address to New office (KM) (Individual)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Distance from new address to New office (KM) (Spouse)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Air ticket cost/ Travelling cost</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Movers and packers cost</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Meals and other cost</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Any other cost</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Date of Travel from old address to new address</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Date of joining the company</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Name of the company</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Address of New Employer</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Gross income earned in this company during the Tax year after moving (CAD)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">5. Are you a Self Employed?</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="selfEmployed" id="selfEmployedYes" value="yes">
+                            <label class="form-check-label" for="selfEmployedYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="selfEmployed" id="selfEmployedNo" value="no" checked>
+                            <label class="form-check-label" for="selfEmployedNo">No</label>
+                        </div>
+                    </div>
+                    <div id="selfEmployedDetails" class="conditional-section mt-3 p-3 bg-light rounded-3" style="display: none;">
+                        <h6 class="mb-3">Self-Employment Details</h6>
+                        <div class="mb-3">
+                            <label class="form-label">Type of Self-Employment:</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="businessType" id="uberSkipDoordash" value="uber">
+                                    <label class="form-check-label" for="uberSkipDoordash">Uber/Skip/Doordash</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="businessType" id="generalBusiness" value="general">
+                                    <label class="form-check-label" for="generalBusiness">General Business</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="businessType" id="rentalIncome" value="rental">
+                                    <label class="form-check-label" for="rentalIncome">Rental Income</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="uberSkipDoordashSection" class="conditional-subsection mt-3 p-3 bg-white rounded-3" style="display: none;">
+                            <h6 class="mb-3">Uber/Skip/Doordash Income & Expenses</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Uber/Skip/ Uber eats statement (Upload or provide details)</label>
+                                <input type="text" class="form-control" placeholder="e.g., provide a link or brief description">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Business (HST) Number</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">HST Access Code</label>
+                                <input type="text" class="form-control" placeholder="(If you do not have this call CRA on 1800-959-5525)">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">HST Filling Period</label>
+                                <input type="text" class="form-control" placeholder="(If you do not have this call CRA on 1800-959-5525)">
+                            </div>
+
+                            <h6 class="mt-4 mb-3">Income</h6>
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Basic Income</label>
+                                    <input type="number" class="form-control">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">HST</label>
+                                    <input type="number" class="form-control">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Total Income</label>
+                                    <input type="number" class="form-control" readonly>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Total KM Travelled for Uber/Skip/door Dash as per statement</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Total Official KM driven</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Total KM driven for Entire Year</label>
+                                <input type="number" class="form-control">
+                            </div>
+
+                            <h6 class="mt-4 mb-3">Expenses (Note: If no HST registration, just include Total Amount)</h6>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Expense</th>
+                                            <th>Basic Amount</th>
+                                            <th>HST</th>
+                                            <th>Total Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Business Number / Vehicle Registration Expense</td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Meals</td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Telephone</td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Parking Fees</td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Cleaning Expenses</td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Safety Inspection</td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Winter tire change</td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Oil change and other maintenance</td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Depreciation</td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Insurance on Vehicle</td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Gas</td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Financing Cost - Interest paid on Installment</td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>If car is on lease - Lease cost</td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Any other uber/skip related expense (1)</td>
+                                            <td><input type="text" class="form-control form-control-sm" placeholder="Specify expense"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Any other uber/skip related expense (2)</td>
+                                            <td><input type="text" class="form-control form-control-sm" placeholder="Specify expense"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                            <td><input type="number" class="form-control form-control-sm"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="mb-3">
+                                    <label class="form-label">Attach your car purchased Invoice</label>
+                                    <input type="file" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="generalBusinessSection" class="conditional-subsection mt-3 p-3 bg-white rounded-3" style="display: none;">
+                            <h6 class="mb-3">General Business Income & Expenses</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Client Name:</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Business Name:</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tax Year:</label>
+                                <input type="text" class="form-control" value="2023" readonly>
+                            </div>
+
+                            <h6 class="mt-4 mb-3">Income</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Sales, Commissions, or Fees (including HST)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Minus: HST collected</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Gross Income</label>
+                                <input type="number" class="form-control" readonly>
+                            </div>
+
+                            <h6 class="mt-4 mb-3">Costs of Goods Sold</h6>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Amount ($)</th>
+                                            <th>HST ($)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>Opening Inventory</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Purchases during the year</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Subcontracts</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Direct Wage Costs</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Other Costs (specify)</td><td><input type="text" class="form-control form-control-sm" placeholder="e.g., specific cost"></td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Minus: Purchase Returns</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td class="fw-bold">Total Costs Of Goods Sold</td><td><input type="number" class="form-control form-control-sm" readonly></td><td><input type="number" class="form-control form-control-sm" readonly></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h6 class="mt-4 mb-3">Expenses</h6>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Expense</th>
+                                            <th>Amount ($)</th>
+                                            <th>HST ($)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>Advertising</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Meals & Entertainment</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Bad Debts</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Insurance</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Interest</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Fees, Licences, Dues</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Office Expenses</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Supplies</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Legal, Accounting, and Professional Fees</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Management & Administration</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Office Rent</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Maintenance & Repairs</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Salaries, Wages, Benefits</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Property Tax</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Travel</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Telephone and Utilities</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Fuel Costs (non motor vehicle)</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Delivery, Freight, Express</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Other 1 (specify)</td><td><input type="text" class="form-control form-control-sm" placeholder="Specify expense"></td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Other 2 (specify)</td><td><input type="text" class="form-control form-control-sm" placeholder="Specify expense"></td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Other 3 (specify)</td><td><input type="text" class="form-control form-control-sm" placeholder="Specify expense"></td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h6 class="mt-4 mb-3">Office-In-House Expenses</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Area of home used for business (Sq.Ft.)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Total area of the home (Sq.Ft.)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Expense</th>
+                                            <th>Amount ($)</th>
+                                            <th>HST ($)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>Heat</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Electricity</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Insurance</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Maintenance & Repairs</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Mortgage Interest</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Property Taxes</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>House Rent</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Other 1 (specify)</td><td><input type="text" class="form-control form-control-sm" placeholder="Specify expense"></td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Other 2 (specify)</td><td><input type="text" class="form-control form-control-sm" placeholder="Specify expense"></td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h6 class="mt-4 mb-3">Motor Vehicle Expenses</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Kilometers driven to earn business income</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Total Kilometers driven in the tax year</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Expense</th>
+                                            <th>Amount ($)</th>
+                                            <th>HST ($)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>Fuel</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Insurance</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>License and Registration</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Maintenance & Repairs</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Business Parking</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Other (specify)</td><td><input type="text" class="form-control form-control-sm" placeholder="Specify expense"></td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Leasing or Finance payments</td><td><input type="number" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="rentalIncomeSection" class="conditional-subsection mt-3 p-3 bg-white rounded-3" style="display: none;">
+                            <h6 class="mb-3">Rental Income & Expenses</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Property Address with Postal Code</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Co-owner / Partner 1 (Name)</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Co-owner / Partner 2 (Name)</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Co-owner / Partner 3 (Name)</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Number of Units</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Gross Rental Income</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Any Govt. Income relating to Rental</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <h6 class="mt-4 mb-3">Expenses</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Personal Use Portion (If sharing the same house with Tenants) (%)</label>
+                                <input type="number" class="form-control" min="0" max="100">
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Expense</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>House Insurance</td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Mortgage Interest</td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Property Taxes</td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Utilities (if any)</td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Management / Admin Fees</td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Repair and Maintenance</td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Cleaning Expense</td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Motor Vehicle Expenses</td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Legal and Professional Fees</td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Advertising and Promotion</td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                        <tr><td>Other Expense (specify)</td><td><input type="text" class="form-control form-control-sm" placeholder="Specify expense"></td><td><input type="number" class="form-control form-control-sm"></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <h6 class="mt-4 mb-3">CCA/Depreciation (We will Calculate)</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Purchase Price</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Purchase date</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Addition / deletion in the Property amount</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Addition / deletion Year</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Last Year UCC Value</label>
+                                <input type="number" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">6. Did you buy your FIRST HOME in the Tax Year?</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="firstHomeBuyer" id="firstHomeBuyerYes" value="yes">
+                            <label class="form-check-label" for="firstHomeBuyerYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="firstHomeBuyer" id="firstHomeBuyerNo" value="no" checked>
+                            <label class="form-check-label" for="firstHomeBuyerNo">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">7. Did you sell any Residential Property which you hold more than 365 last year? How much capital gain you earned?</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="soldPropertyLong" id="soldPropertyLongYes" value="yes">
+                            <label class="form-check-label" for="soldPropertyLongYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="soldPropertyLong" id="soldPropertyLongNo" value="no" checked>
+                            <label class="form-check-label" for="soldPropertyLongNo">No</label>
+                        </div>
+                    </div>
+                    <div id="soldPropertyLongDetails" class="conditional-section mt-3 p-3 bg-light rounded-3" style="display: none;">
+                        <h6 class="mb-3">Residential Property Sale Details (Held > 365 days)</h6>
+                        <div class="mb-3">
+                            <label class="form-label">Address of the Property</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Purchase Date</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Sell Date</label>
+                                <input type="date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Expenses related to Purchase & Sell</label>
+                            <input type="number" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Capital Gain Earned</label>
+                            <input type="number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">8. Did you sell any Residential Property which you hold less than 365 last year? FLIP PROPERTY</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="soldPropertyShort" id="soldPropertyShortYes" value="yes">
+                            <label class="form-check-label" for="soldPropertyShortYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="soldPropertyShort" id="soldPropertyShortNo" value="no" checked>
+                            <label class="form-check-label" for="soldPropertyShortNo">No</label>
+                        </div>
+                    </div>
+                    <div id="soldPropertyShortDetails" class="conditional-section mt-3 p-3 bg-light rounded-3" style="display: none;">
+                        <h6 class="mb-3">Residential Property Sale Details (Held < 365 days - FLIP PROPERTY)</h6>
+                        <div class="mb-3">
+                            <label class="form-label">Address of the Property</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Purchase Date</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Sell Date</label>
+                                <input type="date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Expenses related to Purchase & Sell</label>
+                            <input type="number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">9. Did you have any work from home expense in the Tax year? Detailed method, T2200 is required from your employer.</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="wfhExpense" id="wfhExpenseYes" value="yes">
+                            <label class="form-check-label" for="wfhExpenseYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="wfhExpense" id="wfhExpenseNo" value="no" checked>
+                            <label class="form-check-label" for="wfhExpenseNo">No</label>
+                        </div>
+                    </div>
+                    <div id="wfhExpenseDetails" class="conditional-section mt-3 p-3 bg-light rounded-3" style="display: none;">
+                        <h6 class="mb-3">Work From Home Expenses (Detailed Method)</h6>
+                        <small class="text-muted mb-3 d-block">If you have T2200, then please fill below details.</small>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Total Sq.Ft. area of your House (Individual)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Total Sq.Ft. area of your House (Spouse)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Total Sq.Ft. area used for work (Individual)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Total Sq.Ft. area used for work (Spouse)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Total Rent/Mortgage Interest Expense from Jan to Dec</label>
+                            <input type="number" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Total Wifi and Electricity from Jan to Dec</label>
+                            <input type="number" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Total Heat and Water Expense from Jan to Dec</label>
+                            <input type="number" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Total Insurance Expense from Jan to Dec</label>
+                            <input type="number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">10. Were you a student last year? If yes then we would need T2202A form from your educational institution.</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="studentLastYear" id="studentLastYearYes" value="yes">
+                            <label class="form-check-label" for="studentLastYearYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="studentLastYear" id="studentLastYearNo" value="no" checked>
+                            <label class="form-check-label" for="studentLastYearNo">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">11. Are you a member of any union? If yes then, do you have any union dues?</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="unionMember" id="unionMemberYes" value="yes">
+                            <label class="form-check-label" for="unionMemberYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="unionMember" id="unionMemberNo" value="no" checked>
+                            <label class="form-check-label" for="unionMemberNo">No</label>
+                        </div>
+                    </div>
+                    <div id="unionDuesDetails" class="conditional-section mt-3 p-3 bg-light rounded-3" style="display: none;">
+                        <h6 class="mb-3">Union Dues Details</h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Institution Name</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="addUnionDuesRow">Add Row</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">12. Do you have Day care expenses for your child?</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="daycareExpenses" id="daycareExpensesYes" value="yes">
+                            <label class="form-check-label" for="daycareExpensesYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="daycareExpenses" id="daycareExpensesNo" value="no" checked>
+                            <label class="form-check-label" for="daycareExpensesNo">No</label>
+                        </div>
+                    </div>
+                    <div id="daycareExpensesDetails" class="conditional-section mt-3 p-3 bg-light rounded-3" style="display: none;">
+                        <h6 class="mb-3">Day Care Expenses Details</h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Name of Childcare Provider</th>
+                                        <th>Identification Number/SIN</th>
+                                        <th>Weeks</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="addDaycareExpenseRow">Add Row</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">13. Are you a first time filer? If Yes, then please provide the following details.</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="firstTimeFiler" id="firstTimeFilerYes" value="yes">
+                            <label class="form-check-label" for="firstTimeFilerYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="firstTimeFiler" id="firstTimeFilerNo" value="no" checked>
+                            <label class="form-check-label" for="firstTimeFilerNo">No</label>
+                        </div>
+                    </div>
+                    <div id="firstTimeFilerDetails" class="conditional-section mt-3 p-3 bg-light rounded-3" style="display: none;">
+                        <h6 class="mb-3">First Time Filer Details</h6>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Date of landing in Canada (DD-MM-YYYY) (Individual)</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Date of landing in Canada (DD-MM-YYYY) (Spouse)</label>
+                                <input type="date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Approximate income earned outside Canada in the year before landing (converted in CAD) (Individual)</label>
+                                <input type="number" class="form-control" placeholder="This is not taxable but required to be disclosed">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Approximate income earned outside Canada in the year before landing (converted in CAD) (Spouse)</label>
+                                <input type="number" class="form-control" placeholder="This is not taxable but required to be disclosed">
+                            </div>
+                        </div>
+                        <h6 class="mt-4 mb-3">GST/HST Credit Information</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Back Home/working country Income 2022 (Jan - Dec 2022) in CAD (Individual)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Back Home/working country Income 2022 (Jan - Dec 2022) in CAD (Spouse)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Back Home/working country Income 2021 (Jan - Dec 2021) in CAD (Individual)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Back Home/working country Income 2021 (Jan - Dec 2021) in CAD (Spouse)</label>
+                                <input type="number" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">14. Do you have any other Income in 2023 which does not have T Slips?</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="otherIncome" id="otherIncomeYes" value="yes">
+                            <label class="form-check-label" for="otherIncomeYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="otherIncome" id="otherIncomeNo" value="no" checked>
+                            <label class="form-check-label" for="otherIncomeNo">No</label>
+                        </div>
+                    </div>
+                    <div id="otherIncomeDetails" class="conditional-section mt-3 p-3 bg-light rounded-3" style="display: none;">
+                        <h6 class="mb-3">Other Income Details</h6>
+                        <div class="mb-3">
+                            <label class="form-label">Please describe the income and amount:</label>
+                            <textarea class="form-control" rows="3" placeholder="e.g., Rental income from a private agreement, freelance earnings without a T4"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">15. Do you have any Professional Dues, License Fees, Exam fees which you have paid from your pocket for last year?</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="professionalDues" id="professionalDuesYes" value="yes">
+                            <label class="form-check-label" for="professionalDuesYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="professionalDues" id="professionalDuesNo" value="no" checked>
+                            <label class="form-check-label" for="professionalDuesNo">No</label>
+                        </div>
+                    </div>
+                    <div id="professionalDuesDetails" class="conditional-section mt-3 p-3 bg-light rounded-3" style="display: none;">
+                        <h6 class="mb-3">Professional Dues/Fees Details</h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>NAME</th>
+                                        <th>NAME OF ORGANIZATION</th>
+                                        <th>AMOUNT PAID IN CAD</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="addProfessionalDuesRow">Add Row</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">16. Do you have any RRSP/FHSA Investment? If yes, please provide the slips along with your T Slips.</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="rrspFhsaInvestment" id="rrspFhsaInvestmentYes" value="yes">
+                            <label class="form-check-label" for="rrspFhsaInvestmentYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="rrspFhsaInvestment" id="rrspFhsaInvestmentNo" value="no" checked>
+                            <label class="form-check-label" for="rrspFhsaInvestmentNo">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">17. Children's Art & Sport Tax Credit - Do you have any receipts for your child's Sport/fitness & Art for 2023?</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="childArtSportCredit" id="childArtSportCreditYes" value="yes">
+                            <label class="form-check-label" for="childArtSportCreditYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="childArtSportCredit" id="childArtSportCreditNo" value="no" checked>
+                            <label class="form-check-label" for="childArtSportCreditNo">No</label>
+                        </div>
+                    </div>
+                    <div id="childArtSportCreditDetails" class="conditional-section mt-3 p-3 bg-light rounded-3" style="display: none;">
+                        <h6 class="mb-3">Children's Art & Sport Credit Details</h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>No. of Expense</th>
+                                        <th>Institute Name</th>
+                                        <th>Descriptions</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="addChildArtSportRow">Add Row</button>
+                        </div>
+                        <div class="mt-3">
+                            <label class="form-label fw-bold">Total Amount</label>
+                            <input type="number" class="form-control" value="0" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">18. FOR ONTARIO/ALBERTA/QUEBEC FILER ONLY - Please Provide below details for 2023</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="provinceFiler" id="provinceFilerYes" value="yes">
+                            <label class="form-check-label" for="provinceFilerYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="provinceFiler" id="provinceFilerNo" value="no" checked>
+                            <label class="form-check-label" for="provinceFilerNo">No</label>
+                        </div>
+                    </div>
+                    <div id="provinceFilerDetails" class="conditional-section mt-3 p-3 bg-light rounded-3" style="display: none;">
+                        <h6 class="mb-3">Province Specific Details (2023)</h6>
+                        <small class="text-muted mb-3 d-block">Quebec Filer - Provide RL-31</small>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Rent or Property Tax</th>
+                                        <th>Address of the Property</th>
+                                        <th>Postal Code</th>
+                                        <th>No. of Month Resides</th>
+                                        <th>Rent or Property Tax Paid</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="text" class="form-control form-control-sm" placeholder="Rent or Property Tax"></td>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                        <td><input type="text" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                        <td><input type="number" class="form-control form-control-sm"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="addProvinceFilerRow">Add Row</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-secondary prev-step-btn" data-step="2">Previous: Personal Info</button>
+                    <button type="submit" class="btn btn-primary submit-button">Submit Form</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="t1_form_api.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Enhanced Form Submission Handler
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('multiStepForm');
+            console.log('🔧 Form found:', form !== null);
+            console.log('🔧 T1FormAPI available:', typeof window.T1FormAPI !== 'undefined');
+            
+            if (form && window.T1FormAPI) {
+                console.log('✅ Setting up enhanced form submission...');
+                
+                // Mark form as having enhanced handler
+                form.setAttribute('data-enhanced-handler', 'true');
+                
+                // Remove any existing event listeners and add our custom one
+                form.addEventListener('submit', function(e) {
+                    console.log('🚀 Enhanced form submit intercepted!');
+                    e.preventDefault(); // Prevent default form submission
+                    e.stopPropagation(); // Stop event bubbling
+                    
+                    // Use the API to handle submission
+                    if (window.T1FormAPI.FormHandler && window.T1FormAPI.FormHandler.handleSubmit) {
+                        console.log('📤 Using API to submit form...');
+                        // Call the API handler with proper binding
+                        window.T1FormAPI.FormHandler.handleSubmit.call(window.T1FormAPI.FormHandler, e);
+                    } else {
+                        console.error('❌ API FormHandler not available!');
+                        alert('Form submission system not ready. Please refresh the page.');
+                    }
+                }, true); // Use capture phase to ensure we catch it first
+                
+                console.log('✅ Enhanced form submission handler installed!');
+            } else {
+                console.error('❌ Form or API not available for proper submission handling');
+                
+                // Fallback - prevent default submission at least
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        alert('Form submission system not ready. Please refresh the page and try again.');
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

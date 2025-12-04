@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tax-ease.example.com/schemas/t1_personal_form.json",
+  "title": "T1 Personal Tax Form",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "status", "personalInfo"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "enum": ["draft", "submitted"] },
+    "createdAt": { "type": ["string", "null"], "format": "date-time" },
+    "updatedAt": { "type": ["string", "null"], "format": "date-time" },
+
+    "personalInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["firstName", "lastName", "sin", "address", "phoneNumber", "email", "maritalStatus"],
+      "properties": {
+        "firstName": { "type": "string", "minLength": 1 },
+        "middleName": { "type": ["string", "null"] },
+        "lastName": { "type": "string", "minLength": 1 },
+        "sin": { "type": "string", "pattern": "^\\d{9}$" },
+        "dateOfBirth": { "type": ["string", "null"], "format": "date" },
+        "address": { "type": "string", "minLength": 1 },
+        "phoneNumber": { "type": "string", "pattern": "^\\+?[1-9]\\d{1,14}$" },
+        "email": { "type": "string", "format": "email" },
+        "isCanadianCitizen": { "type": "boolean" },
+        "maritalStatus": { "type": "string", "minLength": 1 },
+        "spouseInfo": { "$ref": "#/$defs/T1SpouseInfo" },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/T1ChildInfo" }
+        }
+      }
+    },
+
+    "hasForeignProperty": { "type": "boolean" },
+    "foreignProperties": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/T1ForeignProperty" }
+    },
+
+    "hasMedicalExpenses": { "type": "boolean" },
+    "hasCharitableDonations": { "type": "boolean" },
+
+    "hasMovingExpenses": { "type": "boolean" },
+    "movingExpense": { "$ref": "#/$defs/T1MovingExpense" },
+    "movingExpenseForIndividual": { "type": "boolean" },
+    "movingExpenseForSpouse": { "type": "boolean" },
+    "movingExpenseIndividual": { "$ref": "#/$defs/T1MovingExpense" },
+    "movingExpenseSpouse": { "$ref": "#/$defs/T1MovingExpense" },
+
+    "isSelfEmployed": { "type": "boolean" },
+    "selfEmployment": { "$ref": "#/$defs/T1SelfEmployment" },
+
+    "isFirstHomeBuyer": { "type": "boolean" },
+    "soldPropertyLongTerm": { "type": "boolean" },
+    "soldPropertyShortTerm": { "type": "boolean" },
+    "hasWorkFromHomeExpense": { "type": "boolean" },
+    "wasStudentLastYear": { "type": "boolean" },
+    "isUnionMember": { "type": "boolean" },
+    "hasDaycareExpenses": { "type": "boolean" },
+    "isFirstTimeFiler": { "type": "boolean" },
+    "hasOtherIncome": { "type": "boolean" },
+    "otherIncomeDescription": { "type": "string" },
+    "hasProfessionalDues": { "type": "boolean" },
+    "hasRrspFhsaInvestment": { "type": "boolean" },
+    "hasChildArtSportCredit": { "type": "boolean" },
+    "isProvinceFiler": { "type": "boolean" }
+  },
+
+  "$defs": {
+    "T1SpouseInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["firstName", "lastName", "sin"],
+      "properties": {
+        "firstName": { "type": "string", "minLength": 1 },
+        "middleName": { "type": ["string", "null"] },
+        "lastName": { "type": "string", "minLength": 1 },
+        "sin": { "type": "string", "pattern": "^\\d{9}$" },
+        "dateOfBirth": { "type": ["string", "null"], "format": "date" }
+      }
+    },
+
+    "T1ChildInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["firstName", "lastName", "sin"],
+      "properties": {
+        "firstName": { "type": "string", "minLength": 1 },
+        "middleName": { "type": ["string", "null"] },
+        "lastName": { "type": "string", "minLength": 1 },
+        "sin": { "type": "string", "pattern": "^\\d{9}$" },
+        "dateOfBirth": { "type": ["string", "null"], "format": "date" }
+      }
+    },
+
+    "T1ForeignProperty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["investmentDetails", "grossIncome", "gainLossOnSale", "maxCostDuringYear", "costAmountYearEnd", "country"],
+      "properties": {
+        "investmentDetails": { "type": "string" },
+        "grossIncome": { "type": "number", "minimum": 0 },
+        "gainLossOnSale": { "type": "number" },
+        "maxCostDuringYear": { "type": "number", "minimum": 0 },
+        "costAmountYearEnd": { "type": "number", "minimum": 0 },
+        "country": { "type": "string" }
+      }
+    },
+
+    "T1MovingExpense": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["individual", "oldAddress", "newAddress", "distanceFromOldToNew", "distanceFromNewToOffice", "airTicketCost", "moversAndPackers", "mealsAndOtherCost", "anyOtherCost", "companyName", "newEmployerAddress", "grossIncomeAfterMoving"],
+      "properties": {
+        "individual": { "type": "string" },
+        "oldAddress": { "type": "string" },
+        "newAddress": { "type": "string" },
+        "distanceFromOldToNew": { "type": "string" },
+        "distanceFromNewToOffice": { "type": "string" },
+        "airTicketCost": { "type": "number", "minimum": 0 },
+        "moversAndPackers": { "type": "number", "minimum": 0 },
+        "mealsAndOtherCost": { "type": "number", "minimum": 0 },
+        "anyOtherCost": { "type": "number", "minimum": 0 },
+        "dateOfTravel": { "type": ["string", "null"], "format": "date" },
+        "dateOfJoining": { "type": ["string", "null"], "format": "date" },
+        "companyName": { "type": "string" },
+        "newEmployerAddress": { "type": "string" },
+        "grossIncomeAfterMoving": { "type": "number", "minimum": 0 }
+      }
+    },
+
+    "T1SelfEmployment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["businessTypes"],
+      "properties": {
+        "businessTypes": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["uber", "general", "rental"] }
+        },
+        "uberBusiness": { "$ref": "#/$defs/T1UberBusiness" },
+        "generalBusiness": { "$ref": "#/$defs/T1GeneralBusiness" },
+        "rentalIncome": { "$ref": "#/$defs/T1RentalIncome" }
+      }
+    },
+
+    "T1UberBusiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["uberSkipStatement", "businessHstNumber", "hstAccessCode", "hstFillingPeriod", "income", "totalKmForUberSkip", "totalOfficialKmDriven", "totalKmDrivenEntireYear", "businessNumberVehicleRegistration", "meals", "telephone", "parkingFees", "cleaningExpenses", "safetyInspection", "winterTireChange", "oilChangeAndMaintenance", "depreciation", "insuranceOnVehicle", "gas", "financingCostInterest", "leaseCost", "otherExpense"],
+      "properties": {
+        "uberSkipStatement": { "type": "string" },
+        "businessHstNumber": { "type": "string" },
+        "hstAccessCode": { "type": "string" },
+        "hstFillingPeriod": { "type": "string" },
+        "income": { "type": "number", "minimum": 0 },
+        "totalKmForUberSkip": { "type": "number", "minimum": 0 },
+        "totalOfficialKmDriven": { "type": "number", "minimum": 0 },
+        "totalKmDrivenEntireYear": { "type": "number", "minimum": 0 },
+        "businessNumberVehicleRegistration": { "type": "number", "minimum": 0 },
+        "meals": { "type": "number", "minimum": 0 },
+        "telephone": { "type": "number", "minimum": 0 },
+        "parkingFees": { "type": "number", "minimum": 0 },
+        "cleaningExpenses": { "type": "number", "minimum": 0 },
+        "safetyInspection": { "type": "number", "minimum": 0 },
+        "winterTireChange": { "type": "number", "minimum": 0 },
+        "oilChangeAndMaintenance": { "type": "number", "minimum": 0 },
+        "depreciation": { "type": "number", "minimum": 0 },
+        "insuranceOnVehicle": { "type": "number", "minimum": 0 },
+        "gas": { "type": "number", "minimum": 0 },
+        "financingCostInterest": { "type": "number", "minimum": 0 },
+        "leaseCost": { "type": "number", "minimum": 0 },
+        "otherExpense": { "type": "number", "minimum": 0 }
+      }
+    },
+
+    "T1GeneralBusiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clientName", "businessName"],
+      "properties": {
+        "clientName": { "type": "string" },
+        "businessName": { "type": "string" },
+        "salesCommissionsFees": { "type": "number", "minimum": 0 },
+        "minusHstCollected": { "type": "number", "minimum": 0 },
+        "grossIncome": { "type": "number" },
+        "openingInventory": { "type": "number", "minimum": 0 },
+        "purchasesDuringYear": { "type": "number", "minimum": 0 },
+        "subcontracts": { "type": "number", "minimum": 0 },
+        "directWageCosts": { "type": "number", "minimum": 0 },
+        "otherCosts": { "type": "number", "minimum": 0 },
+        "purchaseReturns": { "type": "number", "minimum": 0 },
+        "advertising": { "type": "number", "minimum": 0 },
+        "mealsEntertainment": { "type": "number", "minimum": 0 },
+        "badDebts": { "type": "number", "minimum": 0 },
+        "insurance": { "type": "number", "minimum": 0 },
+        "interest": { "type": "number", "minimum": 0 },
+        "feesLicensesDues": { "type": "number", "minimum": 0 },
+        "officeExpenses": { "type": "number", "minimum": 0 },
+        "supplies": { "type": "number", "minimum": 0 },
+        "legalAccountingFees": { "type": "number", "minimum": 0 },
+        "managementAdministration": { "type": "number", "minimum": 0 },
+        "officeRent": { "type": "number", "minimum": 0 },
+        "maintenanceRepairs": { "type": "number", "minimum": 0 },
+        "salariesWagesBenefits": { "type": "number", "minimum": 0 },
+        "propertyTax": { "type": "number", "minimum": 0 },
+        "travel": { "type": "number", "minimum": 0 },
+        "telephoneUtilities": { "type": "number", "minimum": 0 },
+        "fuelCosts": { "type": "number", "minimum": 0 },
+        "deliveryFreightExpress": { "type": "number", "minimum": 0 },
+        "otherExpense1": { "type": "number", "minimum": 0 },
+        "otherExpense2": { "type": "number", "minimum": 0 },
+        "otherExpense3": { "type": "number", "minimum": 0 },
+        "areaOfHomeForBusiness": { "type": "string" },
+        "totalAreaOfHome": { "type": "string" },
+        "heat": { "type": "number", "minimum": 0 },
+        "electricity": { "type": "number", "minimum": 0 },
+        "houseInsurance": { "type": "number", "minimum": 0 },
+        "homeMaintenance": { "type": "number", "minimum": 0 },
+        "mortgageInterest": { "type": "number", "minimum": 0 },
+        "propertyTaxes": { "type": "number", "minimum": 0 },
+        "houseRent": { "type": "number", "minimum": 0 },
+        "homeOtherExpense1": { "type": "number", "minimum": 0 },
+        "homeOtherExpense2": { "type": "number", "minimum": 0 },
+        "kmDrivenForBusiness": { "type": "number", "minimum": 0 },
+        "totalKmDrivenInYear": { "type": "number", "minimum": 0 },
+        "vehicleFuel": { "type": "number", "minimum": 0 },
+        "vehicleInsurance": { "type": "number", "minimum": 0 },
+        "licenseRegistration": { "type": "number", "minimum": 0 },
+        "vehicleMaintenance": { "type": "number", "minimum": 0 },
+        "businessParking": { "type": "number", "minimum": 0 },
+        "vehicleOtherExpense": { "type": "number", "minimum": 0 },
+        "leasingFinancePayments": { "type": "number", "minimum": 0 }
+      }
+    },
+
+    "T1RentalIncome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["propertyAddress", "numberOfUnits", "grossRentalIncome", "anyGovtIncomeRelatingToRental", "personalUsePortion", "houseInsurance", "mortgageInterest", "propertyTaxes", "utilities", "managementAdminFees", "repairAndMaintenance", "cleaningExpense", "motorVehicleExpenses", "legalProfessionalFees", "advertisingPromotion", "otherExpense", "purchasePrice", "additionDeletionAmount"],
+      "properties": {
+        "propertyAddress": { "type": "string" },
+        "coOwnerPartner1": { "type": "string" },
+        "coOwnerPartner2": { "type": "string" },
+        "coOwnerPartner3": { "type": "string" },
+        "numberOfUnits": { "type": "integer", "minimum": 0 },
+        "grossRentalIncome": { "type": "number", "minimum": 0 },
+        "anyGovtIncomeRelatingToRental": { "type": "number", "minimum": 0 },
+        "personalUsePortion": { "type": "string" },
+        "houseInsurance": { "type": "number", "minimum": 0 },
+        "mortgageInterest": { "type": "number", "minimum": 0 },
+        "propertyTaxes": { "type": "number", "minimum": 0 },
+        "utilities": { "type": "number", "minimum": 0 },
+        "managementAdminFees": { "type": "number", "minimum": 0 },
+        "repairAndMaintenance": { "type": "number", "minimum": 0 },
+        "cleaningExpense": { "type": "number", "minimum": 0 },
+        "motorVehicleExpenses": { "type": "number", "minimum": 0 },
+        "legalProfessionalFees": { "type": "number", "minimum": 0 },
+        "advertisingPromotion": { "type": "number", "minimum": 0 },
+        "otherExpense": { "type": "number", "minimum": 0 },
+        "purchasePrice": { "type": "number", "minimum": 0 },
+        "purchaseDate": { "type": ["string", "null"], "format": "date" },
+        "additionDeletionAmount": { "type": "number" }
+      }
+    }
+  }
+}

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T1 Form Integration Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .test-result { margin: 10px 0; }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .info { color: #17a2b8; }
+    </style>
+</head>
+<body>
+    <div class="container my-4">
+        <h2 class="text-center mb-4">T1 Form Integration Test</h2>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Backend API Tests</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="testResults"></div>
+                        <button class="btn btn-primary" onclick="runAllTests()">Run All Tests</button>
+                        <hr>
+                        <button class="btn btn-secondary btn-sm" onclick="testBackendHealth()">Test Backend Health</button>
+                        <button class="btn btn-info btn-sm" onclick="testRegister()">Test Register</button>
+                        <button class="btn btn-warning btn-sm" onclick="testLogin()">Test Login</button>
+                        <button class="btn btn-success btn-sm" onclick="testFormSubmission()">Test Form Submit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Test Email</label>
+                            <input type="email" class="form-control" id="testEmail" value="test_user@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Test Password</label>
+                            <input type="password" class="form-control" id="testPassword" value="TestPass123!">
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-primary btn-sm w-100" onclick="quickRegisterAndLogin()">Quick Register & Login</button>
+                        </div>
+                        <hr>
+                        <div class="mb-3">
+                            <h6>Authentication Status</h6>
+                            <div id="authStatus" class="alert alert-secondary">Checking...</div>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-outline-primary btn-sm w-100" onclick="window.open('http://localhost:8082/t1_form.html', '_blank')">Open T1 Form</button>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-outline-success btn-sm w-100" onclick="checkDatabaseData()">Check Database Data</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Form Data Preview</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="formDataPreview">
+                            <p>Form data will appear here when testing form submission...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="t1_form_api.js"></script>
+    <script>
+        // Test functions
+        function addTestResult(test, success, message) {
+            const div = document.getElementById('testResults');
+            const className = success ? 'success' : 'error';
+            const icon = success ? '✅' : '❌';
+            div.innerHTML += `<div class="test-result ${className}">${icon} ${test}: ${message}</div>`;
+        }
+        
+        function addInfoResult(message) {
+            const div = document.getElementById('testResults');
+            div.innerHTML += `<div class="test-result info">ℹ️ ${message}</div>`;
+        }
+        
+        function clearResults() {
+            document.getElementById('testResults').innerHTML = '';
+        }
+        
+        async function testBackendHealth() {
+            addInfoResult('Testing backend health...');
+            try {
+                const response = await fetch('http://localhost:8000/health');
+                const data = await response.json();
+                addTestResult('Backend Health', response.ok, `Status: ${data.status}`);
+                return response.ok;
+            } catch (error) {
+                addTestResult('Backend Health', false, `Error: ${error.message}`);
+                return false;
+            }
+        }
+        
+        async function testRegister() {
+            addInfoResult('Testing user registration...');
+            try {
+                const email = document.getElementById('testEmail').value;
+                const password = document.getElementById('testPassword').value;
+                const timestamp = Date.now();
+                
+                const result = await window.T1FormAPI.API.register({
+                    first_name: 'Test',
+                    last_name: 'User',
+                    email: `test_${timestamp}@example.com`,
+                    password: password
+                });
+                
+                addTestResult('User Registration', true, `User created: ${result.email}`);
+                return true;
+            } catch (error) {
+                if (error.message.includes('already exists')) {
+                    addTestResult('User Registration', true, 'User already exists (OK)');
+                    return true;
+                } else {
+                    addTestResult('User Registration', false, `Error: ${error.message}`);
+                    return false;
+                }
+            }
+        }
+        
+        async function testLogin() {
+            addInfoResult('Testing user login...');
+            try {
+                const email = document.getElementById('testEmail').value;
+                const password = document.getElementById('testPassword').value;
+                
+                const result = await window.T1FormAPI.API.login(email, password);
+                addTestResult('User Login', true, 'Login successful, token received');
+                updateAuthStatus();
+                return true;
+            } catch (error) {
+                addTestResult('User Login', false, `Error: ${error.message}`);
+                return false;
+            }
+        }
+        
+        async function testFormSubmission() {
+            addInfoResult('Testing T1 form submission...');
+            try {
+                if (!window.T1FormAPI.TokenManager.isAuthenticated()) {
+                    throw new Error('Not authenticated. Please login first.');
+                }
+                
+                const sampleFormData = {
+                    tax_year: 2023,
+                    status: 'draft',
+                    first_name: 'Test',
+                    last_name: 'User',
+                    email: 'test@example.com',
+                    has_foreign_property: false,
+                    has_medical_expenses: true,
+                    has_charitable_donations: false,
+                    has_moving_expenses: false,
+                    is_self_employed: false,
+                    is_first_home_buyer: true,
+                    is_first_time_filer: false,
+                    form_data: {
+                        personalInfo: {
+                            firstName: 'Test',
+                            lastName: 'User',
+                            email: 'test@example.com',
+                            maritalStatus: 'single'
+                        },
+                        questionnaire: {
+                            hasForeignProperty: false,
+                            hasMedicalExpenses: true
+                        }
+                    },
+                    employment_income: 50000,
+                    self_employment_income: 0,
+                    investment_income: 1000,
+                    other_income: 0,
+                    total_income: 51000,
+                    rrsp_contributions: 5000,
+                    charitable_donations: 0,
+                    federal_tax: 7000,
+                    provincial_tax: 3000,
+                    total_tax: 10000,
+                    refund_or_owing: 41000
+                };
+                
+                const result = await window.T1FormAPI.API.createT1Form(sampleFormData);
+                addTestResult('Form Submission', true, `Form submitted! ID: ${result.form_id}`);
+                
+                // Show form data preview
+                document.getElementById('formDataPreview').innerHTML = `
+                    <h6>Submitted Form Data:</h6>
+                    <pre style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 12px;">${JSON.stringify(result, null, 2)}</pre>
+                `;
+                
+                return true;
+            } catch (error) {
+                addTestResult('Form Submission', false, `Error: ${error.message}`);
+                return false;
+            }
+        }
+        
+        async function quickRegisterAndLogin() {
+            clearResults();
+            addInfoResult('Running quick register & login...');
+            
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            const timestamp = Date.now();
+            
+            try {
+                // Try to register (might fail if user exists)
+                try {
+                    await window.T1FormAPI.API.register({
+                        first_name: 'Test',
+                        last_name: 'User',
+                        email: email,
+                        password: password
+                    });
+                    addTestResult('Registration', true, 'New user registered');
+                } catch (regError) {
+                    if (regError.message.includes('already exists')) {
+                        addTestResult('Registration', true, 'User already exists');
+                    } else {
+                        throw regError;
+                    }
+                }
+                
+                // Login
+                await window.T1FormAPI.API.login(email, password);
+                addTestResult('Login', true, 'Login successful');
+                updateAuthStatus();
+                
+                addInfoResult('✅ Ready to test T1 form submission!');
+                
+            } catch (error) {
+                addTestResult('Quick Setup', false, `Error: ${error.message}`);
+            }
+        }
+        
+        async function runAllTests() {
+            clearResults();
+            addInfoResult('Running comprehensive integration tests...');
+            
+            let allPassed = true;
+            
+            // Test 1: Backend Health
+            if (!(await testBackendHealth())) allPassed = false;
+            
+            // Test 2: Registration
+            if (!(await testRegister())) allPassed = false;
+            
+            // Test 3: Login
+            if (!(await testLogin())) allPassed = false;
+            
+            // Test 4: Form Submission
+            if (!(await testFormSubmission())) allPassed = false;
+            
+            // Final result
+            if (allPassed) {
+                addInfoResult('🎉 ALL TESTS PASSED! Integration is working perfectly!');
+            } else {
+                addInfoResult('⚠️ Some tests failed. Check the results above.');
+            }
+        }
+        
+        function updateAuthStatus() {
+            const statusDiv = document.getElementById('authStatus');
+            if (window.T1FormAPI.TokenManager.isAuthenticated()) {
+                statusDiv.className = 'alert alert-success';
+                statusDiv.innerHTML = '✅ Authenticated<br><small>Token is valid</small>';
+            } else {
+                statusDiv.className = 'alert alert-danger';
+                statusDiv.innerHTML = '❌ Not Authenticated<br><small>Please login</small>';
+            }
+        }
+        
+        async function checkDatabaseData() {
+            addInfoResult('Checking database for T1 forms...');
+            try {
+                if (!window.T1FormAPI.TokenManager.isAuthenticated()) {
+                    throw new Error('Not authenticated. Please login first.');
+                }
+                
+                const forms = await window.T1FormAPI.API.listT1Forms();
+                addTestResult('Database Check', true, `Found ${forms.length} T1 form(s) in database`);
+                
+                if (forms.length > 0) {
+                    const formsList = forms.map(form => 
+                        `Form ID: ${form.form_id}, Status: ${form.status}, Created: ${new Date(form.created_at).toLocaleDateString()}`
+                    ).join('<br>');
+                    
+                    document.getElementById('formDataPreview').innerHTML = `
+                        <h6>Database Forms:</h6>
+                        <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 14px;">
+                            ${formsList}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                addTestResult('Database Check', false, `Error: ${error.message}`);
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAuthStatus();
+            setInterval(updateAuthStatus, 5000); // Update every 5 seconds
+            
+            addInfoResult('T1 Form Integration Test Page Loaded');
+            addInfoResult('Backend should be running on: http://localhost:8000');
+            addInfoResult('T1 Form should be available on: http://localhost:8082/t1_form.html');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test T1 Form Integration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-5">
+        <h2 class="text-center mb-4">🧪 T1 Form Integration Test</h2>
+        
+        <div class="alert alert-info">
+            <strong>Test Instructions:</strong>
+            <ol>
+                <li>Click "Test Backend Connection" to verify API is accessible</li>
+                <li>Click "Login with Test Account" to authenticate</li>
+                <li>Click "Submit Sample T1 Form" to send test data</li>
+                <li>Check results below</li>
+            </ol>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Step 1: Test Backend Connection</h5>
+                <button class="btn btn-primary" onclick="testConnection()">Test Backend Connection</button>
+                <div id="connectionResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Step 2: Authentication</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button class="btn btn-success w-100" onclick="loginTestAccount()">Login with Test Account</button>
+                        <small class="text-muted d-block mt-2">
+                            Email: test_1763013147@example.com<br>
+                            Password: SecureTestPass123!
+                        </small>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-warning w-100" onclick="registerNewUser()">Register New User</button>
+                    </div>
+                </div>
+                <div id="authResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Step 3: Submit Sample T1 Form</h5>
+                <button class="btn btn-primary" onclick="submitSampleForm()">Submit Sample T1 Form</button>
+                <div id="submitResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Step 4: Retrieve Submitted Forms</h5>
+                <button class="btn btn-info" onclick="listForms()">List My Forms</button>
+                <div id="listResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Current Status</h5>
+                <div id="statusDisplay">
+                    <p><strong>Authenticated:</strong> <span id="authStatus" class="badge bg-secondary">Unknown</span></p>
+                    <p><strong>Token:</strong> <code id="tokenDisplay">None</code></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+
+        // Update status display
+        function updateStatus() {
+            const token = localStorage.getItem('access_token');
+            const authStatus = document.getElementById('authStatus');
+            const tokenDisplay = document.getElementById('tokenDisplay');
+            
+            if (token) {
+                authStatus.textContent = 'Yes';
+                authStatus.className = 'badge bg-success';
+                tokenDisplay.textContent = token.substring(0, 50) + '...';
+            } else {
+                authStatus.textContent = 'No';
+                authStatus.className = 'badge bg-danger';
+                tokenDisplay.textContent = 'None';
+            }
+        }
+
+        // Test backend connection
+        async function testConnection() {
+            const resultDiv = document.getElementById('connectionResult');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Testing...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            ✅ Backend is running!<br>
+                            <small>Status: ${data.status}<br>
+                            Time: ${data.timestamp}<br>
+                            Service: ${data.service}</small>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="alert alert-danger">❌ Backend responded with error</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-danger">❌ Cannot connect to backend: ${error.message}</div>`;
+            }
+        }
+
+        // Login with test account
+        async function loginTestAccount() {
+            const resultDiv = document.getElementById('authResult');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Logging in...';
+            
+            try {
+                const loginData = {
+                    email: 'test_1763013147@example.com',
+                    password: 'SecureTestPass123!'
+                };
+                
+                const response = await fetch(`${API_BASE}/api/v1/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('access_token', data.access_token);
+                    localStorage.setItem('user_email', 'test_1763013147@example.com');
+                    
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            ✅ Login successful!<br>
+                            <small>Token: ${data.access_token.substring(0, 50)}...</small>
+                        </div>
+                    `;
+                    updateStatus();
+                    
+                    // Setup encryption
+                    await setupEncryption();
+                } else {
+                    resultDiv.innerHTML = `<div class="alert alert-danger">❌ Login failed: ${data.detail}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-danger">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        // Setup encryption
+        async function setupEncryption() {
+            try {
+                const token = localStorage.getItem('access_token');
+                const response = await fetch(`${API_BASE}/api/v1/encryption/setup`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    console.log('✅ Encryption setup completed');
+                } else {
+                    console.log('ℹ️ Encryption may already be set up');
+                }
+            } catch (error) {
+                console.log('ℹ️ Encryption setup error (may be okay):', error.message);
+            }
+        }
+
+        // Register new user
+        async function registerNewUser() {
+            const resultDiv = document.getElementById('authResult');
+            
+            const email = prompt('Enter email:');
+            if (!email) return;
+            
+            const password = prompt('Enter password (min 8 chars):');
+            if (!password) return;
+            
+            const fullName = prompt('Enter full name (First Last):');
+            if (!fullName) return;
+            
+            const phone = prompt('Enter phone number (optional, +1XXXXXXXXXX):');
+            
+            // Split name into first and last
+            const nameParts = fullName.trim().split(' ');
+            const firstName = nameParts[0] || 'User';
+            const lastName = nameParts.slice(1).join(' ') || 'Account';
+            
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Registering...';
+            
+            try {
+                const registerData = {
+                    email: email,
+                    password: password,
+                    first_name: firstName,
+                    last_name: lastName,
+                    accept_terms: true
+                };
+                
+                if (phone) {
+                    registerData.phone = phone;
+                }
+                
+                const response = await fetch(`${API_BASE}/api/v1/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(registerData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok || response.status === 201) {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            ✅ Registration successful!<br>
+                            <small>User ID: ${data.id}<br>
+                            Email: ${data.email}</small><br>
+                            <button class="btn btn-sm btn-primary mt-2" onclick="loginWithCredentials('${email}', '${password}')">Login Now</button>
+                        </div>
+                    `;
+                } else {
+                    let errorMsg = data.detail;
+                    if (Array.isArray(data.detail)) {
+                        errorMsg = data.detail.map(err => `${err.loc.join('.')}: ${err.msg}`).join(', ');
+                    }
+                    resultDiv.innerHTML = `<div class="alert alert-danger">❌ Registration failed: ${errorMsg}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-danger">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        // Login with custom credentials
+        async function loginWithCredentials(email, password) {
+            const resultDiv = document.getElementById('authResult');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Logging in...';
+            
+            try {
+                const loginData = {
+                    email: email,
+                    password: password
+                };
+                
+                const response = await fetch(`${API_BASE}/api/v1/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('access_token', data.access_token);
+                    localStorage.setItem('user_email', email);
+                    
+                    resultDiv.innerHTML = `<div class="alert alert-success">✅ Login successful!</div>`;
+                    updateStatus();
+                    await setupEncryption();
+                } else {
+                    resultDiv.innerHTML = `<div class="alert alert-danger">❌ Login failed: ${data.detail}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-danger">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        // Submit sample T1 form
+        async function submitSampleForm() {
+            const resultDiv = document.getElementById('submitResult');
+            const token = localStorage.getItem('access_token');
+            
+            if (!token) {
+                resultDiv.innerHTML = `<div class="alert alert-warning">⚠️ Please login first</div>`;
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Submitting...';
+            
+            const sampleData = {
+                status: "draft",
+                personalInfo: {
+                    firstName: "John",
+                    middleName: "Test",
+                    lastName: "Doe",
+                    sin: "123456789",
+                    dateOfBirth: "1990-05-20",
+                    address: "123 Main St, Toronto, ON M5V 1A1",
+                    phoneNumber: "+14165550123",
+                    email: "john.test@example.com",
+                    isCanadianCitizen: true,
+                    maritalStatus: "single"
+                },
+                hasForeignProperty: false,
+                foreignProperties: [],
+                hasMedicalExpenses: false,
+                hasCharitableDonations: false,
+                hasMovingExpenses: false,
+                isSelfEmployed: false,
+                isFirstHomeBuyer: false,
+                soldPropertyLongTerm: false,
+                soldPropertyShortTerm: false,
+                hasWorkFromHomeExpense: false,
+                wasStudentLastYear: false,
+                isUnionMember: false,
+                hasDaycareExpenses: false,
+                isFirstTimeFiler: false,
+                hasOtherIncome: false,
+                hasProfessionalDues: false,
+                hasRrspFhsaInvestment: false,
+                hasChildArtSportCredit: false,
+                isProvinceFiler: false
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/t1-forms/`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(sampleData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            ✅ Form submitted successfully!<br>
+                            <small>Form ID: ${data.form_id}<br>
+                            Status: ${data.status}<br>
+                            Created: ${data.created_at}</small><br>
+                            <button class="btn btn-sm btn-info mt-2" onclick="retrieveForm('${data.form_id}')">View Form</button>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="alert alert-danger">❌ Submission failed: ${JSON.stringify(data)}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-danger">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        // List all forms
+        async function listForms() {
+            const resultDiv = document.getElementById('listResult');
+            const token = localStorage.getItem('access_token');
+            
+            if (!token) {
+                resultDiv.innerHTML = `<div class="alert alert-warning">⚠️ Please login first</div>`;
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Loading...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/t1-forms/`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && Array.isArray(data)) {
+                    if (data.length === 0) {
+                        resultDiv.innerHTML = `<div class="alert alert-info">No forms found. Submit one first!</div>`;
+                    } else {
+                        let html = '<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Form ID</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead><tbody>';
+                        data.forEach(form => {
+                            html += `
+                                <tr>
+                                    <td><small>${form.form_id}</small></td>
+                                    <td><span class="badge bg-primary">${form.status}</span></td>
+                                    <td><small>${new Date(form.created_at).toLocaleString()}</small></td>
+                                    <td><button class="btn btn-sm btn-info" onclick="retrieveForm('${form.form_id}')">View</button></td>
+                                </tr>
+                            `;
+                        });
+                        html += '</tbody></table></div>';
+                        resultDiv.innerHTML = html;
+                    }
+                } else {
+                    resultDiv.innerHTML = `<div class="alert alert-danger">❌ Failed to load forms</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-danger">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        // Retrieve specific form
+        async function retrieveForm(formId) {
+            const token = localStorage.getItem('access_token');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/t1-forms/${formId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Form retrieved successfully! Check browser console (F12) for details.');
+                    console.log('Form Data:', data);
+                } else {
+                    alert('Failed to retrieve form');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Initialize
+        updateStatus();
+    </script>
+</body>
+</html>

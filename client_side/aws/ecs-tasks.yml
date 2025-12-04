@@ -1,0 +1,305 @@
+# ECS Task Definition Template for TaxEase Services
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'TaxEase ECS Task Definitions and Services'
+
+Parameters:
+  EnvironmentName:
+    Description: Environment name prefix
+    Type: String
+    Default: taxease-prod
+    
+  ImageTag:
+    Description: Docker image tag
+    Type: String
+    Default: latest
+
+  DatabaseEndpoint:
+    Description: RDS endpoint
+    Type: String
+    
+  RedisEndpoint:
+    Description: Redis endpoint
+    Type: String
+    
+  S3BucketName:
+    Description: S3 bucket name
+    Type: String
+
+Resources:
+  # ECS Execution Role
+  ECSExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      Policies:
+        - PolicyName: ECRAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                Resource: '*'
+
+  # ECS Task Role (for application permissions)
+  ECSTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: S3Access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:DeleteObject
+                Resource: !Sub arn:aws:s3:::${S3BucketName}/*
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket
+                Resource: !Sub arn:aws:s3:::${S3BucketName}
+        - PolicyName: SESAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ses:SendEmail
+                  - ses:SendRawEmail
+                Resource: '*'
+
+  # API Gateway Task Definition
+  GatewayTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${EnvironmentName}-gateway
+      Cpu: 256
+      Memory: 512
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !Ref ECSExecutionRole
+      TaskRoleArn: !Ref ECSTaskRole
+      ContainerDefinitions:
+        - Name: gateway
+          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${EnvironmentName}-gateway:${ImageTag}
+          PortMappings:
+            - ContainerPort: 8000
+          Environment:
+            - Name: AUTH_SERVICE_URL
+              Value: http://auth-service:8001
+            - Name: TAX_SERVICE_URL
+              Value: http://tax-service:8002
+            - Name: FILE_SERVICE_URL
+              Value: http://file-service:8003
+            - Name: REPORT_SERVICE_URL
+              Value: http://report-service:8004
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub /ecs/${EnvironmentName}-gateway
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: ecs
+
+  # Auth Service Task Definition
+  AuthTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${EnvironmentName}-auth
+      Cpu: 256
+      Memory: 512
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !Ref ECSExecutionRole
+      TaskRoleArn: !Ref ECSTaskRole
+      ContainerDefinitions:
+        - Name: auth
+          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${EnvironmentName}-auth:${ImageTag}
+          PortMappings:
+            - ContainerPort: 8001
+          Environment:
+            - Name: DATABASE_URL
+              Value: !Sub postgresql+asyncpg://postgres:${DatabasePassword}@${DatabaseEndpoint}:5432/taxease_db
+            - Name: REDIS_HOST
+              Value: !Ref RedisEndpoint
+            - Name: JWT_SECRET
+              Value: !Ref JWTSecret
+            - Name: JWT_REFRESH_SECRET
+              Value: !Ref JWTRefreshSecret
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub /ecs/${EnvironmentName}-auth
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: ecs
+
+  # Tax Service Task Definition
+  TaxTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${EnvironmentName}-tax
+      Cpu: 256
+      Memory: 512
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !Ref ECSExecutionRole
+      TaskRoleArn: !Ref ECSTaskRole
+      ContainerDefinitions:
+        - Name: tax
+          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${EnvironmentName}-tax:${ImageTag}
+          PortMappings:
+            - ContainerPort: 8002
+          Environment:
+            - Name: DATABASE_URL
+              Value: !Sub postgresql+asyncpg://postgres:${DatabasePassword}@${DatabaseEndpoint}:5432/taxease_db
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub /ecs/${EnvironmentName}-tax
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: ecs
+
+  # File Service Task Definition
+  FileTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${EnvironmentName}-file
+      Cpu: 256
+      Memory: 512
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !Ref ECSExecutionRole
+      TaskRoleArn: !Ref ECSTaskRole
+      ContainerDefinitions:
+        - Name: file
+          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${EnvironmentName}-file:${ImageTag}
+          PortMappings:
+            - ContainerPort: 8003
+          Environment:
+            - Name: DATABASE_URL
+              Value: !Sub postgresql+asyncpg://postgres:${DatabasePassword}@${DatabaseEndpoint}:5432/taxease_db
+            - Name: AWS_REGION
+              Value: !Ref AWS::Region
+            - Name: S3_BUCKET_NAME
+              Value: !Ref S3BucketName
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub /ecs/${EnvironmentName}-file
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: ecs
+
+  # Report Service Task Definition
+  ReportTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${EnvironmentName}-report
+      Cpu: 512
+      Memory: 1024
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !Ref ECSExecutionRole
+      TaskRoleArn: !Ref ECSTaskRole
+      ContainerDefinitions:
+        - Name: report
+          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${EnvironmentName}-report:${ImageTag}
+          PortMappings:
+            - ContainerPort: 8004
+          Environment:
+            - Name: DATABASE_URL
+              Value: !Sub postgresql+asyncpg://postgres:${DatabasePassword}@${DatabaseEndpoint}:5432/taxease_db
+            - Name: AWS_REGION
+              Value: !Ref AWS::Region
+            - Name: S3_BUCKET_NAME
+              Value: !Ref S3BucketName
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub /ecs/${EnvironmentName}-report
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: ecs
+
+  # CloudWatch Log Groups
+  GatewayLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /ecs/${EnvironmentName}-gateway
+      RetentionInDays: 7
+
+  AuthLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /ecs/${EnvironmentName}-auth
+      RetentionInDays: 7
+
+  TaxLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /ecs/${EnvironmentName}-tax
+      RetentionInDays: 7
+
+  FileLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /ecs/${EnvironmentName}-file
+      RetentionInDays: 7
+
+  ReportLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /ecs/${EnvironmentName}-report
+      RetentionInDays: 7
+
+Outputs:
+  GatewayTaskDefinitionArn:
+    Description: Gateway task definition ARN
+    Value: !Ref GatewayTaskDefinition
+    Export:
+      Name: !Sub ${EnvironmentName}-GatewayTaskDefinition
+
+  AuthTaskDefinitionArn:
+    Description: Auth task definition ARN
+    Value: !Ref AuthTaskDefinition
+    Export:
+      Name: !Sub ${EnvironmentName}-AuthTaskDefinition
+
+  TaxTaskDefinitionArn:
+    Description: Tax task definition ARN
+    Value: !Ref TaxTaskDefinition
+    Export:
+      Name: !Sub ${EnvironmentName}-TaxTaskDefinition
+
+  FileTaskDefinitionArn:
+    Description: File task definition ARN
+    Value: !Ref FileTaskDefinition
+    Export:
+      Name: !Sub ${EnvironmentName}-FileTaskDefinition
+
+  ReportTaskDefinitionArn:
+    Description: Report task definition ARN
+    Value: !Ref ReportTaskDefinition
+    Export:
+      Name: !Sub ${EnvironmentName}-ReportTaskDefinition
