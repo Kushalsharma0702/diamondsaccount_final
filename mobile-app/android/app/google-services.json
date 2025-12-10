@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "785722200056",
+    "project_id": "taxease-ec35f",
+    "storage_bucket": "taxease-ec35f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:785722200056:android:c81130658bd70caa21900d",
+        "android_client_info": {
+          "package_name": "com.example.tax_ease"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "785722200056-fovkr26n2b7p80mju8otg2gqcqn2v8d8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcgvx5ISvgw2R6_DFgt6PJSnQHU4j0k8A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "785722200056-fovkr26n2b7p80mju8otg2gqcqn2v8d8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "785722200056-i00rhgh5oueo1od90h3qcgvheb77e0bo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.taxEase"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,7 +3,7 @@
 class ApiEndpoints {
   // OpenAPI base
   // Use localhost for client backend (port 8001)
-  static const String BASE_URL = 'https://3217e6f3cba4.ngrok-free.app/api/v1';
+  static const String BASE_URL = 'https://d43b33acbb1b.ngrok-free.app/api/v1';
 
   // Auth paths
   static const String REGISTER = '/auth/register';

@@ -46,6 +46,15 @@ class Token(BaseSchema):
     refresh_token: str
     token_type: str
     expires_in: int
+    id_token: Optional[str] = None  # Cognito ID token
+
+class CognitoToken(BaseSchema):
+    """Cognito token response"""
+    id_token: str
+    access_token: str
+    refresh_token: str
+    token_type: str = "Bearer"
+    expires_in: int
 
 class TokenRefresh(BaseSchema):
     refresh_token: str
@@ -53,11 +62,13 @@ class TokenRefresh(BaseSchema):
 class OTPRequest(BaseSchema):
     email: EmailStr
     purpose: str  # email_verification, password_reset
+    firebase_id_token: Optional[str] = None  # Optional Firebase ID token for Firebase-based OTP flow
 
 class OTPVerify(BaseSchema):
     email: EmailStr
     code: str
     purpose: str
+    firebase_id_token: Optional[str] = None  # Optional Firebase ID token for Firebase-based OTP flow
     
     @validator('code')
     def normalize_code(cls, v):
@@ -66,11 +77,39 @@ class OTPVerify(BaseSchema):
             return v.strip()
         return str(v).strip()
 
+class OTPVerifyResponse(BaseSchema):
+    """Response after OTP verification - includes backend JWT token"""
+    success: bool
+    message: str
+    token: Optional[str] = None  # Backend JWT token
+    refresh_token: Optional[str] = None  # Backend refresh token
+
+# Firebase Authentication schemas
+class FirebaseRegister(BaseSchema):
+    """Firebase registration request with user data and Firebase ID token"""
+    email: EmailStr
+    first_name: str
+    last_name: str
+    phone: Optional[str] = None
+    accept_terms: bool = True
+    firebase_id_token: str
+
+class FirebaseLogin(BaseSchema):
+    """Firebase ID token login request"""
+    firebase_id_token: str
+
+class GoogleLogin(BaseSchema):
+    """Google Sign-In (Firebase) login request"""
+    firebase_id_token: str
+
 # Tax Form schemas
 class T1PersonalFormBase(BaseSchema):
     tax_year: int
     sin: Optional[str] = None
     marital_status: Optional[str] = None
+    first_name: Optional[str] = None  # Added for admin display
+    last_name: Optional[str] = None   # Added for admin display
+    email: Optional[str] = None       # Added for admin display
     employment_income: Optional[float] = 0.0
     self_employment_income: Optional[float] = 0.0
     investment_income: Optional[float] = 0.0
@@ -84,6 +123,9 @@ class T1PersonalFormCreate(T1PersonalFormBase):
 class T1PersonalFormUpdate(BaseSchema):
     sin: Optional[str] = None
     marital_status: Optional[str] = None
+    first_name: Optional[str] = None  # Added for admin display
+    last_name: Optional[str] = None   # Added for admin display
+    email: Optional[str] = None       # Added for admin display
     employment_income: Optional[float] = None
     self_employment_income: Optional[float] = None
     investment_income: Optional[float] = None

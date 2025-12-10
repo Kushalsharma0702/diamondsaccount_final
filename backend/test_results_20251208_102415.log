@@ -1,0 +1,180 @@
+2025-12-08 10:24:15,029 - __main__ - INFO - [run_tests.py:561] - ================================================================================
+2025-12-08 10:24:15,029 - __main__ - INFO - [run_tests.py:562] - 🚀 Starting Comprehensive End-to-End Test Suite
+2025-12-08 10:24:15,029 - __main__ - INFO - [run_tests.py:563] - ================================================================================
+2025-12-08 10:24:15,029 - __main__ - INFO - [run_tests.py:564] - Base URL: http://localhost:8001
+2025-12-08 10:24:15,029 - __main__ - INFO - [run_tests.py:565] - Test User: test_1765169655@example.com
+2025-12-08 10:24:15,029 - __main__ - INFO - [run_tests.py:566] - 
+2025-12-08 10:24:15,029 - __main__ - INFO - [run_tests.py:569] - 📋 CATEGORY: Health & Status
+2025-12-08 10:24:15,029 - __main__ - INFO - [run_tests.py:570] - --------------------------------------------------------------------------------
+2025-12-08 10:24:15,029 - __main__ - INFO - [run_tests.py:111] - 🧪 Running: Health Check
+2025-12-08 10:24:15,029 - __main__ - INFO - [run_tests.py:112] -    GET http://localhost:8001/health
+2025-12-08 10:24:15,035 - __main__ - ERROR - [run_tests.py:147] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:15,035 - __main__ - INFO - [run_tests.py:111] - 🧪 Running: Root Endpoint
+2025-12-08 10:24:15,035 - __main__ - INFO - [run_tests.py:112] -    GET http://localhost:8001/
+2025-12-08 10:24:15,036 - __main__ - ERROR - [run_tests.py:147] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:15,036 - __main__ - INFO - [run_tests.py:573] - 
+2025-12-08 10:24:15,036 - __main__ - INFO - [run_tests.py:576] - 🔐 CATEGORY: Authentication
+2025-12-08 10:24:15,037 - __main__ - INFO - [run_tests.py:577] - --------------------------------------------------------------------------------
+2025-12-08 10:24:15,037 - __main__ - INFO - [run_tests.py:111] - 🧪 Running: User Registration
+2025-12-08 10:24:15,037 - __main__ - INFO - [run_tests.py:112] -    POST http://localhost:8001/api/v1/auth/register
+2025-12-08 10:24:15,037 - __main__ - INFO - [run_tests.py:114] -    Payload: {
+  "email": "test_1765169655@example.com",
+  "password": "TestPassword123!",
+  "first_name": "Test",
+  "last_name": "User",
+  "phone": "+1234567890",
+  "accept_terms": true
+}
+2025-12-08 10:24:15,038 - __main__ - ERROR - [run_tests.py:147] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:17,048 - __main__ - INFO - [run_tests.py:111] - 🧪 Running: OTP Verification
+2025-12-08 10:24:17,049 - __main__ - INFO - [run_tests.py:112] -    POST http://localhost:8001/api/v1/auth/verify-otp
+2025-12-08 10:24:17,049 - __main__ - INFO - [run_tests.py:114] -    Payload: {
+  "email": "test_1765169655@example.com",
+  "code": "123456",
+  "purpose": "email_verification"
+}
+2025-12-08 10:24:17,051 - __main__ - ERROR - [run_tests.py:147] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:18,057 - __main__ - INFO - [run_tests.py:111] - 🧪 Running: User Login
+2025-12-08 10:24:18,058 - __main__ - INFO - [run_tests.py:112] -    POST http://localhost:8001/api/v1/auth/login
+2025-12-08 10:24:18,058 - __main__ - INFO - [run_tests.py:114] -    Payload: {
+  "email": "test_1765169655@example.com",
+  "password": "TestPassword123!"
+}
+2025-12-08 10:24:18,060 - __main__ - ERROR - [run_tests.py:147] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:18,060 - __main__ - INFO - [run_tests.py:111] - 🧪 Running: Get Current User
+2025-12-08 10:24:18,060 - __main__ - INFO - [run_tests.py:112] -    GET http://localhost:8001/api/v1/auth/me
+2025-12-08 10:24:18,061 - __main__ - ERROR - [run_tests.py:147] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:18,061 - __main__ - INFO - [run_tests.py:111] - 🧪 Running: Request OTP
+2025-12-08 10:24:18,061 - __main__ - INFO - [run_tests.py:112] -    POST http://localhost:8001/api/v1/auth/request-otp
+2025-12-08 10:24:18,062 - __main__ - INFO - [run_tests.py:114] -    Payload: {
+  "email": "test_1765169655@example.com",
+  "purpose": "email_verification"
+}
+2025-12-08 10:24:18,065 - __main__ - ERROR - [run_tests.py:147] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:18,066 - __main__ - INFO - [run_tests.py:585] - 
+2025-12-08 10:24:18,066 - __main__ - INFO - [run_tests.py:588] - 📝 CATEGORY: Tax Forms
+2025-12-08 10:24:18,066 - __main__ - INFO - [run_tests.py:589] - --------------------------------------------------------------------------------
+2025-12-08 10:24:18,066 - __main__ - INFO - [run_tests.py:111] - 🧪 Running: Create T1 Form
+2025-12-08 10:24:18,066 - __main__ - INFO - [run_tests.py:112] -    POST http://localhost:8001/api/v1/tax/t1-personal
+2025-12-08 10:24:18,066 - __main__ - INFO - [run_tests.py:114] -    Payload: {
+  "tax_year": 2023,
+  "sin": "123456789",
+  "marital_status": "single",
+  "employment_income": 50000.0,
+  "self_employment_income": 10000.0,
+  "investment_income": 2000.0,
+  "other_income": 0.0,
+  "rrsp_contributions": 5000.0,
+  "charitable_donations": 500.0
+}
+2025-12-08 10:24:18,067 - __main__ - ERROR - [run_tests.py:147] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:18,068 - __main__ - INFO - [run_tests.py:111] - 🧪 Running: Get All T1 Forms
+2025-12-08 10:24:18,068 - __main__ - INFO - [run_tests.py:112] -    GET http://localhost:8001/api/v1/tax/t1-personal
+2025-12-08 10:24:18,069 - __main__ - ERROR - [run_tests.py:147] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:18,069 - __main__ - WARNING - [run_tests.py:309] -    ⚠️  No forms created, skipping test
+2025-12-08 10:24:18,069 - __main__ - WARNING - [run_tests.py:325] -    ⚠️  No forms created, skipping test
+2025-12-08 10:24:18,069 - __main__ - WARNING - [run_tests.py:346] -    ⚠️  No forms created, skipping test
+2025-12-08 10:24:18,069 - __main__ - INFO - [run_tests.py:595] - 
+2025-12-08 10:24:18,069 - __main__ - INFO - [run_tests.py:598] - 📁 CATEGORY: File Management
+2025-12-08 10:24:18,069 - __main__ - INFO - [run_tests.py:599] - --------------------------------------------------------------------------------
+2025-12-08 10:24:18,069 - __main__ - INFO - [run_tests.py:376] - 🧪 Running: Upload File
+2025-12-08 10:24:18,069 - __main__ - INFO - [run_tests.py:377] -    POST http://localhost:8001/api/v1/files/upload
+2025-12-08 10:24:18,071 - __main__ - ERROR - [run_tests.py:415] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:18,071 - __main__ - INFO - [run_tests.py:111] - 🧪 Running: List User Files
+2025-12-08 10:24:18,072 - __main__ - INFO - [run_tests.py:112] -    GET http://localhost:8001/api/v1/files
+2025-12-08 10:24:18,073 - __main__ - ERROR - [run_tests.py:147] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:18,073 - __main__ - WARNING - [run_tests.py:434] -    ⚠️  No files uploaded, skipping test
+2025-12-08 10:24:18,073 - __main__ - WARNING - [run_tests.py:450] -    ⚠️  No files uploaded, skipping test
+2025-12-08 10:24:18,073 - __main__ - INFO - [run_tests.py:604] - 
+2025-12-08 10:24:18,073 - __main__ - INFO - [run_tests.py:607] - 📊 CATEGORY: Reports
+2025-12-08 10:24:18,073 - __main__ - INFO - [run_tests.py:608] - --------------------------------------------------------------------------------
+2025-12-08 10:24:18,073 - __main__ - INFO - [run_tests.py:111] - 🧪 Running: Generate Report
+2025-12-08 10:24:18,073 - __main__ - INFO - [run_tests.py:112] -    POST http://localhost:8001/api/v1/reports/generate
+2025-12-08 10:24:18,073 - __main__ - INFO - [run_tests.py:114] -    Payload: {
+  "report_type": "t1_summary",
+  "title": "Test Tax Summary Report"
+}
+2025-12-08 10:24:18,074 - __main__ - ERROR - [run_tests.py:147] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:18,075 - __main__ - INFO - [run_tests.py:111] - 🧪 Running: List User Reports
+2025-12-08 10:24:18,075 - __main__ - INFO - [run_tests.py:112] -    GET http://localhost:8001/api/v1/reports
+2025-12-08 10:24:18,076 - __main__ - ERROR - [run_tests.py:147] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:18,076 - __main__ - WARNING - [run_tests.py:502] -    ⚠️  No reports created, skipping test
+2025-12-08 10:24:18,076 - __main__ - INFO - [run_tests.py:612] - 
+2025-12-08 10:24:18,076 - __main__ - INFO - [run_tests.py:615] - ⚠️  CATEGORY: Error Handling
+2025-12-08 10:24:18,076 - __main__ - INFO - [run_tests.py:616] - --------------------------------------------------------------------------------
+2025-12-08 10:24:18,076 - __main__ - INFO - [run_tests.py:111] - 🧪 Running: Invalid Login
+2025-12-08 10:24:18,076 - __main__ - INFO - [run_tests.py:112] -    POST http://localhost:8001/api/v1/auth/login
+2025-12-08 10:24:18,076 - __main__ - INFO - [run_tests.py:114] -    Payload: {
+  "email": "test_1765169655@example.com",
+  "password": "WrongPassword123!"
+}
+2025-12-08 10:24:18,077 - __main__ - ERROR - [run_tests.py:147] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:18,077 - __main__ - INFO - [run_tests.py:111] - 🧪 Running: Unauthorized Access
+2025-12-08 10:24:18,077 - __main__ - INFO - [run_tests.py:112] -    GET http://localhost:8001/api/v1/auth/me
+2025-12-08 10:24:18,078 - __main__ - ERROR - [run_tests.py:147] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:18,079 - __main__ - INFO - [run_tests.py:111] - 🧪 Running: Invalid Endpoint
+2025-12-08 10:24:18,079 - __main__ - INFO - [run_tests.py:112] -    GET http://localhost:8001/api/v1/invalid/endpoint
+2025-12-08 10:24:18,080 - __main__ - ERROR - [run_tests.py:147] -    ❌ ERROR: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:18,080 - __main__ - INFO - [run_tests.py:620] - 
+2025-12-08 10:24:18,080 - __main__ - INFO - [run_tests.py:627] - ================================================================================
+2025-12-08 10:24:18,080 - __main__ - INFO - [run_tests.py:628] - 📊 TEST SUMMARY
+2025-12-08 10:24:18,080 - __main__ - INFO - [run_tests.py:629] - ================================================================================
+2025-12-08 10:24:18,080 - __main__ - INFO - [run_tests.py:636] - Total Tests: 16
+2025-12-08 10:24:18,080 - __main__ - INFO - [run_tests.py:637] - ✅ Passed: 0
+2025-12-08 10:24:18,080 - __main__ - INFO - [run_tests.py:638] - ❌ Failed: 0
+2025-12-08 10:24:18,081 - __main__ - INFO - [run_tests.py:639] - ⚠️  Errors: 16
+2025-12-08 10:24:18,081 - __main__ - INFO - [run_tests.py:640] - Success Rate: 0.0%
+2025-12-08 10:24:18,081 - __main__ - INFO - [run_tests.py:641] - 
+2025-12-08 10:24:18,081 - __main__ - INFO - [run_tests.py:644] - FAILED/ERROR TESTS:
+2025-12-08 10:24:18,081 - __main__ - INFO - [run_tests.py:645] - --------------------------------------------------------------------------------
+2025-12-08 10:24:18,081 - __main__ - ERROR - [run_tests.py:648] - ❌ Health Check: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:18,081 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: GET /health
+2025-12-08 10:24:18,081 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,081 - __main__ - ERROR - [run_tests.py:648] - ❌ Root Endpoint: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:18,081 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: GET /
+2025-12-08 10:24:18,081 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,081 - __main__ - ERROR - [run_tests.py:648] - ❌ User Registration: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:18,081 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: POST /api/v1/auth/register
+2025-12-08 10:24:18,081 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,081 - __main__ - ERROR - [run_tests.py:648] - ❌ OTP Verification: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:18,082 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: POST /api/v1/auth/verify-otp
+2025-12-08 10:24:18,082 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,082 - __main__ - ERROR - [run_tests.py:648] - ❌ User Login: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:18,082 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: POST /api/v1/auth/login
+2025-12-08 10:24:18,082 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,082 - __main__ - ERROR - [run_tests.py:648] - ❌ Get Current User: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:18,082 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: GET /api/v1/auth/me
+2025-12-08 10:24:18,082 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,082 - __main__ - ERROR - [run_tests.py:648] - ❌ Request OTP: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:18,082 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: POST /api/v1/auth/request-otp
+2025-12-08 10:24:18,082 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,082 - __main__ - ERROR - [run_tests.py:648] - ❌ Create T1 Form: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:18,082 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: POST /api/v1/tax/t1-personal
+2025-12-08 10:24:18,082 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,082 - __main__ - ERROR - [run_tests.py:648] - ❌ Get All T1 Forms: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:18,083 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: GET /api/v1/tax/t1-personal
+2025-12-08 10:24:18,083 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,083 - __main__ - ERROR - [run_tests.py:648] - ❌ Upload File: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:18,083 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: POST /api/v1/files/upload
+2025-12-08 10:24:18,083 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,083 - __main__ - ERROR - [run_tests.py:648] - ❌ List User Files: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:18,083 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: GET /api/v1/files
+2025-12-08 10:24:18,083 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,083 - __main__ - ERROR - [run_tests.py:648] - ❌ Generate Report: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:18,083 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: POST /api/v1/reports/generate
+2025-12-08 10:24:18,083 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,083 - __main__ - ERROR - [run_tests.py:648] - ❌ List User Reports: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:18,083 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: GET /api/v1/reports
+2025-12-08 10:24:18,083 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,083 - __main__ - ERROR - [run_tests.py:648] - ❌ Invalid Login: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:18,084 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: POST /api/v1/auth/login
+2025-12-08 10:24:18,084 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,084 - __main__ - ERROR - [run_tests.py:648] - ❌ Unauthorized Access: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]
+2025-12-08 10:24:18,084 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: GET /api/v1/auth/me
+2025-12-08 10:24:18,084 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,084 - __main__ - ERROR - [run_tests.py:648] - ❌ Invalid Endpoint: Cannot connect to host localhost:8001 ssl:default [Connect call failed ('::1', 8001, 0, 0)]
+2025-12-08 10:24:18,084 - __main__ - ERROR - [run_tests.py:649] -    Endpoint: GET /api/v1/invalid/endpoint
+2025-12-08 10:24:18,084 - __main__ - ERROR - [run_tests.py:652] - 
+2025-12-08 10:24:18,084 - __main__ - INFO - [run_tests.py:655] - Average Response Time: 1.64ms
+2025-12-08 10:24:18,084 - __main__ - INFO - [run_tests.py:656] - 
+2025-12-08 10:24:18,085 - __main__ - INFO - [run_tests.py:678] - 📄 Test report saved to: test_results_e2e.json

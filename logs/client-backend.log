@@ -1,38 +1,677 @@
-2025-12-04 12:21:38,181 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/client_side/storage/uploads
-INFO:     Started server process [53000]
+2025-12-10 22:41:19,707 - shared.utils - INFO - Local file storage initialized at: /home/cyberdude/Documents/Projects/CA-final/client_side/storage/uploads
+2025-12-10 22:41:21,066 - shared.aws_ses_service - WARNING - Could not verify SES connection: An error occurred (SignatureDoesNotMatch) when calling the GetSendQuota operation: The request signature we calculated does not match the signature you provided. Check your AWS Secret Access Key and signing method. Consult the service documentation for details.
+INFO:     Started server process [370626]
 INFO:     Waiting for application startup.
-2025-12-04 12:21:38,248 - main - INFO - Database tables created/verified
-2025-12-04 12:21:38,248 - main - INFO - TaxEase API started successfully
-2025-12-04 12:21:38,248 - main - INFO - API Documentation available at: http://localhost:8000/docs
-2025-12-04 12:21:38,248 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
+2025-12-10 22:41:21,135 - main - INFO - Database tables created/verified
+2025-12-10 22:41:21,135 - main - INFO - TaxEase API started successfully
+2025-12-10 22:41:21,135 - main - INFO - API Documentation available at: http://localhost:8000/docs
+2025-12-10 22:41:21,135 - main - INFO - ReDoc Documentation available at: http://localhost:8000/redoc
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
-INFO:     127.0.0.1:46176 - "GET /health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:40562 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:40562 - "GET /favicon.ico HTTP/1.1" 404 Not Found
-2025-12-04 12:40:43,618 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+INFO:     127.0.0.1:56126 - "GET /health HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "OPTIONS /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "OPTIONS /api/v1/files/upload HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "POST /api/v1/files/upload HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "POST /api/v1/files/upload HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "POST /api/v1/files/upload HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "POST /api/v1/files/upload HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "OPTIONS /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "OPTIONS /api/v1/auth/google-login HTTP/1.1" 200 OK
+2025-12-10 23:08:28,190 - shared.firebase_service - ERROR - ❌ firebase-admin package not installed. Firebase authentication will be disabled.
+2025-12-10 23:08:28,190 - shared.firebase_service - ERROR -    Install with: pip install firebase-admin
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "POST /api/v1/auth/google-login HTTP/1.1" 503 Service Unavailable
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "OPTIONS /api/v1/auth/request-otp HTTP/1.1" 200 OK
+2025-12-10 23:08:28,483 - shared.firebase_service - ERROR - ❌ firebase-admin package not installed. Firebase authentication will be disabled.
+2025-12-10 23:08:28,483 - shared.firebase_service - ERROR -    Install with: pip install firebase-admin
+2025-12-10 23:08:28,483 - main - WARNING - Firebase token provided but Firebase service not available
+2025-12-10 23:08:28,483 - main - INFO - Proceeding with OTP generation without Firebase verification (Firebase Admin SDK not configured)
+2025-12-10 23:08:28,484 - main - INFO - 📧 Generating OTP for email verification: sharmakushal7417@gmail.com
+2025-12-10 23:08:28,504 - main - INFO - 🔧 Development mode: Developer OTP 123456 also stored for sharmakushal7417@gmail.com
+2025-12-10 23:08:28,519 - main - INFO - ✅ OTP stored in database for sharmakushal7417@gmail.com
+2025-12-10 23:08:28,520 - shared.aws_ses_service - INFO - 🔥 DEVELOPMENT MODE - OTP for sharmakushal7417@gmail.com: 182106
+2025-12-10 23:08:28,520 - shared.aws_ses_service - INFO - 📧 Purpose: email_verification
+2025-12-10 23:08:28,520 - shared.aws_ses_service - INFO - 💡 Use developer OTP: 123456 for testing
+2025-12-10 23:08:28,520 - main - INFO - ✅ OTP email sent successfully to sharmakushal7417@gmail.com
+2025-12-10 23:08:28,520 - main - INFO - ✅ Email verification OTP request processed for sharmakushal7417@gmail.com
+
+============================================================
+🚨 DEVELOPMENT MODE OTP 🚨
+============================================================
+📧 Email: sharmakushal7417@gmail.com
+🔐 OTP Code: 182106
+🎯 Purpose: email_verification
+💻 Developer OTP (always works): 123456
+============================================================
+
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "POST /api/v1/auth/request-otp HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "OPTIONS /api/v1/auth/verify-otp HTTP/1.1" 200 OK
+2025-12-10 23:08:36,001 - shared.firebase_service - ERROR - ❌ firebase-admin package not installed. Firebase authentication will be disabled.
+2025-12-10 23:08:36,001 - shared.firebase_service - ERROR -    Install with: pip install firebase-admin
+2025-12-10 23:08:36,001 - main - WARNING - Firebase token provided but Firebase service not available
+2025-12-10 23:08:36,001 - main - INFO - Firebase Admin SDK not configured - OTP verification will proceed without Firebase token verification
+2025-12-10 23:08:36,001 - main - INFO - OTP verification attempt for sharmakushal7417@gmail.com: code='698745', purpose=email_verification, has_firebase_token=True
+2025-12-10 23:08:36,001 - main - INFO - ✅ Bypass OTP matched! (Code: 698745) Verifying for sharmakushal7417@gmail.com: email_verification
+2025-12-10 23:08:36,013 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
 Traceback (most recent call last):
   File "/home/cyberdude/.local/lib/python3.10/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
     version = _bcrypt.__about__.__version__
 AttributeError: module 'bcrypt' has no attribute '__about__'
-2025-12-04 12:40:43,836 - shared.utils - INFO - Sending welcome email to hakuaji@gmail.com
-2025-12-04 12:40:43,838 - shared.utils - INFO - Sending OTP 402199 to hakuaji@gmail.com for email_verification
-2025-12-04 12:40:43,839 - main - INFO - User registered: hakuaji@gmail.com
-INFO:     2401:4900:a013:5d9:51d4:d4d2:f0d3:5085:0 - "POST /api/v1/auth/register HTTP/1.1" 201 Created
-INFO:     106.219.231.69:0 - "POST /api/v1/auth/verify-otp HTTP/1.1" 400 Bad Request
-INFO:     106.219.231.69:0 - "POST /api/v1/auth/verify-otp HTTP/1.1" 400 Bad Request
-2025-12-04 12:52:42,791 - shared.utils - INFO - Sending welcome email to kushalji@gmail.com
-2025-12-04 12:52:42,793 - shared.utils - INFO - Sending OTP 419958 to kushalji@gmail.com for email_verification
-2025-12-04 12:52:42,793 - main - INFO - User registered: kushalji@gmail.com
-INFO:     106.219.231.69:0 - "POST /api/v1/auth/register HTTP/1.1" 201 Created
-INFO:     106.219.231.69:0 - "POST /api/v1/auth/verify-otp HTTP/1.1" 400 Bad Request
-INFO:     106.219.231.69:0 - "POST /api/v1/auth/verify-otp HTTP/1.1" 400 Bad Request
-INFO:     106.219.231.69:0 - "POST /api/v1/auth/verify-otp HTTP/1.1" 400 Bad Request
-INFO:     106.219.231.190:0 - "POST /api/v1/auth/verify-otp HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:53672 - "POST /api/v1/auth/verify-otp HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:48604 - "POST /api/v1/auth/verify-otp HTTP/1.1" 400 Bad Request
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-2025-12-04 13:13:50,370 - main - INFO - TaxEase API shutting down...
-INFO:     Application shutdown complete.
-INFO:     Finished server process [53000]
+2025-12-10 23:08:36,278 - main - INFO - ✅ OTP verified and JWT issued for sharmakushal7417@gmail.com
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "POST /api/v1/auth/verify-otp HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "OPTIONS /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "OPTIONS /api/v1/files/upload HTTP/1.1" 200 OK
+2025-12-10 23:08:53,032 - shared.utils - INFO - File uploaded to local storage: /home/cyberdude/Documents/Projects/CA-final/client_side/storage/uploads/user_e6d76e92-38c3-4be4-a266-5de3ac298353/20251210_173853_RwVlfWlDST0.png
+2025-12-10 23:08:53,032 - main - INFO - File uploaded successfully: user_e6d76e92-38c3-4be4-a266-5de3ac298353/20251210_173853_RwVlfWlDST0.png
+2025-12-10 23:08:53,053 - shared.sync_to_admin - ERROR - Error getting/creating client via admin backend: 15 validation errors for Settings
+COGNITO_USER_POOL_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1_FP2WE41eW', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+COGNITO_CLIENT_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='504mgtvq1h97vlml90c3iibnt0', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_REGION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_ACCESS_KEY_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='AKIA3BMJ25BIYDGPA47X', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SECRET_ACCESS_KEY
+  Extra inputs are not permitted [type=extra_forbidden, input_value='BDSPNqu7MlgZ38C1yPMEOZ2X43DgvpJYOMc4ddVA1CJl', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SES_FROM_EMAIL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='diamondacc.project@gmail.com', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_EXPIRY_MINUTES
+  Extra inputs are not permitted [type=extra_forbidden, input_value='5', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_LENGTH
+  Extra inputs are not permitted [type=extra_forbidden, input_value='6', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPMENT_MODE
+  Extra inputs are not permitted [type=extra_forbidden, input_value='true', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPER_OTP
+  Extra inputs are not permitted [type=extra_forbidden, input_value='123456', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+SKIP_EMAIL_VERIFICATION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='false', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+STORAGE_BASE_DIR
+  Extra inputs are not permitted [type=extra_forbidden, input_value='./storage/uploads', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+ADMIN_API_BASE_URL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='http://localhost:8002/api/v1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_REFRESH_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-refresh-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+Traceback (most recent call last):
+  File "/home/cyberdude/Documents/Projects/CA-final/client_side/shared/sync_to_admin.py", line 131, in _get_or_create_client_by_email
+    from app.core.database import AsyncSessionLocal as AdminSession
+  File "/home/cyberdude/Documents/Projects/CA-final/admin-dashboard/backend/app/core/database.py", line 7, in <module>
+    from .config import settings
+  File "/home/cyberdude/Documents/Projects/CA-final/admin-dashboard/backend/app/core/config.py", line 77, in <module>
+    settings = Settings()
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 71, in __init__
+    super().__init__(
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 15 validation errors for Settings
+COGNITO_USER_POOL_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1_FP2WE41eW', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+COGNITO_CLIENT_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='504mgtvq1h97vlml90c3iibnt0', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_REGION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_ACCESS_KEY_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='AKIA3BMJ25BIYDGPA47X', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SECRET_ACCESS_KEY
+  Extra inputs are not permitted [type=extra_forbidden, input_value='BDSPNqu7MlgZ38C1yPMEOZ2X43DgvpJYOMc4ddVA1CJl', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SES_FROM_EMAIL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='diamondacc.project@gmail.com', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_EXPIRY_MINUTES
+  Extra inputs are not permitted [type=extra_forbidden, input_value='5', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_LENGTH
+  Extra inputs are not permitted [type=extra_forbidden, input_value='6', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPMENT_MODE
+  Extra inputs are not permitted [type=extra_forbidden, input_value='true', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPER_OTP
+  Extra inputs are not permitted [type=extra_forbidden, input_value='123456', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+SKIP_EMAIL_VERIFICATION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='false', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+STORAGE_BASE_DIR
+  Extra inputs are not permitted [type=extra_forbidden, input_value='./storage/uploads', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+ADMIN_API_BASE_URL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='http://localhost:8002/api/v1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_REFRESH_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-refresh-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+2025-12-10 23:08:53,054 - shared.sync_to_admin - INFO - Falling back to direct SQL for client creation
+2025-12-10 23:08:53,097 - shared.sync_to_admin - INFO - Client already exists (SQL): sharmakushal7417@gmail.com (ID: 33079d45-fe9b-4d1b-97ad-8b13cc29e4e9)
+2025-12-10 23:08:53,101 - shared.sync_to_admin - ERROR - ❌ Error syncing file to admin: 15 validation errors for Settings
+COGNITO_USER_POOL_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1_FP2WE41eW', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+COGNITO_CLIENT_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='504mgtvq1h97vlml90c3iibnt0', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_REGION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_ACCESS_KEY_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='AKIA3BMJ25BIYDGPA47X', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SECRET_ACCESS_KEY
+  Extra inputs are not permitted [type=extra_forbidden, input_value='BDSPNqu7MlgZ38C1yPMEOZ2X43DgvpJYOMc4ddVA1CJl', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SES_FROM_EMAIL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='diamondacc.project@gmail.com', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_EXPIRY_MINUTES
+  Extra inputs are not permitted [type=extra_forbidden, input_value='5', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_LENGTH
+  Extra inputs are not permitted [type=extra_forbidden, input_value='6', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPMENT_MODE
+  Extra inputs are not permitted [type=extra_forbidden, input_value='true', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPER_OTP
+  Extra inputs are not permitted [type=extra_forbidden, input_value='123456', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+SKIP_EMAIL_VERIFICATION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='false', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+STORAGE_BASE_DIR
+  Extra inputs are not permitted [type=extra_forbidden, input_value='./storage/uploads', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+ADMIN_API_BASE_URL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='http://localhost:8002/api/v1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_REFRESH_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-refresh-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+Traceback (most recent call last):
+  File "/home/cyberdude/Documents/Projects/CA-final/client_side/shared/sync_to_admin.py", line 60, in sync_file_to_admin_document
+    from app.core.database import AsyncSessionLocal as AdminSession
+  File "/home/cyberdude/Documents/Projects/CA-final/admin-dashboard/backend/app/core/database.py", line 7, in <module>
+    from .config import settings
+  File "/home/cyberdude/Documents/Projects/CA-final/admin-dashboard/backend/app/core/config.py", line 77, in <module>
+    settings = Settings()
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 71, in __init__
+    super().__init__(
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 15 validation errors for Settings
+COGNITO_USER_POOL_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1_FP2WE41eW', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+COGNITO_CLIENT_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='504mgtvq1h97vlml90c3iibnt0', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_REGION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_ACCESS_KEY_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='AKIA3BMJ25BIYDGPA47X', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SECRET_ACCESS_KEY
+  Extra inputs are not permitted [type=extra_forbidden, input_value='BDSPNqu7MlgZ38C1yPMEOZ2X43DgvpJYOMc4ddVA1CJl', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SES_FROM_EMAIL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='diamondacc.project@gmail.com', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_EXPIRY_MINUTES
+  Extra inputs are not permitted [type=extra_forbidden, input_value='5', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_LENGTH
+  Extra inputs are not permitted [type=extra_forbidden, input_value='6', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPMENT_MODE
+  Extra inputs are not permitted [type=extra_forbidden, input_value='true', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPER_OTP
+  Extra inputs are not permitted [type=extra_forbidden, input_value='123456', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+SKIP_EMAIL_VERIFICATION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='false', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+STORAGE_BASE_DIR
+  Extra inputs are not permitted [type=extra_forbidden, input_value='./storage/uploads', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+ADMIN_API_BASE_URL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='http://localhost:8002/api/v1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_REFRESH_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-refresh-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+2025-12-10 23:08:53,101 - shared.sync_to_admin - ERROR - Traceback (most recent call last):
+  File "/home/cyberdude/Documents/Projects/CA-final/client_side/shared/sync_to_admin.py", line 60, in sync_file_to_admin_document
+    from app.core.database import AsyncSessionLocal as AdminSession
+  File "/home/cyberdude/Documents/Projects/CA-final/admin-dashboard/backend/app/core/database.py", line 7, in <module>
+    from .config import settings
+  File "/home/cyberdude/Documents/Projects/CA-final/admin-dashboard/backend/app/core/config.py", line 77, in <module>
+    settings = Settings()
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 71, in __init__
+    super().__init__(
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 15 validation errors for Settings
+COGNITO_USER_POOL_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1_FP2WE41eW', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+COGNITO_CLIENT_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='504mgtvq1h97vlml90c3iibnt0', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_REGION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_ACCESS_KEY_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='AKIA3BMJ25BIYDGPA47X', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SECRET_ACCESS_KEY
+  Extra inputs are not permitted [type=extra_forbidden, input_value='BDSPNqu7MlgZ38C1yPMEOZ2X43DgvpJYOMc4ddVA1CJl', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SES_FROM_EMAIL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='diamondacc.project@gmail.com', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_EXPIRY_MINUTES
+  Extra inputs are not permitted [type=extra_forbidden, input_value='5', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_LENGTH
+  Extra inputs are not permitted [type=extra_forbidden, input_value='6', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPMENT_MODE
+  Extra inputs are not permitted [type=extra_forbidden, input_value='true', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPER_OTP
+  Extra inputs are not permitted [type=extra_forbidden, input_value='123456', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+SKIP_EMAIL_VERIFICATION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='false', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+STORAGE_BASE_DIR
+  Extra inputs are not permitted [type=extra_forbidden, input_value='./storage/uploads', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+ADMIN_API_BASE_URL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='http://localhost:8002/api/v1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_REFRESH_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-refresh-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "POST /api/v1/files/upload HTTP/1.1" 201 Created
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-12-10 23:10:38,267 - shared.utils - INFO - File uploaded to local storage: /home/cyberdude/Documents/Projects/CA-final/client_side/storage/uploads/user_e6d76e92-38c3-4be4-a266-5de3ac298353/20251210_174038_Lu6kUPSwtn0.pdf
+2025-12-10 23:10:38,268 - main - INFO - File uploaded successfully: user_e6d76e92-38c3-4be4-a266-5de3ac298353/20251210_174038_Lu6kUPSwtn0.pdf
+2025-12-10 23:10:38,274 - shared.sync_to_admin - ERROR - Error getting/creating client via admin backend: 15 validation errors for Settings
+COGNITO_USER_POOL_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1_FP2WE41eW', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+COGNITO_CLIENT_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='504mgtvq1h97vlml90c3iibnt0', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_REGION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_ACCESS_KEY_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='AKIA3BMJ25BIYDGPA47X', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SECRET_ACCESS_KEY
+  Extra inputs are not permitted [type=extra_forbidden, input_value='BDSPNqu7MlgZ38C1yPMEOZ2X43DgvpJYOMc4ddVA1CJl', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SES_FROM_EMAIL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='diamondacc.project@gmail.com', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_EXPIRY_MINUTES
+  Extra inputs are not permitted [type=extra_forbidden, input_value='5', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_LENGTH
+  Extra inputs are not permitted [type=extra_forbidden, input_value='6', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPMENT_MODE
+  Extra inputs are not permitted [type=extra_forbidden, input_value='true', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPER_OTP
+  Extra inputs are not permitted [type=extra_forbidden, input_value='123456', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+SKIP_EMAIL_VERIFICATION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='false', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+STORAGE_BASE_DIR
+  Extra inputs are not permitted [type=extra_forbidden, input_value='./storage/uploads', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+ADMIN_API_BASE_URL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='http://localhost:8002/api/v1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_REFRESH_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-refresh-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+Traceback (most recent call last):
+  File "/home/cyberdude/Documents/Projects/CA-final/client_side/shared/sync_to_admin.py", line 131, in _get_or_create_client_by_email
+    from app.core.database import AsyncSessionLocal as AdminSession
+  File "/home/cyberdude/Documents/Projects/CA-final/admin-dashboard/backend/app/core/database.py", line 7, in <module>
+    from .config import settings
+  File "/home/cyberdude/Documents/Projects/CA-final/admin-dashboard/backend/app/core/config.py", line 77, in <module>
+    settings = Settings()
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 71, in __init__
+    super().__init__(
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 15 validation errors for Settings
+COGNITO_USER_POOL_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1_FP2WE41eW', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+COGNITO_CLIENT_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='504mgtvq1h97vlml90c3iibnt0', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_REGION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_ACCESS_KEY_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='AKIA3BMJ25BIYDGPA47X', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SECRET_ACCESS_KEY
+  Extra inputs are not permitted [type=extra_forbidden, input_value='BDSPNqu7MlgZ38C1yPMEOZ2X43DgvpJYOMc4ddVA1CJl', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SES_FROM_EMAIL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='diamondacc.project@gmail.com', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_EXPIRY_MINUTES
+  Extra inputs are not permitted [type=extra_forbidden, input_value='5', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_LENGTH
+  Extra inputs are not permitted [type=extra_forbidden, input_value='6', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPMENT_MODE
+  Extra inputs are not permitted [type=extra_forbidden, input_value='true', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPER_OTP
+  Extra inputs are not permitted [type=extra_forbidden, input_value='123456', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+SKIP_EMAIL_VERIFICATION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='false', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+STORAGE_BASE_DIR
+  Extra inputs are not permitted [type=extra_forbidden, input_value='./storage/uploads', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+ADMIN_API_BASE_URL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='http://localhost:8002/api/v1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_REFRESH_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-refresh-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+2025-12-10 23:10:38,274 - shared.sync_to_admin - INFO - Falling back to direct SQL for client creation
+2025-12-10 23:10:38,314 - shared.sync_to_admin - INFO - Client already exists (SQL): sharmakushal7417@gmail.com (ID: 33079d45-fe9b-4d1b-97ad-8b13cc29e4e9)
+2025-12-10 23:10:38,320 - shared.sync_to_admin - ERROR - ❌ Error syncing file to admin: 15 validation errors for Settings
+COGNITO_USER_POOL_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1_FP2WE41eW', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+COGNITO_CLIENT_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='504mgtvq1h97vlml90c3iibnt0', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_REGION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_ACCESS_KEY_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='AKIA3BMJ25BIYDGPA47X', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SECRET_ACCESS_KEY
+  Extra inputs are not permitted [type=extra_forbidden, input_value='BDSPNqu7MlgZ38C1yPMEOZ2X43DgvpJYOMc4ddVA1CJl', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SES_FROM_EMAIL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='diamondacc.project@gmail.com', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_EXPIRY_MINUTES
+  Extra inputs are not permitted [type=extra_forbidden, input_value='5', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_LENGTH
+  Extra inputs are not permitted [type=extra_forbidden, input_value='6', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPMENT_MODE
+  Extra inputs are not permitted [type=extra_forbidden, input_value='true', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPER_OTP
+  Extra inputs are not permitted [type=extra_forbidden, input_value='123456', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+SKIP_EMAIL_VERIFICATION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='false', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+STORAGE_BASE_DIR
+  Extra inputs are not permitted [type=extra_forbidden, input_value='./storage/uploads', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+ADMIN_API_BASE_URL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='http://localhost:8002/api/v1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_REFRESH_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-refresh-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+Traceback (most recent call last):
+  File "/home/cyberdude/Documents/Projects/CA-final/client_side/shared/sync_to_admin.py", line 60, in sync_file_to_admin_document
+    from app.core.database import AsyncSessionLocal as AdminSession
+  File "/home/cyberdude/Documents/Projects/CA-final/admin-dashboard/backend/app/core/database.py", line 7, in <module>
+    from .config import settings
+  File "/home/cyberdude/Documents/Projects/CA-final/admin-dashboard/backend/app/core/config.py", line 77, in <module>
+    settings = Settings()
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 71, in __init__
+    super().__init__(
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 15 validation errors for Settings
+COGNITO_USER_POOL_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1_FP2WE41eW', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+COGNITO_CLIENT_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='504mgtvq1h97vlml90c3iibnt0', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_REGION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_ACCESS_KEY_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='AKIA3BMJ25BIYDGPA47X', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SECRET_ACCESS_KEY
+  Extra inputs are not permitted [type=extra_forbidden, input_value='BDSPNqu7MlgZ38C1yPMEOZ2X43DgvpJYOMc4ddVA1CJl', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SES_FROM_EMAIL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='diamondacc.project@gmail.com', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_EXPIRY_MINUTES
+  Extra inputs are not permitted [type=extra_forbidden, input_value='5', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_LENGTH
+  Extra inputs are not permitted [type=extra_forbidden, input_value='6', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPMENT_MODE
+  Extra inputs are not permitted [type=extra_forbidden, input_value='true', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPER_OTP
+  Extra inputs are not permitted [type=extra_forbidden, input_value='123456', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+SKIP_EMAIL_VERIFICATION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='false', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+STORAGE_BASE_DIR
+  Extra inputs are not permitted [type=extra_forbidden, input_value='./storage/uploads', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+ADMIN_API_BASE_URL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='http://localhost:8002/api/v1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_REFRESH_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-refresh-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+2025-12-10 23:10:38,320 - shared.sync_to_admin - ERROR - Traceback (most recent call last):
+  File "/home/cyberdude/Documents/Projects/CA-final/client_side/shared/sync_to_admin.py", line 60, in sync_file_to_admin_document
+    from app.core.database import AsyncSessionLocal as AdminSession
+  File "/home/cyberdude/Documents/Projects/CA-final/admin-dashboard/backend/app/core/database.py", line 7, in <module>
+    from .config import settings
+  File "/home/cyberdude/Documents/Projects/CA-final/admin-dashboard/backend/app/core/config.py", line 77, in <module>
+    settings = Settings()
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 71, in __init__
+    super().__init__(
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 15 validation errors for Settings
+COGNITO_USER_POOL_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1_FP2WE41eW', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+COGNITO_CLIENT_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='504mgtvq1h97vlml90c3iibnt0', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_REGION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='ca-central-1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_ACCESS_KEY_ID
+  Extra inputs are not permitted [type=extra_forbidden, input_value='AKIA3BMJ25BIYDGPA47X', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SECRET_ACCESS_KEY
+  Extra inputs are not permitted [type=extra_forbidden, input_value='BDSPNqu7MlgZ38C1yPMEOZ2X43DgvpJYOMc4ddVA1CJl', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+AWS_SES_FROM_EMAIL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='diamondacc.project@gmail.com', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_EXPIRY_MINUTES
+  Extra inputs are not permitted [type=extra_forbidden, input_value='5', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+OTP_LENGTH
+  Extra inputs are not permitted [type=extra_forbidden, input_value='6', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPMENT_MODE
+  Extra inputs are not permitted [type=extra_forbidden, input_value='true', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+DEVELOPER_OTP
+  Extra inputs are not permitted [type=extra_forbidden, input_value='123456', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+SKIP_EMAIL_VERIFICATION
+  Extra inputs are not permitted [type=extra_forbidden, input_value='false', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+STORAGE_BASE_DIR
+  Extra inputs are not permitted [type=extra_forbidden, input_value='./storage/uploads', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+ADMIN_API_BASE_URL
+  Extra inputs are not permitted [type=extra_forbidden, input_value='http://localhost:8002/api/v1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+JWT_REFRESH_SECRET
+  Extra inputs are not permitted [type=extra_forbidden, input_value='your-jwt-refresh-secret-key-change-in-production', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "POST /api/v1/files/upload HTTP/1.1" 201 Created
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "OPTIONS /api/v1/tax/t1-personal HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/tax/t1-personal HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "POST /api/v1/tax/t1-personal HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 426, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 84, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/fastapi/applications.py", line 1106, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/starlette/applications.py", line 122, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 184, in __call__
+    raise exc
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 162, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 146, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 79, in __call__
+    raise exc
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 68, in __call__
+    await self.app(scope, receive, sender)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/fastapi/middleware/asyncexitstack.py", line 20, in __call__
+    raise e
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/fastapi/middleware/asyncexitstack.py", line 17, in __call__
+    await self.app(scope, receive, send)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/starlette/routing.py", line 718, in __call__
+    await route.handle(scope, receive, send)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/starlette/routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/starlette/routing.py", line 66, in app
+    response = await func(request)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/fastapi/routing.py", line 274, in app
+    raw_response = await run_endpoint_function(
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/fastapi/routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/home/cyberdude/Documents/Projects/CA-final/client_side/main.py", line 1175, in create_t1_form
+  File "<string>", line 4, in __init__
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/sqlalchemy/orm/state.py", line 566, in _initialize_instance
+    with util.safe_reraise():
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/sqlalchemy/orm/state.py", line 564, in _initialize_instance
+    manager.original_init(*mixed[1:], **kwargs)
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/sqlalchemy/orm/decl_base.py", line 2142, in _declarative_constructor
+    raise TypeError(
+TypeError: 'sin' is an invalid keyword argument for T1PersonalForm
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59582 - "GET /api/v1/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:40824 - "POST /api/v1/tax/t1-personal HTTP/1.1" 401 Unauthorized
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     2401:4900:8203:d5a5:36a1:e389:440b:929a:0 - "GET /api/v1/auth/me HTTP/1.1" 200 OK

@@ -31,8 +31,19 @@ UIError mapDioErrorToUIError(DioException e) {
   int? statusCode = e.response?.statusCode;
 
   final data = e.response?.data;
-  if (data is Map && data['message'] != null) {
-    backendMessage = data['message'].toString();
+  if (data is Map) {
+    // FastAPI returns errors in 'detail' field
+    if (data['detail'] != null) {
+      backendMessage = data['detail'].toString();
+    } 
+    // Some APIs may use 'message' field
+    else if (data['message'] != null) {
+      backendMessage = data['message'].toString();
+    }
+    // Handle nested error objects
+    else if (data['error'] is Map && data['error']['detail'] != null) {
+      backendMessage = data['error']['detail'].toString();
+    }
   }
 
   // Timeouts and connection-level problems.

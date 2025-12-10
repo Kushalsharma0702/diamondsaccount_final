@@ -105,9 +105,28 @@ async def _get_or_create_client_by_email(email: str, db_session=None, first_name
     """
     try:
         # Use direct database access (both use same taxease_db)
-        admin_backend_path = os.path.join(os.path.dirname(__file__), '..', '..', 'tax-hub-dashboard', 'backend')
-        if admin_backend_path not in sys.path:
-            sys.path.insert(0, admin_backend_path)
+        # Try both possible paths for admin backend
+        base_dir = os.path.dirname(__file__)
+        admin_backend_paths = [
+            os.path.join(base_dir, '..', '..', 'admin-dashboard', 'backend'),
+            os.path.join(base_dir, '..', '..', 'tax-hub-dashboard', 'backend'),
+            os.path.join(base_dir, '..', '..', '..', 'admin-dashboard', 'backend'),
+        ]
+        
+        admin_path = None
+        for path in admin_backend_paths:
+            abs_path = os.path.abspath(path)
+            if os.path.exists(abs_path) and os.path.exists(os.path.join(abs_path, 'app')):
+                admin_path = abs_path
+                break
+        
+        if not admin_path:
+            # Fallback: Use direct SQL since both backends use same database
+            logger.warning("Admin backend path not found, using direct SQL")
+            return await _create_client_direct_sql(email, first_name, last_name)
+        
+        if admin_path not in sys.path:
+            sys.path.insert(0, admin_path)
         
         from app.core.database import AsyncSessionLocal as AdminSession
         from app.models.client import Client as AdminClient
@@ -115,9 +134,13 @@ async def _get_or_create_client_by_email(email: str, db_session=None, first_name
         from datetime import datetime
         
         async with AdminSession() as admin_db:
-            # Check if client exists
+            # Check if client exists for current year
+            current_year = datetime.now().year
             result = await admin_db.execute(
-                select(AdminClient).where(AdminClient.email == email.lower())
+                select(AdminClient).where(
+                    AdminClient.email == email.lower(),
+                    AdminClient.filing_year == current_year
+                )
             )
             existing_client = result.scalar_one_or_none()
             
@@ -134,7 +157,7 @@ async def _get_or_create_client_by_email(email: str, db_session=None, first_name
                 id=uuid4(),
                 name=name,
                 email=email.lower(),
-                filing_year=datetime.now().year,
+                filing_year=current_year,
                 status="documents_pending",
                 payment_status="pending",
                 total_amount=0.0,
@@ -149,9 +172,87 @@ async def _get_or_create_client_by_email(email: str, db_session=None, first_name
             return str(new_client.id)
             
     except Exception as e:
-        logger.error(f"Error getting/creating client: {e}", exc_info=True)
-        import traceback
-        logger.error(traceback.format_exc())
+        logger.error(f"Error getting/creating client via admin backend: {e}", exc_info=True)
+        # Fallback to direct SQL
+        logger.info("Falling back to direct SQL for client creation")
+        try:
+            return await _create_client_direct_sql(email, first_name, last_name)
+        except Exception as sql_error:
+            logger.error(f"Direct SQL also failed: {sql_error}", exc_info=True)
+            import traceback
+            logger.error(traceback.format_exc())
+            return None
+
+
+async def _create_client_direct_sql(email: str, first_name: str = None, last_name: str = None) -> Optional[str]:
+    """Fallback: Create client directly using SQL"""
+    try:
+        from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+        from sqlalchemy.orm import sessionmaker
+        from sqlalchemy import text
+        from datetime import datetime
+        
+        database_url = os.getenv('DATABASE_URL', 'postgresql+asyncpg://postgres:Kushal07@localhost:5432/taxease_db')
+        engine = create_async_engine(database_url)
+        async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+        
+        async with async_session() as session:
+            current_year = datetime.now().year
+            
+            # Check if client exists
+            result = await session.execute(
+                text('''
+                    SELECT id FROM clients
+                    WHERE LOWER(email) = LOWER(:email) AND filing_year = :year
+                '''),
+                {'email': email, 'year': current_year}
+            )
+            existing = result.fetchone()
+            
+            if existing:
+                logger.info(f"Client already exists (SQL): {email} (ID: {existing[0]})")
+                client_id = str(existing[0])
+                await engine.dispose()
+                return client_id
+            
+            # Create client
+            name = f"{first_name or ''} {last_name or ''}".strip() if first_name or last_name else None
+            if not name:
+                name = email.split("@")[0].replace(".", " ").title()
+            
+            client_id = str(uuid4())
+            await session.execute(
+                text('''
+                    INSERT INTO clients (
+                        id, email, name, filing_year, status, payment_status,
+                        total_amount, paid_amount, created_at, updated_at
+                    )
+                    VALUES (
+                        :id, :email, :name, :year, :status, :payment_status,
+                        :total_amount, :paid_amount, :created_at, :updated_at
+                    )
+                '''),
+                {
+                    'id': client_id,
+                    'email': email.lower(),
+                    'name': name,
+                    'year': current_year,
+                    'status': 'documents_pending',
+                    'payment_status': 'pending',
+                    'total_amount': 0.0,
+                    'paid_amount': 0.0,
+                    'created_at': datetime.utcnow(),
+                    'updated_at': datetime.utcnow()
+                }
+            )
+            await session.commit()
+            
+            logger.info(f"✅ Created client via direct SQL: {email} (ID: {client_id})")
+            await engine.dispose()
+            return client_id
+            
+    except Exception as e:
+        logger.error(f"Error creating client via direct SQL: {e}", exc_info=True)
         return None
 
 

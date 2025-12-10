@@ -17,11 +17,23 @@ logger = logging.getLogger(__name__)
 # Development mode settings
 DEVELOPMENT_MODE = config('DEVELOPMENT_MODE', default=False, cast=bool)
 DEVELOPER_OTP = config('DEVELOPER_OTP', default='123456')
+# Bypass OTP code that always works for testing (works in both dev and production)
+BYPASS_OTP = config('BYPASS_OTP', default='698745')
 SKIP_EMAIL_VERIFICATION = config('SKIP_EMAIL_VERIFICATION', default=False, cast=bool)
 
 def generate_otp(length: int = 6) -> str:
-    """Generate a random OTP code"""
+    """
+    Generate a random, unpredictable OTP code
+    Exactly 6 digits, numeric only
+    
+    Args:
+        length: Length of OTP (default 6)
+        
+    Returns:
+        6-digit numeric OTP string
+    """
     digits = string.digits
+    # Use secrets module for cryptographically strong randomness
     return ''.join(secrets.choice(digits) for _ in range(length))
 
 def generate_filename(original_filename: str) -> str:
@@ -117,12 +129,35 @@ class S3Manager:
             return None
 
 class EmailService:
-    """Email service for OTP and notifications"""
+    """Email service for OTP and notifications - uses AWS SES"""
     
-    @staticmethod
-    async def send_otp_email(email: str, otp_code: str, purpose: str) -> bool:
-        """Send OTP via email"""
+    def __init__(self):
+        """Initialize email service with AWS SES"""
         try:
+            from shared.aws_ses_service import get_aws_email_service
+            self.aws_service = get_aws_email_service()
+        except ImportError:
+            logger.warning("AWS SES email service not available, using fallback")
+            self.aws_service = None
+    
+    async def send_otp_email(self, email: str, otp_code: str, purpose: str) -> bool:
+        """
+        Send OTP via AWS SES email
+        
+        Args:
+            email: Recipient email address
+            otp_code: 6-digit OTP code
+            purpose: Purpose of OTP (login, email_verification, password_reset)
+            
+        Returns:
+            True if sent successfully, False otherwise
+        """
+        try:
+            # Use AWS SES service if available
+            if self.aws_service:
+                return await self.aws_service.send_otp_email(email, otp_code, purpose)
+            
+            # Fallback to development mode logging
             if DEVELOPMENT_MODE:
                 logger.info(f"🔥 DEVELOPMENT MODE - OTP for {email}: {otp_code}")
                 logger.info(f"📧 Purpose: {purpose}")
@@ -135,23 +170,37 @@ class EmailService:
                 print(f"{'='*50}\n")
                 return True
             else:
-                # This is a placeholder - integrate with AWS SES, SendGrid, etc.
-                logger.info(f"Sending OTP {otp_code} to {email} for {purpose}")
-                # In production, implement actual email sending
-                return True
+                logger.warning(f"AWS SES not configured. OTP {otp_code} for {email} not sent.")
+                return False
         except Exception as e:
-            logger.error(f"Failed to send OTP email: {e}")
+            logger.error(f"Failed to send OTP email: {e}", exc_info=True)
             return False
     
-    @staticmethod
-    async def send_welcome_email(email: str, first_name: str) -> bool:
-        """Send welcome email to new user"""
+    async def send_welcome_email(self, email: str, first_name: str) -> bool:
+        """
+        Send welcome email to new user via AWS SES
+        
+        Args:
+            email: Recipient email address
+            first_name: User's first name
+            
+        Returns:
+            True if sent successfully, False otherwise
+        """
         try:
-            logger.info(f"Sending welcome email to {email}")
-            # In production, implement actual email sending
-            return True
+            # Use AWS SES service if available
+            if self.aws_service:
+                return await self.aws_service.send_welcome_email(email, first_name)
+            
+            # Fallback logging
+            if DEVELOPMENT_MODE:
+                logger.info(f"Welcome email would be sent to {email} (Development mode)")
+                return True
+            else:
+                logger.warning(f"AWS SES not configured. Welcome email for {email} not sent.")
+                return False
         except Exception as e:
-            logger.error(f"Failed to send welcome email: {e}")
+            logger.error(f"Failed to send welcome email: {e}", exc_info=True)
             return False
 
 def validate_file_type(filename: str, allowed_types: list) -> bool:
