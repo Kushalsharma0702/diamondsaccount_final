@@ -1,0 +1,17 @@
+node_modules
+.git
+build
+dist
+.out
+.next
+.cache
+coverage
+android
+ios
+linux
+windows
+macos
+web/build
+.env
+*.log
+*.lock

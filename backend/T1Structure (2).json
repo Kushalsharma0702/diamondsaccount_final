@@ -1,0 +1,542 @@
+{
+  "formType": "T1",
+  "formName": "T1 Personal Tax Form",
+  "generatedAtUtc": "2025-12-20T08:04:32Z",
+  "uiImplementation": {
+    "personalInfoStep": "lib/features/tax_forms/presentation/widgets/t1_personal_info_step.dart",
+    "questionnaireStep": "lib/features/tax_forms/presentation/widgets/t1_questionnaire_1_step.dart",
+    "detailSteps": "lib/features/tax_forms/presentation/widgets/t1_questionnaire_2_step.dart",
+    "containerPage": "lib/features/tax_forms/presentation/pages/personal_tax_form_page.dart",
+    "documentRules": "lib/features/documents/data/t1_document_requirements.dart"
+  },
+  "steps": [
+    {
+      "id": "personal_info",
+      "title": "Personal Information",
+      "sections": [
+        {
+          "id": "individual_information",
+          "title": "Individual Information",
+          "fields": [
+            { "key": "personalInfo.firstName", "label": "First Name", "type": "text", "required": true },
+            { "key": "personalInfo.middleName", "label": "Middle Name", "type": "text", "required": false },
+            { "key": "personalInfo.lastName", "label": "Last Name", "type": "text", "required": true },
+            { "key": "personalInfo.sin", "label": "SIN (Individual)", "type": "number", "required": true, "maxLength": 9 },
+            { "key": "personalInfo.dateOfBirth", "label": "Date of Birth", "type": "date", "required": true },
+            { "key": "personalInfo.address", "label": "Current Address with Postal Code", "type": "text", "required": true },
+            { "key": "personalInfo.phoneNumber", "label": "Phone Number", "type": "phone", "required": true },
+            { "key": "personalInfo.email", "label": "Email", "type": "email", "required": true },
+            { "key": "personalInfo.isCanadianCitizen", "label": "Are you a Canadian Citizen?", "type": "boolean", "required": true },
+            {
+              "key": "personalInfo.maritalStatus",
+              "label": "Marital Status",
+              "type": "select",
+              "required": true,
+              "options": ["single", "married", "common-law", "separated", "divorced", "widowed"]
+            }
+          ]
+        },
+        {
+          "id": "spouse_information",
+          "title": "Spouse Information",
+          "shownWhen": {
+            "key": "personalInfo.maritalStatus",
+            "operator": "in",
+            "value": ["married", "common-law"]
+          },
+          "fields": [
+            { "key": "personalInfo.spouseInfo.firstName", "label": "First Name", "type": "text", "required": true },
+            { "key": "personalInfo.spouseInfo.middleName", "label": "Middle Name", "type": "text", "required": false },
+            { "key": "personalInfo.spouseInfo.lastName", "label": "Last Name", "type": "text", "required": true },
+            { "key": "personalInfo.spouseInfo.sin", "label": "SIN (Spouse)", "type": "number", "required": true, "maxLength": 9 },
+            { "key": "personalInfo.spouseInfo.dateOfBirth", "label": "Date of Birth", "type": "date", "required": true }
+          ]
+        },
+        {
+          "id": "children_details",
+          "title": "Children Details",
+          "repeatable": true,
+          "itemKey": "personalInfo.children[]",
+          "fields": [
+            { "key": "firstName", "label": "First Name", "type": "text" },
+            { "key": "middleName", "label": "Middle Name", "type": "text" },
+            { "key": "lastName", "label": "Last Name", "type": "text" },
+            { "key": "sin", "label": "SIN", "type": "number", "maxLength": 9 },
+            { "key": "dateOfBirth", "label": "Date of Birth", "type": "date" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "questionnaire",
+      "title": "Questionnaire",
+      "questions": [
+        {
+          "number": 1,
+          "key": "hasForeignProperty",
+          "text": "Did taxpayer own specified foreign property at any time in 2023 with a total cost of more than CAN$100,000?",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "hasForeignProperty", "operator": "equals", "value": true },
+            "repeatable": true,
+            "ui": "table",
+            "columns": [
+              { "label": "Investment Details", "type": "text" },
+              { "label": "Gross Income", "type": "number" },
+              { "label": "Gain/Loss on sale", "type": "number" },
+              { "label": "Maximum Cost during the year", "type": "number" },
+              { "label": "Cost amount at the year end", "type": "number" },
+              { "label": "Country", "type": "text" }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "key": "hasMedicalExpenses",
+          "text": "Do you have any Medical Expenses?",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "hasMedicalExpenses", "operator": "equals", "value": true },
+            "repeatable": true,
+            "ui": "table",
+            "columns": [
+              { "label": "Payment Date", "type": "date" },
+              { "label": "Patient Name", "type": "text" },
+              { "label": "PAYMENT MADE TO", "type": "text" },
+              { "label": "DESCRIPTION OF EXPENSE", "type": "text" },
+              { "label": "INSURANCE COVERED", "type": "number" },
+              { "label": "Amount Paid from Pocket", "type": "number" }
+            ]
+          }
+        },
+        {
+          "number": 9,
+          "key": "hasWorkFromHomeExpense",
+          "text": "Did you have any work from home expense in the Tax year? Detailed method, T2200 is required from your employer.",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "hasWorkFromHomeExpense", "operator": "equals", "value": true },
+            "fields": [
+              { "label": "Total House Area (Sq.Ft.)", "type": "number" },
+              { "label": "Total Work Area (Sq.Ft.)", "type": "number" },
+              { "label": "Rent Expense", "type": "number" },
+              { "label": "Mortgage Expense", "type": "number" },
+              { "label": "Wifi Expense", "type": "number" },
+              { "label": "Electricity Expense", "type": "number" },
+              { "label": "Water Expense", "type": "number" },
+              { "label": "Heat Expense", "type": "number" },
+              { "label": "Total Insurance Expense", "type": "number" }
+            ]
+          }
+        },
+        {
+          "number": 12,
+          "key": "hasDaycareExpenses",
+          "text": "Do you have Day care expenses for your child?",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "hasDaycareExpenses", "operator": "equals", "value": true },
+            "repeatable": true,
+            "ui": "table",
+            "columns": [
+              { "label": "Childcare Provider", "type": "text" },
+              { "label": "Amount", "type": "number" },
+              { "label": "Identification Number/SIN", "type": "text" },
+              { "label": "Weeks", "type": "number" }
+            ]
+          },
+          "documentsRequired": ["Day Care Expense Receipts"]
+        },
+        {
+          "number": 13,
+          "key": "isFirstTimeFiler",
+          "text": "Are you a first time filer? If Yes, then please provide the following details.",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "isFirstTimeFiler", "operator": "equals", "value": true },
+            "fields": [
+              { "label": "Date of Landing (Individual)", "type": "date" },
+              { "label": "Income Outside Canada (CAD)", "type": "number" },
+              { "label": "Back Home Income 2024 (in CAD)", "type": "number" },
+              { "label": "Back Home Income 2023 (in CAD)", "type": "number" }
+            ]
+          }
+        },
+        {
+          "number": 18,
+          "key": "isProvinceFiler",
+          "text": "FOR ONTARIO/ALBERTA/QUEBEC FILER ONLY - Please Provide below details for 2023",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "isProvinceFiler", "operator": "equals", "value": true },
+            "repeatable": true,
+            "ui": "table",
+            "notes": ["Quebec filer - Provide RL-31"],
+            "columns": [
+              { "label": "Rent or Property Tax", "type": "text" },
+              { "label": "Property Address", "type": "text" },
+              { "label": "Postal Code", "type": "text" },
+              { "label": "No. Of Months Resides", "type": "number" }
+            ]
+          }
+        },
+        {
+          "number": 8,
+          "key": "soldPropertyShortTerm",
+          "text": "Did you sell any Residential Property which you hold less than 365 days last year? FLIP PROPERTY",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "soldPropertyShortTerm", "operator": "equals", "value": true },
+            "fields": [
+              { "label": "Property Address", "type": "text" },
+              { "label": "Purchase Date", "type": "date" },
+              { "label": "Sell Date", "type": "date" },
+              { "label": "Purchase & Sell Expenses", "type": "number" }
+            ]
+          }
+        },
+        {
+          "number": 9,
+          "key": "hasWorkFromHomeExpense",
+          "text": "Did you have any work from home expense in the Tax year? Detailed method, T2200 is required from your employer.",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "hasWorkFromHomeExpense", "operator": "equals", "value": true },
+            "fields": [
+              { "label": "Total House Area (Sq.Ft.)", "type": "number" },
+              { "label": "Work Area (Sq.Ft.)", "type": "number" },
+              { "label": "Rent/Mortgage Expense", "type": "number" },
+              { "label": "Utilities Expense", "type": "number" }
+            ]
+          }
+        },
+        {
+          "number": 10,
+          "key": "wasStudentLastYear",
+          "text": "Were you a student last year? If yes then we would need T2202A form from your educational institution.",
+          "type": "boolean",
+          "documentsRequired": ["T2202 Form"]
+        },
+        {
+          "number": 11,
+          "key": "isUnionMember",
+          "text": "Are you a member of any union? If yes then, do you have any union dues?",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "isUnionMember", "operator": "equals", "value": true },
+            "repeatable": true,
+            "ui": "table",
+            "columns": [
+              { "label": "Institution Name", "type": "text" },
+              { "label": "Amount", "type": "number" }
+            ]
+          },
+          "documentsRequired": ["Union Dues Receipt"]
+        },
+        {
+          "number": 12,
+          "key": "hasDaycareExpenses",
+          "text": "Do you have Day care expenses for your child?",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "hasDaycareExpenses", "operator": "equals", "value": true },
+            "repeatable": true,
+            "ui": "table",
+            "columns": [
+              { "label": "Childcare Provider", "type": "text" },
+              { "label": "Amount", "type": "number" }
+            ]
+          },
+          "documentsRequired": ["Day Care Expense Receipts"]
+        },
+        {
+          "number": 13,
+          "key": "isFirstTimeFiler",
+          "text": "Are you a first time filer? If Yes, then please provide the following details.",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "isFirstTimeFiler", "operator": "equals", "value": true },
+            "fields": [
+              { "label": "Date of Landing (Individual)", "type": "date" },
+              { "label": "Income Outside Canada (CAD)", "type": "number" }
+            ]
+          }
+        },
+        {
+          "number": 14,
+          "key": "hasOtherIncome",
+          "text": "Do you have any other Income in 2023 which does not have T Slips?",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "hasOtherIncome", "operator": "equals", "value": true },
+            "fields": [
+              { "key": "otherIncomeDescription", "label": "Describe the income and amount", "type": "text", "maxLines": 3 }
+            ]
+          }
+        },
+        {
+          "number": 15,
+          "key": "hasProfessionalDues",
+          "text": "Do you have any Professional Dues, License Fees, Exam fees which you have paid from your pocket for last year?",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "hasProfessionalDues", "operator": "equals", "value": true },
+            "repeatable": true,
+            "ui": "table",
+            "columns": [
+              { "label": "Name", "type": "text" },
+              { "label": "Organization", "type": "text" },
+              { "label": "Amount", "type": "number" }
+            ]
+          },
+          "documentsRequired": ["Professional Fees Receipt"]
+        },
+        {
+          "number": 16,
+          "key": "hasRrspFhsaInvestment",
+          "text": "Do you have any RRSP/FHSA Investment? If yes, please provide the slips along with your T Slips.",
+          "type": "boolean",
+          "documentsRequired": ["RRSP/FHSA T-slips"]
+        },
+        {
+          "number": 17,
+          "key": "hasChildArtSportCredit",
+          "text": "Children's Art & Sport Tax Credit - Do you have any receipts for your child's Sport/fitness & Art for 2023?",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "hasChildArtSportCredit", "operator": "equals", "value": true },
+            "repeatable": true,
+            "ui": "table",
+            "columns": [
+              { "label": "Institute Name", "type": "text" },
+              { "label": "Description", "type": "text" },
+              { "label": "Amount", "type": "number" }
+            ]
+          },
+          "documentsRequired": ["Receipt for Child's Sport/Fitness & Art"]
+        },
+        {
+          "number": 18,
+          "key": "isProvinceFiler",
+          "text": "FOR ONTARIO/ALBERTA/QUEBEC FILER ONLY - Please Provide below details for 2023",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "isProvinceFiler", "operator": "equals", "value": true },
+            "repeatable": true,
+            "ui": "table",
+            "notes": ["Quebec filer - Provide RL-31"],
+            "columns": [
+              { "label": "Rent or Property Tax", "type": "text" },
+              { "label": "Property Address", "type": "text" },
+              { "label": "Amount Paid", "type": "number" }
+            ]
+          }
+        },
+        {
+          "number": 19,
+          "key": "hasDisabilityTaxCredit",
+          "text": "Is any family member has disability tax credit?",
+          "type": "boolean",
+          "subform": {
+            "shownWhen": { "key": "hasDisabilityTaxCredit", "operator": "equals", "value": true },
+            "repeatable": true,
+            "ui": "subform",
+            "itemKey": "disabilityClaimMembers[]",
+            "fields": [
+              { "key": "firstName", "label": "First Name", "type": "text", "required": true },
+              { "key": "lastName", "label": "Last Name", "type": "text", "required": true },
+              { "key": "relation", "label": "Relation", "type": "text", "required": true },
+              { "key": "approvedYear", "label": "Approved Year", "type": "number", "required": true }
+            ],
+            "actions": ["Add another member"]
+          },
+          "documentsRequired": ["Disability Approval form"]
+        },
+        {
+          "number": 20,
+          "key": "isFilingForDeceased",
+          "text": "Are you filing a return on behalf of a person who died in this Tax Year?",
+          "type": "boolean",
+          "addsDetailStep": "deceasedReturn",
+          "documentsRequired": ["Clearance Certificate"]
+        }
+      ]
+    },
+    {
+      "id": "detail_steps",
+      "title": "Questionnaire Detail Steps (conditionally shown)",
+      "steps": [
+        {
+          "id": "movingExpenses",
+          "trigger": { "key": "hasMovingExpenses", "equals": true },
+          "subforms": [
+            {
+              "id": "movingExpenseIndividual",
+              "shownWhen": { "key": "movingExpenseForIndividual", "equals": true },
+              "fields": [
+                { "key": "oldAddress", "type": "text" },
+                { "key": "newAddress", "type": "text" },
+                { "key": "distanceFromOldToNew", "type": "text" },
+                { "key": "distanceFromNewToOffice", "type": "text" },
+                { "key": "airTicketCost", "type": "number" },
+                { "key": "moversAndPackers", "type": "number" },
+                { "key": "mealsAndOtherCost", "type": "number" },
+                { "key": "anyOtherCost", "type": "number" },
+                { "key": "dateOfTravel", "type": "date" },
+                { "key": "dateOfJoining", "type": "date" },
+                { "key": "companyName", "type": "text" },
+                { "key": "newEmployerAddress", "type": "text" },
+                { "key": "grossIncomeAfterMoving", "type": "number" }
+              ]
+            },
+            {
+              "id": "movingExpenseSpouse",
+              "shownWhen": { "key": "movingExpenseForSpouse", "equals": true },
+              "fields": "same-as-movingExpenseIndividual"
+            }
+          ]
+        },
+        {
+          "id": "uberSkipDoordash",
+          "trigger": { "key": "selfEmployment.businessTypes", "contains": "uber" },
+          "fields": [
+            { "key": "selfEmployment.uberBusiness.uberSkipStatement", "type": "text" },
+            { "key": "selfEmployment.uberBusiness.businessHstNumber", "type": "text" },
+            { "key": "selfEmployment.uberBusiness.hstAccessCode", "type": "text" },
+            { "key": "selfEmployment.uberBusiness.hstFillingPeriod", "type": "text" },
+            { "key": "selfEmployment.uberBusiness.income", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.totalKmForUberSkip", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.totalOfficialKmDriven", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.totalKmDrivenEntireYear", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.businessNumberVehicleRegistration", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.meals", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.telephone", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.parkingFees", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.cleaningExpenses", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.safetyInspection", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.winterTireChange", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.oilChangeAndMaintenance", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.depreciation", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.insuranceOnVehicle", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.gas", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.financingCostInterest", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.leaseCost", "type": "number" },
+            { "key": "selfEmployment.uberBusiness.otherExpense", "type": "number" }
+          ]
+        },
+        {
+          "id": "generalBusiness",
+          "trigger": { "key": "selfEmployment.businessTypes", "contains": "general" },
+          "fields": [
+            { "key": "selfEmployment.generalBusiness.clientName", "type": "text" },
+            { "key": "selfEmployment.generalBusiness.businessName", "type": "text" },
+            { "key": "selfEmployment.generalBusiness.salesCommissionsFees", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.minusHstCollected", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.grossIncome", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.openingInventory", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.purchasesDuringYear", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.subcontracts", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.directWageCosts", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.otherCosts", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.purchaseReturns", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.advertising", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.mealsEntertainment", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.badDebts", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.insurance", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.interest", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.feesLicensesDues", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.officeExpenses", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.supplies", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.legalAccountingFees", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.managementAdministration", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.officeRent", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.maintenanceRepairs", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.salariesWagesBenefits", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.propertyTax", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.travel", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.telephoneUtilities", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.fuelCosts", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.deliveryFreightExpress", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.otherExpense1", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.otherExpense2", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.otherExpense3", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.areaOfHomeForBusiness", "type": "text" },
+            { "key": "selfEmployment.generalBusiness.totalAreaOfHome", "type": "text" },
+            { "key": "selfEmployment.generalBusiness.heat", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.electricity", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.houseInsurance", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.homeMaintenance", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.mortgageInterest", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.propertyTaxes", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.houseRent", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.homeOtherExpense1", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.homeOtherExpense2", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.kmDrivenForBusiness", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.totalKmDrivenInYear", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.vehicleFuel", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.vehicleInsurance", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.licenseRegistration", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.vehicleMaintenance", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.businessParking", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.vehicleOtherExpense", "type": "number" },
+            { "key": "selfEmployment.generalBusiness.leasingFinancePayments", "type": "number" }
+          ]
+        },
+        {
+          "id": "rentalIncome",
+          "trigger": { "key": "selfEmployment.businessTypes", "contains": "rental" },
+          "fields": [
+            { "key": "selfEmployment.rentalIncome.propertyAddress", "type": "text" },
+            { "key": "selfEmployment.rentalIncome.coOwnerPartner1", "type": "text" },
+            { "key": "selfEmployment.rentalIncome.coOwnerPartner2", "type": "text" },
+            { "key": "selfEmployment.rentalIncome.coOwnerPartner3", "type": "text" },
+            { "key": "selfEmployment.rentalIncome.numberOfUnits", "type": "number" },
+            { "key": "selfEmployment.rentalIncome.grossRentalIncome", "type": "number" },
+            { "key": "selfEmployment.rentalIncome.anyGovtIncomeRelatingToRental", "type": "number" },
+            { "key": "selfEmployment.rentalIncome.personalUsePortion", "type": "text" },
+            { "key": "selfEmployment.rentalIncome.houseInsurance", "type": "number" },
+            { "key": "selfEmployment.rentalIncome.mortgageInterest", "type": "number" },
+            { "key": "selfEmployment.rentalIncome.propertyTaxes", "type": "number" },
+            { "key": "selfEmployment.rentalIncome.utilities", "type": "number" },
+            { "key": "selfEmployment.rentalIncome.managementAdminFees", "type": "number" },
+            { "key": "selfEmployment.rentalIncome.repairAndMaintenance", "type": "number" },
+            { "key": "selfEmployment.rentalIncome.cleaningExpense", "type": "number" },
+            { "key": "selfEmployment.rentalIncome.motorVehicleExpenses", "type": "number" },
+            { "key": "selfEmployment.rentalIncome.legalProfessionalFees", "type": "number" },
+            { "key": "selfEmployment.rentalIncome.advertisingPromotion", "type": "number" },
+            { "key": "selfEmployment.rentalIncome.otherExpense", "type": "number" },
+            { "key": "selfEmployment.rentalIncome.purchasePrice", "type": "number" },
+            { "key": "selfEmployment.rentalIncome.purchaseDate", "type": "date" },
+            { "key": "selfEmployment.rentalIncome.additionDeletionAmount", "type": "number" }
+          ]
+        },
+        {
+          "id": "deceasedReturn",
+          "trigger": { "key": "isFilingForDeceased", "equals": true },
+          "fields": [
+            { "key": "deceasedReturnInfo.deceasedFullName", "label": "Name of deceased person", "type": "text" },
+            { "key": "deceasedReturnInfo.dateOfDeath", "label": "Date of death", "type": "date" },
+            { "key": "deceasedReturnInfo.deceasedSin", "label": "Deceased person SIN", "type": "number" },
+            { "key": "deceasedReturnInfo.deceasedMailingAddress", "label": "Mailing address of deceased person", "type": "text" },
+            { "key": "deceasedReturnInfo.legalRepresentativeName", "label": "Name of legal representative", "type": "text" },
+            { "key": "deceasedReturnInfo.legalRepresentativeContactNumber", "label": "Contact number of legal representative", "type": "number" },
+            { "key": "deceasedReturnInfo.legalRepresentativeAddress", "label": "Address of legal representative", "type": "text" }
+          ]
+        }
+      ]
+    }
+  ],
+  "documentRequirements": [
+    { "label": "Disability Approval form", "shownWhen": { "key": "hasDisabilityTaxCredit", "equals": true } },
+    { "label": "Clearance Certificate", "shownWhen": { "key": "isFilingForDeceased", "equals": true } },
+    { "label": "Charitable Donation Receipts", "shownWhen": { "key": "hasCharitableDonations", "equals": true } },
+    { "label": "Moving Expense", "shownWhen": { "key": "hasMovingExpenses", "equals": true } },
+    { "label": "Statement of Adjustment issued by lawyer", "shownWhen": { "key": "isFirstHomeBuyer", "equals": true } },
+    { "label": "T2202 Form", "shownWhen": { "key": "wasStudentLastYear", "equals": true } },
+    { "label": "Union Dues Receipt", "shownWhen": { "key": "isUnionMember", "equals": true } },
+    { "label": "Day Care Expense Receipts", "shownWhen": { "key": "hasDaycareExpenses", "equals": true } },
+    { "label": "Professional Fees Receipt", "shownWhen": { "key": "hasProfessionalDues", "equals": true } },
+    { "label": "RRSP/FHSA T-slips", "shownWhen": { "key": "hasRrspFhsaInvestment", "equals": true } },
+    { "label": "Receipt for Child's Sport/Fitness & Art", "shownWhen": { "key": "hasChildArtSportCredit", "equals": true } }
+  ]
+}

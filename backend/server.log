@@ -1,0 +1,539 @@
+INFO:     Will watch for changes in these directories: ['/home/cyberdude/Documents/Projects/CA-final']
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+INFO:     Started reloader process [884167] using WatchFiles
+INFO:     Started server process [884170]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:39624 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39628 - "POST /api/v1/chat/send HTTP/1.1" 201 Created
+INFO:     127.0.0.1:39634 - "POST /api/v1/chat/send HTTP/1.1" 201 Created
+INFO:     127.0.0.1:39648 - "GET /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39658 - "GET /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e/unread-count?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39674 - "PUT /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e/mark-read?role=client HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'backend/app/routes/chat.py', 'backend/test_chat_api.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [884170]
+INFO:     Started server process [887161]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:46114 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+(trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+INFO:     127.0.0.1:46116 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46116 - "OPTIONS /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46114 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:45378 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:45378 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55298 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55300 - "OPTIONS /api/v1/t1-forms-business/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55310 - "POST /api/v1/t1-forms-business/ HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55310 - "POST /api/v1/t1-forms-business/ HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:46472 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:37228 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:37244 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:37244 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:37244 - "OPTIONS /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42898 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42898 - "OPTIONS /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37244 - "GET /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37244 - "OPTIONS /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e/mark-read?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42898 - "PUT /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e/mark-read?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42898 - "OPTIONS /api/v1/chat/send HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37244 - "POST /api/v1/chat/send HTTP/1.1" 201 Created
+INFO:     127.0.0.1:37244 - "GET /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37244 - "PUT /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e/mark-read?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37244 - "GET /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37244 - "PUT /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e/mark-read?role=client HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'backend/app/utils/redis_session.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [887161]
+WARNING:  WatchFiles detected changes in 'backend/app/utils/redis_session.py'. Reloading...
+INFO:     Started server process [939550]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/routes/admin_auth.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [939550]
+INFO:     Started server process [940840]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/routes/admin_full.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [940840]
+INFO:     Started server process [943583]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [943583]
+INFO:     Started server process [943692]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [943692]
+✅ Redis connected successfully
+INFO:     Started server process [943825]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/auth/jwt.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [943825]
+✅ Redis connected successfully
+INFO:     Started server process [944210]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/routes/admin_full.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [944210]
+✅ Redis connected successfully
+INFO:     Started server process [944307]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/create_admin_user.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [944307]
+✅ Redis connected successfully
+WARNING:  WatchFiles detected changes in 'backend/create_admin_user.py'. Reloading...
+INFO:     Started server process [950079]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/routes/admin_full.py', 'backend/app/utils/redis_session.py', 'backend/app/routes/admin_auth.py', 'backend/app/main.py', 'backend/create_admin_user.py', 'backend/app/auth/jwt.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [950079]
+✅ Redis connected successfully
+INFO:     Started server process [952410]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✅ Redis connected successfully
+INFO:     127.0.0.1:33458 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+(trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+INFO:     127.0.0.1:33462 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33462 - "OPTIONS /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33458 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:43784 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:43784 - "OPTIONS /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43792 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43792 - "OPTIONS /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43784 - "GET /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43784 - "OPTIONS /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e/mark-read?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43792 - "PUT /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e/mark-read?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43792 - "GET /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43792 - "PUT /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e/mark-read?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43792 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:43792 - "OPTIONS /api/v1/t1-forms-business/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38248 - "POST /api/v1/t1-forms-business/ HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:38248 - "POST /api/v1/t1-forms-business/ HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:38248 - "POST /api/v1/t1-forms-business/ HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:38248 - "POST /api/v1/t1-forms-business/ HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:38248 - "POST /api/v1/t1-forms-business/ HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:38248 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:38248 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:38248 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38248 - "GET /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38248 - "PUT /api/v1/chat/e5837611-892a-439e-8dd0-cfdf624bee1e/mark-read?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38248 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+WARNING:  WatchFiles detected changes in 'tax_ease_app_client/ios/Flutter/ephemeral/flutter_lldb_helper.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [952410]
+INFO:     Started server process [1008746]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'tax_ease_app_client/ios/Flutter/ephemeral/flutter_lldb_helper.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1008746]
+✅ Redis connected successfully
+INFO:     Started server process [1009200]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'database/__init__.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1009200]
+✅ Redis connected successfully
+WARNING:  WatchFiles detected changes in 'backend/app/utils/encryption.py', 'database/schemas.py', 'backend/app/main.py', 'backend/app/routes/admin_full.py', 'backend/app/routes/documents.py', 'backend/test_api.py', 'backend/app/utils/redis_session.py', 'backend/create_demo_user.py', 'backend/test_document_upload_encryption.py', 'backend/create_admin_user.py', 'backend/app/routes/admin_auth.py', 'backend/app/routes/client.py', 'backend/test_step_by_step.py', 'backend/test_t1_form_submission.py', 'backend/app/routes/chat.py', 'backend/test_signup_fix.py', 'backend/app/routes/auth.py', 'backend/app/auth/jwt.py', 'backend/app/routes/t1.py', 'backend/app/database.py', 'backend/app/routes/filing_status.py', 'backend/test_chat_api.py', 'backend/test_filing_status.py'. Reloading...
+INFO:     Started server process [1443348]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✅ Redis connected successfully
+INFO:     127.0.0.1:52758 - "OPTIONS /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52772 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52772 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60178 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60190 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+WARNING:  WatchFiles detected changes in 'backend/app/routes/client_me.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1443348]
+WARNING:  WatchFiles detected changes in 'backend/app/routes/client_me.py'. Reloading...
+INFO:     Started server process [1507051]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1507051]
+✅ Redis connected successfully
+INFO:     Started server process [1507193]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1507193]
+✅ Redis connected successfully
+INFO:     Started server process [1507318]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/routes/client_me.py', 'backend/app/main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1507318]
+✅ Redis connected successfully
+INFO:     Started server process [1510306]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✅ Redis connected successfully
+INFO:     127.0.0.1:33528 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:33528 - "OPTIONS /api/v1/client/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33542 - "GET /api/v1/client/me HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:33542 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:33542 - "GET /api/v1/client/me HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:55790 - "OPTIONS /api/v1/client/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55806 - "GET /api/v1/client/me HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:55806 - "GET /api/v1/client/me HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:55806 - "OPTIONS /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55790 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46506 - "OPTIONS /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46516 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:39330 - "OPTIONS /api/v1/auth/register HTTP/1.1" 200 OK
+(trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+INFO:     127.0.0.1:39338 - "POST /api/v1/auth/register HTTP/1.1" 201 Created
+INFO:     127.0.0.1:39346 - "OPTIONS /api/v1/auth/verify-otp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39360 - "POST /api/v1/auth/verify-otp HTTP/1.1" 400 Bad Request
+WARNING:  WatchFiles detected changes in 'backend/app/auth/otp.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1510306]
+INFO:     Started server process [1532987]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/routes/auth.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1532987]
+✅ Redis connected successfully
+INFO:     Started server process [1535209]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/auth/otp.py', 'backend/app/routes/auth.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1535209]
+✅ Redis connected successfully
+INFO:     Started server process [1537708]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✅ Redis connected successfully
+INFO:     127.0.0.1:49456 - "POST /api/v1/auth/verify-otp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59862 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+(trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/home/cyberdude/.local/lib/python3.10/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+INFO:     127.0.0.1:59868 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59868 - "OPTIONS /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59862 - "GET /api/v1/auth/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59862 - "OPTIONS /api/v1/client/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59868 - "GET /api/v1/client/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59868 - "GET /api/v1/client/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59868 - "OPTIONS /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59862 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'backend/app/routes/auth.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1537708]
+INFO:     Started server process [1545987]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/routes/auth.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1545987]
+✅ Redis connected successfully
+INFO:     Started server process [1546521]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/routes/client_me.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1546521]
+✅ Redis connected successfully
+INFO:     Started server process [1547272]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/routes/auth.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1547272]
+✅ Redis connected successfully
+INFO:     Started server process [1548981]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/app/routes/client_me.py', 'backend/app/routes/auth.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1548981]
+✅ Redis connected successfully
+INFO:     Started server process [1550230]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✅ Redis connected successfully
+INFO:     127.0.0.1:56712 - "GET /api/v1/client/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56712 - "OPTIONS /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "GET /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "OPTIONS /api/v1/chat/send HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56712 - "POST /api/v1/chat/send HTTP/1.1" 201 Created
+INFO:     127.0.0.1:56712 - "GET /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56712 - "OPTIONS /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381/mark-read?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "PUT /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381/mark-read?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "GET /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "PUT /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381/mark-read?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "GET /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "PUT /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381/mark-read?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "GET /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "PUT /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381/mark-read?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "GET /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "PUT /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381/mark-read?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "GET /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "PUT /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381/mark-read?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "GET /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "PUT /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381/mark-read?role=client HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "GET /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56728 - "PUT /api/v1/chat/bde06ff7-98a4-4cdc-a3ac-1d705b757381/mark-read?role=client HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'backend/app/auth/otp.py', 'services/client-api/shared/t1_business_models.py', 'backend/app/utils/encryption.py', 'backend/app/routes/client_me.py', 'database/schemas.py', 'backend/app/main.py', 'backend/app/routes/admin_full.py', 'backend/app/routes/documents.py', 'backend/test_api.py', 'backend/app/utils/redis_session.py', 'backend/create_demo_user.py', 'backend/test_document_upload_encryption.py', 'backend/create_admin_user.py', 'backend/app/routes/admin_auth.py', 'backend/app/routes/client.py', 'backend/test_step_by_step.py', 'services/client-api/alembic/versions/20241218_add_t1_business_forms.py', 'services/client-api/shared/t1_business_schemas.py', 'backend/test_t1_form_submission.py', 'backend/app/routes/chat.py', 'database/__init__.py', 'services/client-api/shared/t1_business_routes.py', 'backend/test_signup_fix.py', 'backend/app/routes/auth.py', 'backend/app/auth/jwt.py', 'backend/app/routes/t1.py', 'services/client-api/alembic/env.py', 'backend/app/database.py', 'services/client-api/shared/models.py', 'backend/app/routes/filing_status.py', 'backend/test_chat_api.py', 'backend/test_filing_status.py', 'services/client-api/main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1550230]
+INFO:     Started server process [1630771]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✅ Redis connected successfully
+INFO:     127.0.0.1:54216 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50406 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46442 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46456 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47554 - "GET /api/v1/admin/analytics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48556 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48566 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35612 - "GET /api/v1/admin/auth/me HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:35614 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35628 - "GET /api/v1/admin/auth/me HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:35638 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37618 - "GET /api/v1/admin/auth/me HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:37626 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46782 - "GET /api/v1/admin/analytics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46768 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46790 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46798 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56960 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56964 - "GET /api/v1/admin/auth/me HTTP/1.1" 403 Forbidden
+WARNING:  WatchFiles detected changes in 'backend/seed_database.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1630771]
+WARNING:  WatchFiles detected changes in 'backend/seed_database.py'. Reloading...
+INFO:     Started server process [1772218]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/seed_database.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1772218]
+✅ Redis connected successfully
+INFO:     Started server process [1773156]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/seed_database.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1773156]
+✅ Redis connected successfully
+INFO:     Started server process [1774113]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/seed_database.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1774113]
+✅ Redis connected successfully
+INFO:     Started server process [1775921]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/seed_database.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1775921]
+✅ Redis connected successfully
+INFO:     Started server process [1776574]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/seed_database.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1776574]
+✅ Redis connected successfully
+INFO:     Started server process [1777282]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/seed_database.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1777282]
+✅ Redis connected successfully
+INFO:     Started server process [1777834]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/seed_database.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1777834]
+✅ Redis connected successfully
+INFO:     Started server process [1780716]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/seed_database.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1780716]
+✅ Redis connected successfully
+INFO:     Started server process [1782199]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/seed_database.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1782199]
+✅ Redis connected successfully
+INFO:     Started server process [1782350]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'backend/seed_database.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1782350]
+✅ Redis connected successfully
+INFO:     Started server process [1784379]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✅ Redis connected successfully
+INFO:     127.0.0.1:58446 - "GET /health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58446 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58458 - "GET /docs HTTP/1.1" 200 OK
+/home/cyberdude/.local/lib/python3.10/site-packages/fastapi/openapi/utils.py:207: UserWarning: Duplicate Operation ID get_clients_api_v1_admin_clients_get for function get_clients at /home/cyberdude/Documents/Projects/CA-final/backend/app/routes/admin_full.py
+  warnings.warn(message, stacklevel=1)
+INFO:     127.0.0.1:58458 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1784379]
+WARNING:  WatchFiles detected changes in 'database/schemas.py'. Reloading...
+WARNING:  WatchFiles detected changes in 'database/__init__.py'. Reloading...
+WARNING:  WatchFiles detected changes in 'backend/app/auth/otp.py', 'backend/app/utils/encryption.py', 'backend/app/routes/client_me.py', 'backend/app/main.py', 'backend/app/routes/admin_full.py', 'backend/app/routes/documents.py', 'backend/test_api.py', 'backend/app/utils/redis_session.py', 'backend/create_demo_user.py', 'backend/test_document_upload_encryption.py', 'backend/create_admin_user.py', 'backend/app/routes/admin_auth.py', 'backend/app/routes/client.py', 'backend/test_step_by_step.py', 'backend/test_t1_form_submission.py', 'backend/app/routes/chat.py', 'backend/test_signup_fix.py', 'backend/app/routes/auth.py', 'backend/app/routes/t1.py', 'backend/app/auth/jwt.py', 'backend/seed_database.py', 'backend/app/database.py', 'backend/app/routes/filing_status.py', 'backend/test_chat_api.py', 'backend/test_filing_status.py'. Reloading...
+INFO:     Started server process [1837798]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✅ Redis connected successfully
+INFO:     127.0.0.1:43800 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59954 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45088 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40042 - "OPTIONS /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48066 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33574 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54020 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'backend/app/routes/client_me.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1837798]
+INFO:     Started server process [1843565]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✅ Redis connected successfully
+INFO:     127.0.0.1:42824 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'backend/app/routes/client_me.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1843565]
+INFO:     Started server process [1843904]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✅ Redis connected successfully
+INFO:     127.0.0.1:34518 - "GET /api/v1/admin/clients HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1843904]
+INFO:     Stopping reloader process [884167]

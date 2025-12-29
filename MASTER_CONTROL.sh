@@ -154,26 +154,34 @@ start_all_services() {
     fi
     echo ""
     
-    # Step 2: Update Flutter Web with Ngrok URL
-    echo -e "${CYAN}Step 2: Updating Flutter Web with Ngrok URL...${NC}"
+    # Step 2: Update Flutter Web with Backend URL (use localhost, not ngrok)
+    echo -e "${CYAN}Step 2: Configuring Flutter Web with Backend URL...${NC}"
     
-    # Try to find Flutter app directory (prefer mobile-app)
+    # Try to find Flutter app directory
     FLUTTER_DIR=""
-    if [ -d "$BASE_DIR/mobile-app" ]; then
+    if [ -d "$BASE_DIR/services/mobile-app" ]; then
+        FLUTTER_DIR="$BASE_DIR/services/mobile-app"
+    elif [ -d "$BASE_DIR/services/mobile-app" ]; then
+        FLUTTER_DIR="$BASE_DIR/services/mobile-app"
+    elif [ -d "$BASE_DIR/mobile-app" ]; then
         FLUTTER_DIR="$BASE_DIR/mobile-app"
-    elif [ -d "$BASE_DIR/frontend/tax_ease-main (1)/tax_ease-main" ]; then
-        FLUTTER_DIR="$BASE_DIR/frontend/tax_ease-main (1)/tax_ease-main"
     fi
     
     if [ -n "$FLUTTER_DIR" ] && [ -d "$FLUTTER_DIR" ]; then
         API_ENDPOINTS_FILE="$FLUTTER_DIR/lib/core/constants/api_endpoints.dart"
-        if [ -f "$API_ENDPOINTS_FILE" ] && [ -n "$NGROK_URL" ]; then
-            NEW_BASE_URL="${NGROK_URL}/api/v1"
-            sed -i "s|static const String BASE_URL = '.*';|static const String BASE_URL = '$NEW_BASE_URL';|" "$API_ENDPOINTS_FILE"
-            echo -e "${GREEN}✅ Flutter web updated!${NC}"
-            echo -e "${BLUE}   New BASE_URL: $NEW_BASE_URL${NC}"
+        if [ -f "$API_ENDPOINTS_FILE" ]; then
+            # Use localhost for local development
+            LOCAL_BASE_URL="http://localhost:8001/api/v1"
+            sed -i "s|static const String BASE_URL = '.*';|static const String BASE_URL = '$LOCAL_BASE_URL';|" "$API_ENDPOINTS_FILE"
+            echo -e "${GREEN}✅ Flutter web configured!${NC}"
+            echo -e "${BLUE}   BASE_URL: $LOCAL_BASE_URL${NC}"
+            
+            # If ngrok URL is available, note it for reference
+            if [ -n "$NGROK_URL" ]; then
+                echo -e "${BLUE}   Ngrok URL (for reference): ${NGROK_URL}/api/v1${NC}"
+            fi
         else
-            echo -e "${YELLOW}⚠️  Skipping Flutter URL update (file not found or no ngrok URL)${NC}"
+            echo -e "${YELLOW}⚠️  API endpoints file not found: $API_ENDPOINTS_FILE${NC}"
         fi
     else
         echo -e "${YELLOW}⚠️  Flutter directory not found. Skipping URL update.${NC}"
@@ -183,7 +191,7 @@ start_all_services() {
     # Step 3: Start Client Backend
     echo -e "${CYAN}Step 3: Starting Client Backend (Port 8001)...${NC}"
     
-    CLIENT_BACKEND_DIR="$BASE_DIR/client_side"
+    CLIENT_BACKEND_DIR="$BASE_DIR/services/client-api"
     cd "$CLIENT_BACKEND_DIR"
     
     if [ ! -d "venv" ]; then
@@ -214,7 +222,22 @@ start_all_services() {
     # Step 4: Start Admin Backend
     echo -e "${CYAN}Step 4: Starting Admin Backend (Port 8002)...${NC}"
     
-    ADMIN_BACKEND_DIR="$BASE_DIR/tax-hub-dashboard/backend"
+    # Try to find admin backend directory
+    ADMIN_BACKEND_DIR=""
+    if [ -d "$BASE_DIR/services/admin-api" ]; then
+        ADMIN_BACKEND_DIR="$BASE_DIR/services/admin-api"
+    elif [ -d "$BASE_DIR/services/admin-api" ]; then
+        ADMIN_BACKEND_DIR="$BASE_DIR/services/admin-api"
+    elif [ -d "$BASE_DIR/tax-hub-dashboard/backend" ]; then
+        ADMIN_BACKEND_DIR="$BASE_DIR/tax-hub-dashboard/backend"
+    fi
+    
+    if [ -z "$ADMIN_BACKEND_DIR" ] || [ ! -d "$ADMIN_BACKEND_DIR" ]; then
+        echo -e "${RED}❌ Admin backend directory not found!${NC}"
+        echo -e "${YELLOW}   Expected: $BASE_DIR/services/admin-api${NC}"
+        exit 1
+    fi
+    
     cd "$ADMIN_BACKEND_DIR"
     
     if [ ! -d "venv" ]; then
@@ -243,7 +266,22 @@ start_all_services() {
     # Step 5: Start Admin Dashboard
     echo -e "${CYAN}Step 5: Starting Admin Dashboard (Port 8080)...${NC}"
     
-    ADMIN_DASHBOARD_DIR="$BASE_DIR/tax-hub-dashboard"
+    # Try to find admin dashboard directory
+    ADMIN_DASHBOARD_DIR=""
+    if [ -d "$BASE_DIR/services/admin-frontend" ] && [ -f "$BASE_DIR/services/admin-frontend/package.json" ]; then
+        ADMIN_DASHBOARD_DIR="$BASE_DIR/services/admin-frontend"
+    elif [ -d "$BASE_DIR/admin-dashboard" ] && [ -f "$BASE_DIR/admin-dashboard/package.json" ]; then
+        ADMIN_DASHBOARD_DIR="$BASE_DIR/admin-dashboard"
+    elif [ -d "$BASE_DIR/tax-hub-dashboard" ] && [ -f "$BASE_DIR/tax-hub-dashboard/package.json" ]; then
+        ADMIN_DASHBOARD_DIR="$BASE_DIR/tax-hub-dashboard"
+    fi
+    
+    if [ -z "$ADMIN_DASHBOARD_DIR" ] || [ ! -d "$ADMIN_DASHBOARD_DIR" ]; then
+        echo -e "${RED}❌ Admin dashboard directory not found!${NC}"
+        echo -e "${YELLOW}   Expected: $BASE_DIR/services/admin-frontend${NC}"
+        exit 1
+    fi
+    
     cd "$ADMIN_DASHBOARD_DIR"
     
     if [ ! -d "node_modules" ]; then
@@ -263,17 +301,19 @@ start_all_services() {
     # Step 6: Start Flutter Web
     echo -e "${CYAN}Step 6: Starting Flutter Web (Client Frontend)...${NC}"
     
-    # Try to find Flutter app directory (prefer mobile-app)
+    # Try to find Flutter app directory
     FLUTTER_APP_DIR=""
-    if [ -d "$BASE_DIR/mobile-app" ]; then
+    if [ -d "$BASE_DIR/services/mobile-app" ]; then
+        FLUTTER_APP_DIR="$BASE_DIR/services/mobile-app"
+    elif [ -d "$BASE_DIR/services/mobile-app" ]; then
+        FLUTTER_APP_DIR="$BASE_DIR/services/mobile-app"
+    elif [ -d "$BASE_DIR/mobile-app" ]; then
         FLUTTER_APP_DIR="$BASE_DIR/mobile-app"
-    elif [ -d "$BASE_DIR/frontend/tax_ease-main (1)/tax_ease-main" ]; then
-        FLUTTER_APP_DIR="$BASE_DIR/frontend/tax_ease-main (1)/tax_ease-main"
     fi
     
     if [ -z "$FLUTTER_APP_DIR" ] || [ ! -d "$FLUTTER_APP_DIR" ]; then
         echo -e "${YELLOW}⚠️  Flutter app directory not found. Skipping Flutter Web.${NC}"
-        echo -e "${YELLOW}   Expected: $BASE_DIR/mobile-app or $BASE_DIR/frontend/tax_ease-main (1)/tax_ease-main${NC}"
+        echo -e "${YELLOW}   Expected: $BASE_DIR/services/mobile-app${NC}"
     elif ! command -v flutter &> /dev/null; then
         echo -e "${RED}❌ Flutter is not installed or not in PATH${NC}"
         echo -e "${YELLOW}⚠️  Skipping Flutter Web${NC}"
@@ -291,7 +331,7 @@ start_all_services() {
         FLUTTER_WEB_PID=$!
         echo "$FLUTTER_WEB_PID" > "$BASE_DIR/logs/flutter-web.pid"
         
-        sleep 10
+        sleep 15
         
         if check_port 3000; then
             echo -e "${GREEN}✅ Flutter Web started on http://localhost:3000${NC}"
