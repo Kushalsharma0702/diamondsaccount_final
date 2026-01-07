@@ -16,7 +16,10 @@ from shared.models import User
 from shared.t1_business_models import (
     T1FormMain, T1PersonalInfo, T1SpouseInfo, T1ChildInfo,
     T1ForeignProperty, T1MovingExpense, T1MovingExpenseIndividual, T1MovingExpenseSpouse,
-    T1SelfEmployment, T1UberBusiness, T1GeneralBusiness, T1RentalIncome
+    T1SelfEmployment, T1UberBusiness, T1GeneralBusiness, T1RentalIncome,
+    T1MedicalExpense, T1WorkFromHomeExpense, T1DaycareExpense, T1FirstTimeFiler,
+    T1ProvinceFiler, T1SoldPropertyShortTerm, T1UnionMemberDue, T1ProfessionalDue,
+    T1ChildArtSportCredit, T1DisabilityTaxCredit, T1DeceasedReturn
 )
 from shared.t1_business_schemas import (
     T1FormDataSchema, T1FormCreateRequest, T1FormResponse,
@@ -59,6 +62,8 @@ def convert_form_data_to_db(form_data: T1FormDataSchema, user_id: str, db_form: 
     db_form.has_rrsp_fhsa_investment = form_data.hasRrspFhsaInvestment
     db_form.has_child_art_sport_credit = form_data.hasChildArtSportCredit
     db_form.is_province_filer = form_data.isProvinceFiler
+    db_form.has_disability_tax_credit = form_data.hasDisabilityTaxCredit
+    db_form.is_filing_for_deceased = form_data.isFilingForDeceased
     db_form.uploaded_documents = form_data.uploadedDocuments
     db_form.awaiting_documents = form_data.awaitingDocuments
     db_form.updated_at = datetime.utcnow()
@@ -71,7 +76,11 @@ def convert_db_to_form_data(db_form: T1FormMain) -> T1FormDataSchema:
     from shared.t1_business_schemas import (
         T1PersonalInfoSchema, T1SpouseInfoSchema, T1ChildInfoSchema,
         T1ForeignPropertySchema, T1MovingExpenseSchema, T1SelfEmploymentSchema,
-        T1UberBusinessSchema, T1GeneralBusinessSchema, T1RentalIncomeSchema
+        T1UberBusinessSchema, T1GeneralBusinessSchema, T1RentalIncomeSchema,
+        T1MedicalExpenseSchema, T1WorkFromHomeExpenseSchema, T1DaycareExpenseSchema,
+        T1FirstTimeFilerSchema, T1ProvinceFilerSchema, T1SoldPropertyShortTermSchema,
+        T1UnionMemberDueSchema, T1ProfessionalDueSchema, T1ChildArtSportCreditSchema,
+        T1DisabilityTaxCreditSchema, T1DeceasedReturnSchema
     )
     
     # Convert personal info
@@ -126,6 +135,132 @@ def convert_db_to_form_data(db_form: T1FormMain) -> T1FormDataSchema:
         for fp in (db_form.foreign_properties or [])
     ]
     
+    # Convert medical expenses
+    medical_expenses = [
+        T1MedicalExpenseSchema(
+            paymentDate=me.payment_date,
+            patientName=me.patient_name or "",
+            paymentMadeTo=me.payment_made_to or "",
+            descriptionOfExpense=me.description_of_expense or "",
+            insuranceCovered=me.insurance_covered or 0.0,
+            amountPaidFromPocket=me.amount_paid_from_pocket or 0.0
+        )
+        for me in (db_form.medical_expenses or [])
+    ]
+    
+    # Convert work from home expense
+    work_from_home_expense = None
+    if db_form.work_from_home_expense:
+        work_from_home_expense = T1WorkFromHomeExpenseSchema(
+            totalHouseAreaSqft=db_form.work_from_home_expense.total_house_area_sqft or 0.0,
+            totalWorkAreaSqft=db_form.work_from_home_expense.total_work_area_sqft or 0.0,
+            rentExpense=db_form.work_from_home_expense.rent_expense or 0.0,
+            mortgageExpense=db_form.work_from_home_expense.mortgage_expense or 0.0,
+            wifiExpense=db_form.work_from_home_expense.wifi_expense or 0.0,
+            electricityExpense=db_form.work_from_home_expense.electricity_expense or 0.0,
+            waterExpense=db_form.work_from_home_expense.water_expense or 0.0,
+            heatExpense=db_form.work_from_home_expense.heat_expense or 0.0,
+            totalInsuranceExpense=db_form.work_from_home_expense.total_insurance_expense or 0.0,
+            rentMortgageExpense=db_form.work_from_home_expense.rent_mortgage_expense or 0.0,
+            utilitiesExpense=db_form.work_from_home_expense.utilities_expense or 0.0
+        )
+    
+    # Convert daycare expenses
+    daycare_expenses = [
+        T1DaycareExpenseSchema(
+            childcareProvider=de.childcare_provider or "",
+            amount=de.amount or 0.0,
+            identificationNumberSin=de.identification_number_sin or "",
+            weeks=de.weeks or 0
+        )
+        for de in (db_form.daycare_expenses or [])
+    ]
+    
+    # Convert first time filer
+    first_time_filer = None
+    if db_form.first_time_filer:
+        first_time_filer = T1FirstTimeFilerSchema(
+            dateOfLandingIndividual=db_form.first_time_filer.date_of_landing_individual,
+            incomeOutsideCanadaCad=db_form.first_time_filer.income_outside_canada_cad or 0.0,
+            backHomeIncome2024Cad=db_form.first_time_filer.back_home_income_2024_cad or 0.0,
+            backHomeIncome2023Cad=db_form.first_time_filer.back_home_income_2023_cad or 0.0
+        )
+    
+    # Convert province filer
+    province_filer = [
+        T1ProvinceFilerSchema(
+            rentOrPropertyTax=pf.rent_or_property_tax or "",
+            propertyAddress=pf.property_address or "",
+            postalCode=pf.postal_code or "",
+            numberOfMonthsResides=pf.number_of_months_resides or 0,
+            amountPaid=pf.amount_paid or 0.0
+        )
+        for pf in (db_form.province_filer or [])
+    ]
+    
+    # Convert sold property short term
+    sold_property_short_term_details = None
+    if db_form.sold_property_short_term:
+        sold_property_short_term_details = T1SoldPropertyShortTermSchema(
+            propertyAddress=db_form.sold_property_short_term.property_address or "",
+            purchaseDate=db_form.sold_property_short_term.purchase_date,
+            sellDate=db_form.sold_property_short_term.sell_date,
+            purchaseAndSellExpenses=db_form.sold_property_short_term.purchase_and_sell_expenses or 0.0
+        )
+    
+    # Convert union member dues
+    union_member_dues = [
+        T1UnionMemberDueSchema(
+            institutionName=umd.institution_name or "",
+            amount=umd.amount or 0.0
+        )
+        for umd in (db_form.union_member_dues or [])
+    ]
+    
+    # Convert professional dues
+    professional_dues = [
+        T1ProfessionalDueSchema(
+            name=pd.name or "",
+            organization=pd.organization or "",
+            amount=pd.amount or 0.0
+        )
+        for pd in (db_form.professional_dues or [])
+    ]
+    
+    # Convert child art/sport credits
+    child_art_sport_credits = [
+        T1ChildArtSportCreditSchema(
+            instituteName=casc.institute_name or "",
+            description=casc.description or "",
+            amount=casc.amount or 0.0
+        )
+        for casc in (db_form.child_art_sport_credits or [])
+    ]
+    
+    # Convert disability tax credits
+    disability_tax_credits = [
+        T1DisabilityTaxCreditSchema(
+            firstName=dtc.first_name or "",
+            lastName=dtc.last_name or "",
+            relation=dtc.relation or "",
+            approvedYear=dtc.approved_year or 0
+        )
+        for dtc in (db_form.disability_tax_credits or [])
+    ]
+    
+    # Convert deceased return
+    deceased_return_info = None
+    if db_form.deceased_return:
+        deceased_return_info = T1DeceasedReturnSchema(
+            deceasedFullName=db_form.deceased_return.deceased_full_name or "",
+            dateOfDeath=db_form.deceased_return.date_of_death,
+            deceasedSin=db_form.deceased_return.deceased_sin or "",
+            deceasedMailingAddress=db_form.deceased_return.deceased_mailing_address or "",
+            legalRepresentativeName=db_form.deceased_return.legal_representative_name or "",
+            legalRepresentativeContactNumber=db_form.deceased_return.legal_representative_contact_number or "",
+            legalRepresentativeAddress=db_form.deceased_return.legal_representative_address or ""
+        )
+    
     # Convert moving expenses (simplified - full implementation needed)
     moving_expense = None
     moving_expense_individual = None
@@ -144,6 +279,7 @@ def convert_db_to_form_data(db_form: T1FormMain) -> T1FormDataSchema:
         hasForeignProperty=db_form.has_foreign_property,
         foreignProperties=foreign_properties,
         hasMedicalExpenses=db_form.has_medical_expenses,
+        medicalExpenses=medical_expenses,
         hasCharitableDonations=db_form.has_charitable_donations,
         hasMovingExpenses=db_form.has_moving_expenses,
         movingExpense=moving_expense,
@@ -156,17 +292,29 @@ def convert_db_to_form_data(db_form: T1FormMain) -> T1FormDataSchema:
         isFirstHomeBuyer=db_form.is_first_home_buyer,
         soldPropertyLongTerm=db_form.sold_property_long_term,
         soldPropertyShortTerm=db_form.sold_property_short_term,
+        soldPropertyShortTermDetails=sold_property_short_term_details,
         hasWorkFromHomeExpense=db_form.has_work_from_home_expense,
+        workFromHomeExpense=work_from_home_expense,
         wasStudentLastYear=db_form.was_student_last_year,
         isUnionMember=db_form.is_union_member,
+        unionMemberDues=union_member_dues,
         hasDaycareExpenses=db_form.has_daycare_expenses,
+        daycareExpenses=daycare_expenses,
         isFirstTimeFiler=db_form.is_first_time_filer,
+        firstTimeFiler=first_time_filer,
         hasOtherIncome=db_form.has_other_income,
         otherIncomeDescription=db_form.other_income_description or "",
         hasProfessionalDues=db_form.has_professional_dues,
+        professionalDues=professional_dues,
         hasRrspFhsaInvestment=db_form.has_rrsp_fhsa_investment,
         hasChildArtSportCredit=db_form.has_child_art_sport_credit,
+        childArtSportCredits=child_art_sport_credits,
         isProvinceFiler=db_form.is_province_filer,
+        provinceFiler=province_filer,
+        hasDisabilityTaxCredit=db_form.has_disability_tax_credit,
+        disabilityTaxCredits=disability_tax_credits,
+        isFilingForDeceased=db_form.is_filing_for_deceased,
+        deceasedReturnInfo=deceased_return_info,
         uploadedDocuments=db_form.uploaded_documents or {},
         awaitingDocuments=db_form.awaiting_documents or False
     )
@@ -296,8 +444,236 @@ async def save_t1_form(
             )
             db.add(foreign_prop)
         
-        # TODO: Handle moving expenses, self employment, etc.
-        # This is a simplified version - full implementation would handle all nested objects
+        # Handle medical expenses
+        if existing_form:
+            await db.execute(
+                delete(T1MedicalExpense).where(T1MedicalExpense.form_id == existing_form.id)
+            )
+        
+        for me in form_data.medicalExpenses:
+            medical_exp = T1MedicalExpense(
+                form_id=db_form.id,
+                payment_date=me.paymentDate,
+                patient_name=me.patientName,
+                payment_made_to=me.paymentMadeTo,
+                description_of_expense=me.descriptionOfExpense,
+                insurance_covered=me.insuranceCovered,
+                amount_paid_from_pocket=me.amountPaidFromPocket
+            )
+            db.add(medical_exp)
+        
+        # Handle work from home expense
+        if form_data.workFromHomeExpense:
+            if existing_form and existing_form.work_from_home_expense:
+                wfh = existing_form.work_from_home_expense
+                wfh.total_house_area_sqft = form_data.workFromHomeExpense.totalHouseAreaSqft
+                wfh.total_work_area_sqft = form_data.workFromHomeExpense.totalWorkAreaSqft
+                wfh.rent_expense = form_data.workFromHomeExpense.rentExpense
+                wfh.mortgage_expense = form_data.workFromHomeExpense.mortgageExpense
+                wfh.wifi_expense = form_data.workFromHomeExpense.wifiExpense
+                wfh.electricity_expense = form_data.workFromHomeExpense.electricityExpense
+                wfh.water_expense = form_data.workFromHomeExpense.waterExpense
+                wfh.heat_expense = form_data.workFromHomeExpense.heatExpense
+                wfh.total_insurance_expense = form_data.workFromHomeExpense.totalInsuranceExpense
+                wfh.rent_mortgage_expense = form_data.workFromHomeExpense.rentMortgageExpense
+                wfh.utilities_expense = form_data.workFromHomeExpense.utilitiesExpense
+            else:
+                wfh = T1WorkFromHomeExpense(
+                    form_id=db_form.id,
+                    total_house_area_sqft=form_data.workFromHomeExpense.totalHouseAreaSqft,
+                    total_work_area_sqft=form_data.workFromHomeExpense.totalWorkAreaSqft,
+                    rent_expense=form_data.workFromHomeExpense.rentExpense,
+                    mortgage_expense=form_data.workFromHomeExpense.mortgageExpense,
+                    wifi_expense=form_data.workFromHomeExpense.wifiExpense,
+                    electricity_expense=form_data.workFromHomeExpense.electricityExpense,
+                    water_expense=form_data.workFromHomeExpense.waterExpense,
+                    heat_expense=form_data.workFromHomeExpense.heatExpense,
+                    total_insurance_expense=form_data.workFromHomeExpense.totalInsuranceExpense,
+                    rent_mortgage_expense=form_data.workFromHomeExpense.rentMortgageExpense,
+                    utilities_expense=form_data.workFromHomeExpense.utilitiesExpense
+                )
+                db.add(wfh)
+        
+        # Handle daycare expenses
+        if existing_form:
+            await db.execute(
+                delete(T1DaycareExpense).where(T1DaycareExpense.form_id == existing_form.id)
+            )
+        
+        for de in form_data.daycareExpenses:
+            daycare_exp = T1DaycareExpense(
+                form_id=db_form.id,
+                childcare_provider=de.childcareProvider,
+                amount=de.amount,
+                identification_number_sin=de.identificationNumberSin,
+                weeks=de.weeks
+            )
+            db.add(daycare_exp)
+        
+        # Handle first time filer
+        if form_data.firstTimeFiler:
+            if existing_form and existing_form.first_time_filer:
+                ftf = existing_form.first_time_filer
+                ftf.date_of_landing_individual = form_data.firstTimeFiler.dateOfLandingIndividual
+                ftf.income_outside_canada_cad = form_data.firstTimeFiler.incomeOutsideCanadaCad
+                ftf.back_home_income_2024_cad = form_data.firstTimeFiler.backHomeIncome2024Cad
+                ftf.back_home_income_2023_cad = form_data.firstTimeFiler.backHomeIncome2023Cad
+            else:
+                ftf = T1FirstTimeFiler(
+                    form_id=db_form.id,
+                    date_of_landing_individual=form_data.firstTimeFiler.dateOfLandingIndividual,
+                    income_outside_canada_cad=form_data.firstTimeFiler.incomeOutsideCanadaCad,
+                    back_home_income_2024_cad=form_data.firstTimeFiler.backHomeIncome2024Cad,
+                    back_home_income_2023_cad=form_data.firstTimeFiler.backHomeIncome2023Cad
+                )
+                db.add(ftf)
+        
+        # Handle province filer
+        if existing_form:
+            await db.execute(
+                delete(T1ProvinceFiler).where(T1ProvinceFiler.form_id == existing_form.id)
+            )
+        
+        for pf in form_data.provinceFiler:
+            province_f = T1ProvinceFiler(
+                form_id=db_form.id,
+                rent_or_property_tax=pf.rentOrPropertyTax,
+                property_address=pf.propertyAddress,
+                postal_code=pf.postalCode,
+                number_of_months_resides=pf.numberOfMonthsResides,
+                amount_paid=pf.amountPaid
+            )
+            db.add(province_f)
+        
+        # Handle sold property short term
+        if form_data.soldPropertyShortTermDetails:
+            if existing_form and existing_form.sold_property_short_term:
+                spst = existing_form.sold_property_short_term
+                spst.property_address = form_data.soldPropertyShortTermDetails.propertyAddress
+                spst.purchase_date = form_data.soldPropertyShortTermDetails.purchaseDate
+                spst.sell_date = form_data.soldPropertyShortTermDetails.sellDate
+                spst.purchase_and_sell_expenses = form_data.soldPropertyShortTermDetails.purchaseAndSellExpenses
+            else:
+                spst = T1SoldPropertyShortTerm(
+                    form_id=db_form.id,
+                    property_address=form_data.soldPropertyShortTermDetails.propertyAddress,
+                    purchase_date=form_data.soldPropertyShortTermDetails.purchaseDate,
+                    sell_date=form_data.soldPropertyShortTermDetails.sellDate,
+                    purchase_and_sell_expenses=form_data.soldPropertyShortTermDetails.purchaseAndSellExpenses
+                )
+                db.add(spst)
+        
+        # Handle union member dues
+        if existing_form:
+            await db.execute(
+                delete(T1UnionMemberDue).where(T1UnionMemberDue.form_id == existing_form.id)
+            )
+        
+        for umd in form_data.unionMemberDues:
+            union_due = T1UnionMemberDue(
+                form_id=db_form.id,
+                institution_name=umd.institutionName,
+                amount=umd.amount
+            )
+            db.add(union_due)
+        
+        # Handle professional dues
+        if existing_form:
+            await db.execute(
+                delete(T1ProfessionalDue).where(T1ProfessionalDue.form_id == existing_form.id)
+            )
+        
+        for pd in form_data.professionalDues:
+            prof_due = T1ProfessionalDue(
+                form_id=db_form.id,
+                name=pd.name,
+                organization=pd.organization,
+                amount=pd.amount
+            )
+            db.add(prof_due)
+        
+        # Handle child art/sport credits
+        if existing_form:
+            await db.execute(
+                delete(T1ChildArtSportCredit).where(T1ChildArtSportCredit.form_id == existing_form.id)
+            )
+        
+        for casc in form_data.childArtSportCredits:
+            art_sport = T1ChildArtSportCredit(
+                form_id=db_form.id,
+                institute_name=casc.instituteName,
+                description=casc.description,
+                amount=casc.amount
+            )
+            db.add(art_sport)
+        
+        # Handle disability tax credits
+        if existing_form:
+            await db.execute(
+                delete(T1DisabilityTaxCredit).where(T1DisabilityTaxCredit.form_id == existing_form.id)
+            )
+        
+        for dtc in form_data.disabilityTaxCredits:
+            disability = T1DisabilityTaxCredit(
+                form_id=db_form.id,
+                first_name=dtc.firstName,
+                last_name=dtc.lastName,
+                relation=dtc.relation,
+                approved_year=dtc.approvedYear
+            )
+            db.add(disability)
+        
+        # Handle deceased return
+        if form_data.deceasedReturnInfo:
+            if existing_form and existing_form.deceased_return:
+                dr = existing_form.deceased_return
+                dr.deceased_full_name = form_data.deceasedReturnInfo.deceasedFullName
+                dr.date_of_death = form_data.deceasedReturnInfo.dateOfDeath
+                dr.deceased_sin = form_data.deceasedReturnInfo.deceasedSin
+                dr.deceased_mailing_address = form_data.deceasedReturnInfo.deceasedMailingAddress
+                dr.legal_representative_name = form_data.deceasedReturnInfo.legalRepresentativeName
+                dr.legal_representative_contact_number = form_data.deceasedReturnInfo.legalRepresentativeContactNumber
+                dr.legal_representative_address = form_data.deceasedReturnInfo.legalRepresentativeAddress
+            else:
+                dr = T1DeceasedReturn(
+                    form_id=db_form.id,
+                    deceased_full_name=form_data.deceasedReturnInfo.deceasedFullName,
+                    date_of_death=form_data.deceasedReturnInfo.dateOfDeath,
+                    deceased_sin=form_data.deceasedReturnInfo.deceasedSin,
+                    deceased_mailing_address=form_data.deceasedReturnInfo.deceasedMailingAddress,
+                    legal_representative_name=form_data.deceasedReturnInfo.legalRepresentativeName,
+                    legal_representative_contact_number=form_data.deceasedReturnInfo.legalRepresentativeContactNumber,
+                    legal_representative_address=form_data.deceasedReturnInfo.legalRepresentativeAddress
+                )
+                db.add(dr)
+        
+        # Update main form boolean flags
+        db_form.has_foreign_property = form_data.hasForeignProperty
+        db_form.has_medical_expenses = form_data.hasMedicalExpenses
+        db_form.has_charitable_donations = form_data.hasCharitableDonations
+        db_form.has_moving_expenses = form_data.hasMovingExpenses
+        db_form.is_self_employed = form_data.isSelfEmployed
+        db_form.is_first_home_buyer = form_data.isFirstHomeBuyer
+        db_form.sold_property_long_term = form_data.soldPropertyLongTerm
+        db_form.sold_property_short_term = form_data.soldPropertyShortTerm
+        db_form.has_work_from_home_expense = form_data.hasWorkFromHomeExpense
+        db_form.was_student_last_year = form_data.wasStudentLastYear
+        db_form.is_union_member = form_data.isUnionMember
+        db_form.has_daycare_expenses = form_data.hasDaycareExpenses
+        db_form.is_first_time_filer = form_data.isFirstTimeFiler
+        db_form.has_other_income = form_data.hasOtherIncome
+        db_form.other_income_description = form_data.otherIncomeDescription
+        db_form.has_professional_dues = form_data.hasProfessionalDues
+        db_form.has_rrsp_fhsa_investment = form_data.hasRrspFhsaInvestment
+        db_form.has_child_art_sport_credit = form_data.hasChildArtSportCredit
+        db_form.is_province_filer = form_data.isProvinceFiler
+        db_form.has_disability_tax_credit = form_data.hasDisabilityTaxCredit
+        db_form.is_filing_for_deceased = form_data.isFilingForDeceased
+        db_form.uploaded_documents = form_data.uploadedDocuments
+        db_form.awaiting_documents = form_data.awaitingDocuments
+        
+        # TODO: Handle moving expenses and self employment (already partially implemented)
+        # Moving expenses and self employment handling would go here if needed
         
         await db.commit()
         await db.refresh(db_form)
@@ -306,7 +682,18 @@ async def save_t1_form(
         stmt = select(T1FormMain).options(
             selectinload(T1FormMain.personal_info).selectinload(T1PersonalInfo.spouse_info),
             selectinload(T1FormMain.personal_info).selectinload(T1PersonalInfo.children),
-            selectinload(T1FormMain.foreign_properties)
+            selectinload(T1FormMain.foreign_properties),
+            selectinload(T1FormMain.medical_expenses),
+            selectinload(T1FormMain.work_from_home_expense),
+            selectinload(T1FormMain.daycare_expenses),
+            selectinload(T1FormMain.first_time_filer),
+            selectinload(T1FormMain.province_filer),
+            selectinload(T1FormMain.sold_property_short_term),
+            selectinload(T1FormMain.union_member_dues),
+            selectinload(T1FormMain.professional_dues),
+            selectinload(T1FormMain.child_art_sport_credits),
+            selectinload(T1FormMain.disability_tax_credits),
+            selectinload(T1FormMain.deceased_return)
         ).where(T1FormMain.id == db_form.id)
         
         result = await db.execute(stmt)
@@ -343,7 +730,18 @@ async def get_all_t1_forms(
         stmt = select(T1FormMain).options(
             selectinload(T1FormMain.personal_info).selectinload(T1PersonalInfo.spouse_info),
             selectinload(T1FormMain.personal_info).selectinload(T1PersonalInfo.children),
-            selectinload(T1FormMain.foreign_properties)
+            selectinload(T1FormMain.foreign_properties),
+            selectinload(T1FormMain.medical_expenses),
+            selectinload(T1FormMain.work_from_home_expense),
+            selectinload(T1FormMain.daycare_expenses),
+            selectinload(T1FormMain.first_time_filer),
+            selectinload(T1FormMain.province_filer),
+            selectinload(T1FormMain.sold_property_short_term),
+            selectinload(T1FormMain.union_member_dues),
+            selectinload(T1FormMain.professional_dues),
+            selectinload(T1FormMain.child_art_sport_credits),
+            selectinload(T1FormMain.disability_tax_credits),
+            selectinload(T1FormMain.deceased_return)
         ).where(T1FormMain.user_id == current_user.id)
         
         result = await db.execute(stmt)
@@ -379,7 +777,18 @@ async def get_t1_form_by_id(
         stmt = select(T1FormMain).options(
             selectinload(T1FormMain.personal_info).selectinload(T1PersonalInfo.spouse_info),
             selectinload(T1FormMain.personal_info).selectinload(T1PersonalInfo.children),
-            selectinload(T1FormMain.foreign_properties)
+            selectinload(T1FormMain.foreign_properties),
+            selectinload(T1FormMain.medical_expenses),
+            selectinload(T1FormMain.work_from_home_expense),
+            selectinload(T1FormMain.daycare_expenses),
+            selectinload(T1FormMain.first_time_filer),
+            selectinload(T1FormMain.province_filer),
+            selectinload(T1FormMain.sold_property_short_term),
+            selectinload(T1FormMain.union_member_dues),
+            selectinload(T1FormMain.professional_dues),
+            selectinload(T1FormMain.child_art_sport_credits),
+            selectinload(T1FormMain.disability_tax_credits),
+            selectinload(T1FormMain.deceased_return)
         ).where(
             T1FormMain.id == form_id,
             T1FormMain.user_id == current_user.id
@@ -453,6 +862,8 @@ async def delete_t1_form(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error deleting T1 form: {str(e)}"
         )
+
+
 
 
 

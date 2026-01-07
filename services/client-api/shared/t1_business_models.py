@@ -48,10 +48,25 @@ class T1FormMain(Base):
     uploaded_documents = Column(JSON, default=dict)  # Map<String, String>
     awaiting_documents = Column(Boolean, default=False)
     
+    # Additional fields from questionnaire
+    has_disability_tax_credit = Column(Boolean, nullable=True)
+    is_filing_for_deceased = Column(Boolean, nullable=True)
+    
     # Relationships
     user = relationship("User", back_populates="t1_forms_main")
     personal_info = relationship("T1PersonalInfo", back_populates="form", uselist=False, cascade="all, delete-orphan")
     foreign_properties = relationship("T1ForeignProperty", back_populates="form", cascade="all, delete-orphan")
+    medical_expenses = relationship("T1MedicalExpense", back_populates="form", cascade="all, delete-orphan")
+    work_from_home_expense = relationship("T1WorkFromHomeExpense", back_populates="form", uselist=False, cascade="all, delete-orphan")
+    daycare_expenses = relationship("T1DaycareExpense", back_populates="form", cascade="all, delete-orphan")
+    first_time_filer = relationship("T1FirstTimeFiler", back_populates="form", uselist=False, cascade="all, delete-orphan")
+    province_filer = relationship("T1ProvinceFiler", back_populates="form", cascade="all, delete-orphan")
+    sold_property_short_term = relationship("T1SoldPropertyShortTerm", back_populates="form", uselist=False, cascade="all, delete-orphan")
+    union_member_dues = relationship("T1UnionMemberDue", back_populates="form", cascade="all, delete-orphan")
+    professional_dues = relationship("T1ProfessionalDue", back_populates="form", cascade="all, delete-orphan")
+    child_art_sport_credits = relationship("T1ChildArtSportCredit", back_populates="form", cascade="all, delete-orphan")
+    disability_tax_credits = relationship("T1DisabilityTaxCredit", back_populates="form", cascade="all, delete-orphan")
+    deceased_return = relationship("T1DeceasedReturn", back_populates="form", uselist=False, cascade="all, delete-orphan")
     moving_expense = relationship("T1MovingExpense", back_populates="form", uselist=False, cascade="all, delete-orphan")
     moving_expense_individual = relationship("T1MovingExpenseIndividual", back_populates="form", uselist=False, cascade="all, delete-orphan")
     moving_expense_spouse = relationship("T1MovingExpenseSpouse", back_populates="form", uselist=False, cascade="all, delete-orphan")
@@ -411,6 +426,235 @@ class T1RentalIncome(Base):
     # Relationships
     self_employment = relationship("T1SelfEmployment", back_populates="rental_income")
 
+
+# Medical Expenses
+class T1MedicalExpense(Base):
+    """Medical Expenses"""
+    __tablename__ = "t1_medical_expenses"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    form_id = Column(String(50), ForeignKey("t1_forms_main.id"), nullable=False)
+    
+    payment_date = Column(DateTime(timezone=True), nullable=True)
+    patient_name = Column(String(200), nullable=True)
+    payment_made_to = Column(String(200), nullable=True)
+    description_of_expense = Column(Text, nullable=True)
+    insurance_covered = Column(Float, default=0.0)
+    amount_paid_from_pocket = Column(Float, default=0.0)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    # Relationships
+    form = relationship("T1FormMain", back_populates="medical_expenses")
+
+
+# Work from Home Expenses
+class T1WorkFromHomeExpense(Base):
+    """Work from Home Expenses"""
+    __tablename__ = "t1_work_from_home_expenses"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    form_id = Column(String(50), ForeignKey("t1_forms_main.id"), nullable=False, unique=True)
+    
+    total_house_area_sqft = Column(Float, default=0.0)
+    total_work_area_sqft = Column(Float, default=0.0)
+    rent_expense = Column(Float, default=0.0)
+    mortgage_expense = Column(Float, default=0.0)
+    wifi_expense = Column(Float, default=0.0)
+    electricity_expense = Column(Float, default=0.0)
+    water_expense = Column(Float, default=0.0)
+    heat_expense = Column(Float, default=0.0)
+    total_insurance_expense = Column(Float, default=0.0)
+    # Alternative simplified fields
+    rent_mortgage_expense = Column(Float, default=0.0)
+    utilities_expense = Column(Float, default=0.0)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    # Relationships
+    form = relationship("T1FormMain", back_populates="work_from_home_expense")
+
+
+# Daycare Expenses
+class T1DaycareExpense(Base):
+    """Daycare Expenses"""
+    __tablename__ = "t1_daycare_expenses"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    form_id = Column(String(50), ForeignKey("t1_forms_main.id"), nullable=False)
+    
+    childcare_provider = Column(String(200), nullable=True)
+    amount = Column(Float, default=0.0)
+    identification_number_sin = Column(String(50), nullable=True)
+    weeks = Column(Integer, default=0)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    # Relationships
+    form = relationship("T1FormMain", back_populates="daycare_expenses")
+
+
+# First Time Filer
+class T1FirstTimeFiler(Base):
+    """First Time Filer Information"""
+    __tablename__ = "t1_first_time_filer"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    form_id = Column(String(50), ForeignKey("t1_forms_main.id"), nullable=False, unique=True)
+    
+    date_of_landing_individual = Column(DateTime(timezone=True), nullable=True)
+    income_outside_canada_cad = Column(Float, default=0.0)
+    back_home_income_2024_cad = Column(Float, default=0.0)
+    back_home_income_2023_cad = Column(Float, default=0.0)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    # Relationships
+    form = relationship("T1FormMain", back_populates="first_time_filer")
+
+
+# Province Filer
+class T1ProvinceFiler(Base):
+    """Province Filer Information (Ontario/Alberta/Quebec)"""
+    __tablename__ = "t1_province_filer"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    form_id = Column(String(50), ForeignKey("t1_forms_main.id"), nullable=False)
+    
+    rent_or_property_tax = Column(String(50), nullable=True)
+    property_address = Column(Text, nullable=True)
+    postal_code = Column(String(20), nullable=True)
+    number_of_months_resides = Column(Integer, default=0)
+    amount_paid = Column(Float, default=0.0)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    # Relationships
+    form = relationship("T1FormMain", back_populates="province_filer")
+
+
+# Sold Property Short Term (Flip Property)
+class T1SoldPropertyShortTerm(Base):
+    """Sold Property Short Term (Flip Property)"""
+    __tablename__ = "t1_sold_property_short_term"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    form_id = Column(String(50), ForeignKey("t1_forms_main.id"), nullable=False, unique=True)
+    
+    property_address = Column(Text, nullable=True)
+    purchase_date = Column(DateTime(timezone=True), nullable=True)
+    sell_date = Column(DateTime(timezone=True), nullable=True)
+    purchase_and_sell_expenses = Column(Float, default=0.0)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    # Relationships
+    form = relationship("T1FormMain", back_populates="sold_property_short_term")
+
+
+# Union Member Dues
+class T1UnionMemberDue(Base):
+    """Union Member Dues"""
+    __tablename__ = "t1_union_member_dues"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    form_id = Column(String(50), ForeignKey("t1_forms_main.id"), nullable=False)
+    
+    institution_name = Column(String(200), nullable=True)
+    amount = Column(Float, default=0.0)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    # Relationships
+    form = relationship("T1FormMain", back_populates="union_member_dues")
+
+
+# Professional Dues
+class T1ProfessionalDue(Base):
+    """Professional Dues, License Fees, Exam Fees"""
+    __tablename__ = "t1_professional_dues"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    form_id = Column(String(50), ForeignKey("t1_forms_main.id"), nullable=False)
+    
+    name = Column(String(200), nullable=True)
+    organization = Column(String(200), nullable=True)
+    amount = Column(Float, default=0.0)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    # Relationships
+    form = relationship("T1FormMain", back_populates="professional_dues")
+
+
+# Child Art/Sport Credit
+class T1ChildArtSportCredit(Base):
+    """Children's Art & Sport Tax Credit"""
+    __tablename__ = "t1_child_art_sport_credit"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    form_id = Column(String(50), ForeignKey("t1_forms_main.id"), nullable=False)
+    
+    institute_name = Column(String(200), nullable=True)
+    description = Column(Text, nullable=True)
+    amount = Column(Float, default=0.0)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    # Relationships
+    form = relationship("T1FormMain", back_populates="child_art_sport_credits")
+
+
+# Disability Tax Credit
+class T1DisabilityTaxCredit(Base):
+    """Disability Tax Credit"""
+    __tablename__ = "t1_disability_tax_credit"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    form_id = Column(String(50), ForeignKey("t1_forms_main.id"), nullable=False)
+    
+    first_name = Column(String(100), nullable=True)
+    last_name = Column(String(100), nullable=True)
+    relation = Column(String(100), nullable=True)
+    approved_year = Column(Integer, nullable=True)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    # Relationships
+    form = relationship("T1FormMain", back_populates="disability_tax_credits")
+
+
+# Deceased Return Information
+class T1DeceasedReturn(Base):
+    """Deceased Return Information"""
+    __tablename__ = "t1_deceased_return"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    form_id = Column(String(50), ForeignKey("t1_forms_main.id"), nullable=False, unique=True)
+    
+    deceased_full_name = Column(String(200), nullable=True)
+    date_of_death = Column(DateTime(timezone=True), nullable=True)
+    deceased_sin = Column(String(20), nullable=True)
+    deceased_mailing_address = Column(Text, nullable=True)
+    legal_representative_name = Column(String(200), nullable=True)
+    legal_representative_contact_number = Column(String(20), nullable=True)
+    legal_representative_address = Column(Text, nullable=True)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    # Relationships
+    form = relationship("T1FormMain", back_populates="deceased_return")
 
 
 

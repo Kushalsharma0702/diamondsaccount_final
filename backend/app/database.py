@@ -1,12 +1,17 @@
-"""Database connection and session management for Tax-Ease monolith backend."""
+"""Database connection and session management for Tax-Ease monolith backend (v2 schema)."""
 import os
+import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from database import Base
+# Add project root to path so we can import database module
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from database.schemas_v2 import Base
 
 # Load .env from project root (2 levels up from backend/app/)
 project_root = Path(__file__).parent.parent.parent
@@ -38,3 +43,8 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def init_db():
+    """Initialize database (create all tables)"""
+    Base.metadata.create_all(bind=engine)

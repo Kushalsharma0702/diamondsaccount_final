@@ -219,6 +219,7 @@ class T1FormDataSchema(BaseModel):
     hasForeignProperty: Optional[bool] = None
     foreignProperties: List[T1ForeignPropertySchema] = []
     hasMedicalExpenses: Optional[bool] = None
+    medicalExpenses: List[T1MedicalExpenseSchema] = []
     hasCharitableDonations: Optional[bool] = None
     hasMovingExpenses: Optional[bool] = None
     movingExpense: Optional[T1MovingExpenseSchema] = None
@@ -231,17 +232,29 @@ class T1FormDataSchema(BaseModel):
     isFirstHomeBuyer: Optional[bool] = None
     soldPropertyLongTerm: Optional[bool] = None
     soldPropertyShortTerm: Optional[bool] = None
+    soldPropertyShortTermDetails: Optional[T1SoldPropertyShortTermSchema] = None
     hasWorkFromHomeExpense: Optional[bool] = None
+    workFromHomeExpense: Optional[T1WorkFromHomeExpenseSchema] = None
     wasStudentLastYear: Optional[bool] = None
     isUnionMember: Optional[bool] = None
+    unionMemberDues: List[T1UnionMemberDueSchema] = []
     hasDaycareExpenses: Optional[bool] = None
+    daycareExpenses: List[T1DaycareExpenseSchema] = []
     isFirstTimeFiler: Optional[bool] = None
+    firstTimeFiler: Optional[T1FirstTimeFilerSchema] = None
     hasOtherIncome: Optional[bool] = None
     otherIncomeDescription: str = ""
     hasProfessionalDues: Optional[bool] = None
+    professionalDues: List[T1ProfessionalDueSchema] = []
     hasRrspFhsaInvestment: Optional[bool] = None
     hasChildArtSportCredit: Optional[bool] = None
+    childArtSportCredits: List[T1ChildArtSportCreditSchema] = []
     isProvinceFiler: Optional[bool] = None
+    provinceFiler: List[T1ProvinceFilerSchema] = []
+    hasDisabilityTaxCredit: Optional[bool] = None
+    disabilityTaxCredits: List[T1DisabilityTaxCreditSchema] = []
+    isFilingForDeceased: Optional[bool] = None
+    deceasedReturnInfo: Optional[T1DeceasedReturnSchema] = None
     uploadedDocuments: Dict[str, str] = {}
     awaitingDocuments: bool = False
 
@@ -273,6 +286,139 @@ class T1FormDeleteResponse(BaseModel):
     """Response schema for deleting T1 form"""
     success: bool
     message: str
+
+
+# Medical Expense Schema
+class T1MedicalExpenseSchema(BaseModel):
+    paymentDate: Optional[datetime] = None
+    patientName: str = ""
+    paymentMadeTo: str = ""
+    descriptionOfExpense: str = ""
+    insuranceCovered: float = 0.0
+    amountPaidFromPocket: float = 0.0
+
+    class Config:
+        from_attributes = True
+
+
+# Work from Home Expense Schema
+class T1WorkFromHomeExpenseSchema(BaseModel):
+    totalHouseAreaSqft: float = 0.0
+    totalWorkAreaSqft: float = 0.0
+    rentExpense: float = 0.0
+    mortgageExpense: float = 0.0
+    wifiExpense: float = 0.0
+    electricityExpense: float = 0.0
+    waterExpense: float = 0.0
+    heatExpense: float = 0.0
+    totalInsuranceExpense: float = 0.0
+    # Alternative simplified fields
+    rentMortgageExpense: float = 0.0
+    utilitiesExpense: float = 0.0
+
+    class Config:
+        from_attributes = True
+
+
+# Daycare Expense Schema
+class T1DaycareExpenseSchema(BaseModel):
+    childcareProvider: str = ""
+    amount: float = 0.0
+    identificationNumberSin: str = ""
+    weeks: int = 0
+
+    class Config:
+        from_attributes = True
+
+
+# First Time Filer Schema
+class T1FirstTimeFilerSchema(BaseModel):
+    dateOfLandingIndividual: Optional[datetime] = None
+    incomeOutsideCanadaCad: float = 0.0
+    backHomeIncome2024Cad: float = 0.0
+    backHomeIncome2023Cad: float = 0.0
+
+    class Config:
+        from_attributes = True
+
+
+# Province Filer Schema
+class T1ProvinceFilerSchema(BaseModel):
+    rentOrPropertyTax: str = ""
+    propertyAddress: str = ""
+    postalCode: str = ""
+    numberOfMonthsResides: int = 0
+    amountPaid: float = 0.0
+
+    class Config:
+        from_attributes = True
+
+
+# Sold Property Short Term Schema
+class T1SoldPropertyShortTermSchema(BaseModel):
+    propertyAddress: str = ""
+    purchaseDate: Optional[datetime] = None
+    sellDate: Optional[datetime] = None
+    purchaseAndSellExpenses: float = 0.0
+
+    class Config:
+        from_attributes = True
+
+
+# Union Member Due Schema
+class T1UnionMemberDueSchema(BaseModel):
+    institutionName: str = ""
+    amount: float = 0.0
+
+    class Config:
+        from_attributes = True
+
+
+# Professional Due Schema
+class T1ProfessionalDueSchema(BaseModel):
+    name: str = ""
+    organization: str = ""
+    amount: float = 0.0
+
+    class Config:
+        from_attributes = True
+
+
+# Child Art/Sport Credit Schema
+class T1ChildArtSportCreditSchema(BaseModel):
+    instituteName: str = ""
+    description: str = ""
+    amount: float = 0.0
+
+    class Config:
+        from_attributes = True
+
+
+# Disability Tax Credit Schema
+class T1DisabilityTaxCreditSchema(BaseModel):
+    firstName: str = ""
+    lastName: str = ""
+    relation: str = ""
+    approvedYear: int = 0
+
+    class Config:
+        from_attributes = True
+
+
+# Deceased Return Schema
+class T1DeceasedReturnSchema(BaseModel):
+    deceasedFullName: str = ""
+    dateOfDeath: Optional[datetime] = None
+    deceasedSin: str = ""
+    deceasedMailingAddress: str = ""
+    legalRepresentativeName: str = ""
+    legalRepresentativeContactNumber: str = ""
+    legalRepresentativeAddress: str = ""
+
+    class Config:
+        from_attributes = True
+
+
 
 
 
