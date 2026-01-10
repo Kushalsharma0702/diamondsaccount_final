@@ -1,0 +1,119 @@
+╔════════════════════════════════════════════════════════════╗
+║     🚀 ALL TAX-EASE SERVICES RUNNING                      ║
+╚════════════════════════════════════════════════════════════╝
+
+📊 Service Status (All Connected to AWS):
+  ✅ Master Backend   → http://localhost:8000/docs  (PID: check logs)
+  ✅ Admin API        → http://localhost:8001/docs  (PID: 774344)
+  ✅ Client API       → http://localhost:8002/docs  (PID: 775735)
+  ✅ Admin Dashboard  → http://localhost:8080
+
+🗄️  Database:
+  ✅ AWS RDS PostgreSQL → 16.52.182.106:5432/postgres
+  📊 33 users, 17 filings, 10 t1_forms, 748 t1_answers, 6 documents
+
+☁️  Storage:
+  ✅ AWS S3 Bucket → taxease-prod-documents (ca-central-1)
+  🔐 Server-side encryption enabled (AES256)
+  📝 USE_S3_STORAGE=true
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 API ROUTES BY SERVICE:
+
+🔷 Master Backend (Port 8000) - Unified API:
+   • POST   /api/v1/auth/signup          - User registration
+   • POST   /api/v1/auth/login           - User authentication
+   • POST   /api/v1/auth/refresh         - Refresh access token
+   • GET    /api/v1/users/me             - Get current user profile
+   • GET    /api/v1/filings              - List user filings
+   • POST   /api/v1/filings              - Create new filing
+   • POST   /api/v1/documents/upload     - Upload document (S3)
+   • GET    /api/v1/documents/{id}/download - Download document
+   • POST   /api/v1/t1-forms             - Submit T1 tax form
+   • GET    /api/v1/t1-forms/{id}        - Get T1 form details
+   • GET    /api/v1/health               - Health check
+
+🔶 Admin API (Port 8001) - Admin Portal:
+   • POST   /api/v1/admin/login          - Admin authentication
+   • GET    /api/v1/admin/users          - List all users
+   • GET    /api/v1/admin/documents      - List all documents
+   • GET    /api/v1/admin/filings        - List all filings
+   • GET    /api/v1/admin/stats          - System statistics
+
+🔷 Client API (Port 8002) - Same as Master Backend
+   (Duplicate of port 8000 for legacy support)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔐 Test Credentials:
+
+Admin Portal:
+  Email: admin@taxease.ca
+  Password: admin123
+  URL: http://localhost:8080
+
+Client User:
+  Email: (any registered user)
+  Password: (their password)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧪 QUICK API TESTS:
+
+1️⃣  Test Master Backend Health:
+    curl http://localhost:8000/health
+
+2️⃣  Test Admin Login (Port 8001):
+    curl -X POST http://localhost:8001/api/v1/admin/login \
+      -H "Content-Type: application/json" \
+      -d '{"email":"admin@taxease.ca","password":"admin123"}'
+
+3️⃣  Test User Signup (Port 8000):
+    curl -X POST http://localhost:8000/api/v1/auth/signup \
+      -H "Content-Type: application/json" \
+      -d '{
+        "email":"newuser@test.com",
+        "password":"Test123!",
+        "full_name":"New User",
+        "phone":"1234567890"
+      }'
+
+4️⃣  Test Document Upload to S3 (requires token):
+    TOKEN="your_jwt_token_here"
+    curl -X POST http://localhost:8000/api/v1/documents/upload \
+      -H "Authorization: Bearer $TOKEN" \
+      -F "file=@document.pdf" \
+      -F "client_id=CLIENT_ID" \
+      -F "section=income"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 View Logs:
+  • Master Backend: tail -f logs/master-backend-8000.log
+  • Admin API: Check terminal PID 774344
+  • Client API: Check terminal PID 775735
+  • Dashboard: Browser console
+
+🛑 Stop Services:
+  • Master Backend: pkill -f "uvicorn.*8000"
+  • Admin API: pkill -f "uvicorn.*8001"
+  • Client API: pkill -f "uvicorn.*8002"
+  • Dashboard: pkill -f "vite.*8080"
+  • All: pkill -f uvicorn && pkill -f vite
+
+🔄 Restart All:
+  ./MASTER_CONTROL.sh
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ All services ready for testing!
+✅ Connected to AWS RDS database
+✅ S3 storage enabled for documents
+✅ All APIs accessible via localhost
+
+🌐 Access Points:
+  • Master API Docs: http://localhost:8000/docs
+  • Admin API Docs: http://localhost:8001/docs
+  • Client API Docs: http://localhost:8002/docs
+  • Admin Dashboard: http://localhost:8080

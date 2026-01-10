@@ -1,0 +1,51 @@
+nohup: ignoring input
+INFO:     Will watch for changes in these directories: ['/home/cyberdude/Documents/Projects/CA-final']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [782785] using WatchFiles
+INFO:     Started server process [782789]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+2026-01-11 02:18:40,043 - audit - INFO - REQUEST: GET /docs user=None ip=127.0.0.1
+2026-01-11 02:18:40,044 - audit - INFO - RESPONSE: GET /docs status=200 user=None duration=0.001s
+
+======================================================================
+🔒 TAX-EASE API V2 - STARTUP VALIDATION
+======================================================================
+
+Running startup checks...
+----------------------------------------------------------------------
+✅ Required environment variables validated
+✅ JWT_SECRET validated (length: 58 chars)
+✅ Encryption key validated (length: 61 bytes)
+✅ Redis connection validated (localhost:6379)
+✅ Database connection validated
+✅ Storage path validated (/home/cyberdude/Documents/Projects/CA-final/storage/uploads)
+✅ State machines validated
+----------------------------------------------------------------------
+
+✅ All startup checks passed
+🚀 Application is ready to start
+
+======================================================================
+
+INFO:     127.0.0.1:49074 - "GET /docs HTTP/1.1" 200 OK
+2026-01-11 02:18:51,098 - audit - INFO - REQUEST: GET /api/v1/health user=None ip=2405:201:a008:a035:2c2e:158f:f478:f7a5
+2026-01-11 02:18:55,315 - audit - INFO - RESPONSE: GET /api/v1/health status=200 user=None duration=4.216s
+INFO:     2405:201:a008:a035:2c2e:158f:f478:f7a5:0 - "GET /api/v1/health HTTP/1.1" 200 OK
+2026-01-11 02:19:15,741 - audit - INFO - REQUEST: GET / user=None ip=2405:201:a008:a035:2c2e:158f:f478:f7a5
+2026-01-11 02:19:15,741 - audit - INFO - RESPONSE: GET / status=200 user=None duration=0.001s
+INFO:     2405:201:a008:a035:2c2e:158f:f478:f7a5:0 - "GET / HTTP/1.1" 200 OK
+2026-01-11 02:19:15,859 - audit - INFO - REQUEST: GET /favicon.ico user=None ip=2405:201:a008:a035:2c2e:158f:f478:f7a5
+2026-01-11 02:19:15,860 - audit - INFO - RESPONSE: GET /favicon.ico status=404 user=None duration=0.001s
+INFO:     2405:201:a008:a035:2c2e:158f:f478:f7a5:0 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+2026-01-11 02:19:22,293 - audit - INFO - REQUEST: GET /docs user=None ip=2405:201:a008:a035:2c2e:158f:f478:f7a5
+2026-01-11 02:19:22,294 - audit - INFO - RESPONSE: GET /docs status=200 user=None duration=0.001s
+INFO:     2405:201:a008:a035:2c2e:158f:f478:f7a5:0 - "GET /docs HTTP/1.1" 200 OK
+2026-01-11 02:19:22,753 - audit - INFO - REQUEST: GET /openapi.json user=None ip=2405:201:a008:a035:2c2e:158f:f478:f7a5
+2026-01-11 02:19:22,794 - audit - INFO - RESPONSE: GET /openapi.json status=200 user=None duration=0.041s
+INFO:     2405:201:a008:a035:2c2e:158f:f478:f7a5:0 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [782789]
+INFO:     Stopping reloader process [782785]

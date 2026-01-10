@@ -1,0 +1,68 @@
+╔════════════════════════════════════════════════════════════╗
+║        🚀 TAX-EASE SERVICES - ALL RUNNING                 ║
+╚════════════════════════════════════════════════════════════╝
+
+📊 Service Status:
+  ✅ Admin API        → http://localhost:8001/docs
+  ✅ Client API       → http://localhost:8002/docs  
+  ✅ Admin Dashboard  → http://localhost:8080
+
+🗄️  Database:
+  ✅ AWS RDS PostgreSQL → 16.52.182.106:5432/postgres
+
+☁️  Storage:
+  ✅ AWS S3 Bucket → taxease-prod-documents (ca-central-1)
+  📝 Mode: S3 storage enabled (USE_S3_STORAGE=true)
+
+🔐 Test Credentials:
+  Email: admin@taxease.ca
+  Password: admin123
+
+🌐 Access URLs:
+  • Admin Dashboard: http://localhost:8080
+  • Admin API Docs: http://localhost:8001/docs
+  • Client API Docs: http://localhost:8002/docs
+
+📋 Running Processes:
+  • Admin API (PID: check with 'ps aux | grep 8001')
+  • Client API (PID: check with 'ps aux | grep 8002')
+  • Dashboard (PID: check with 'ps aux | grep 8080')
+
+🧪 Quick API Tests:
+
+1. Test Admin Login:
+   curl -X POST http://localhost:8001/api/v1/admin/login \
+     -H "Content-Type: application/json" \
+     -d '{"email":"admin@taxease.ca","password":"admin123"}'
+
+2. Test User Signup:
+   curl -X POST http://localhost:8002/api/v1/auth/signup \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email":"test@example.com",
+       "password":"Test123!",
+       "full_name":"Test User",
+       "phone":"1234567890"
+     }'
+
+3. Test Document Upload (requires auth token):
+   curl -X POST http://localhost:8002/api/v1/documents/upload \
+     -H "Authorization: Bearer YOUR_TOKEN" \
+     -F "file=@document.pdf" \
+     -F "client_id=CLIENT_ID" \
+     -F "section=income"
+
+🛑 Stop All Services:
+   pkill -f "uvicorn.*8001"
+   pkill -f "uvicorn.*8002"
+   pkill -f "vite.*8080"
+
+🔄 Restart Services:
+   ./MASTER_CONTROL.sh
+
+📊 View Logs:
+   • Admin API logs: tail -f logs/admin-backend.log
+   • Client API logs: check terminal output
+   • Dashboard logs: check browser console
+
+✅ All services ready for testing with AWS RDS database!

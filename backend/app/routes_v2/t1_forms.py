@@ -298,7 +298,7 @@ async def get_t1_draft(
     return T1FormResponse(
         id=str(t1_form.id),
         filing_id=str(t1_form.filing_id),
-        form_version=t1_form.form_version,
+        form_version="2024",  # Default version since not stored in DB
         status=t1_form.status,
         is_locked=t1_form.is_locked,
         completion_percentage=t1_form.completion_percentage,
