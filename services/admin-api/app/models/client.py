@@ -38,7 +38,7 @@ class Client(Base):
     
     # Relationships
     assigned_admin = relationship("AdminUser", back_populates="assigned_clients", foreign_keys=[assigned_admin_id])
-    documents = relationship("Document", back_populates="client", cascade="all, delete-orphan")
+    # documents = relationship("Document", back_populates="client", cascade="all, delete-orphan")  # Removed - no FK
     payments = relationship("Payment", back_populates="client", cascade="all, delete-orphan")
     notes = relationship("Note", back_populates="client", cascade="all, delete-orphan")
     cost_estimates = relationship("CostEstimate", back_populates="client", cascade="all, delete-orphan")

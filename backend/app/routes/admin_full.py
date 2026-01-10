@@ -9,9 +9,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, and_, or_
 
 from database import (
-    Client, Admin, AdminClientMap, Document, Payment, Notification,
-    T1ReturnFlat, ChatMessage, User
+    Client, Admin, AdminClientMap, ChatMessage, User
 )
+from database.schemas_v2 import Filing, T1Form, Document, Payment, Notification, T1Answer
 from backend.app.database import get_db
 from backend.app.routes.filing_status import STATUS_DISPLAY_NAMES
 
@@ -130,8 +130,8 @@ def get_clients(
     
     clients = query.order_by(Client.created_at.desc()).all()
     
-    # Fetch admin names
-    admin_ids = {c.admin_assignments[0].admin_id for c in clients if c.admin_assignments}
+    # Fetch admin names using assigned_admin_id directly
+    admin_ids = {c.assigned_admin_id for c in clients if c.assigned_admin_id}
     admins = db.query(Admin).filter(Admin.id.in_(admin_ids)).all() if admin_ids else []
     admin_map = {str(a.id): a.name for a in admins}
     
@@ -139,8 +139,8 @@ def get_clients(
     for c in clients:
         assigned_admin_id = None
         assigned_admin_name = None
-        if c.admin_assignments:
-            assigned_admin_id = str(c.admin_assignments[0].admin_id)
+        if c.assigned_admin_id:
+            assigned_admin_id = str(c.assigned_admin_id)
             assigned_admin_name = admin_map.get(assigned_admin_id)
         
         result.append(ClientResponse(
@@ -169,81 +169,123 @@ def get_client_detail(client_id: str, db: Session = Depends(get_db)):
     if not client:
         raise HTTPException(status_code=404, detail="Client not found")
     
-    # Get assigned admin
+    # Get assigned admin using assigned_admin_id directly
     assigned_admin_id = None
     assigned_admin_name = None
-    if client.admin_assignments:
-        admin_id = client.admin_assignments[0].admin_id
-        admin = db.query(Admin).filter(Admin.id == admin_id).first()
+    if client.assigned_admin_id:
+        admin = db.query(Admin).filter(Admin.id == client.assigned_admin_id).first()
         if admin:
             assigned_admin_id = str(admin.id)
             assigned_admin_name = admin.name
     
-    # Get T1 return
-    t1_return = db.query(T1ReturnFlat).filter(
-        T1ReturnFlat.client_id == client.id
-    ).order_by(T1ReturnFlat.filing_year.desc()).first()
-    
+    # Get T1 form via user email → filing → t1_form
     t1_data = None
-    if t1_return:
-        t1_data = {
-            "id": str(t1_return.id),
-            "filingYear": t1_return.filing_year,
-            "status": t1_return.status,
-            "statusDisplay": STATUS_DISPLAY_NAMES.get(t1_return.status, t1_return.status),
-            "paymentStatus": t1_return.payment_status,
-            "submittedAt": t1_return.submitted_at.isoformat() if t1_return.submitted_at else None,
-            "updatedAt": t1_return.updated_at.isoformat(),
-        }
+    user = db.query(User).filter(User.email == client.email).first()
+    filing = None
     
-    # Get documents
-    documents = db.query(Document).filter(Document.client_id == client.id).all()
-    documents_data = [
-        {
-            "id": str(d.id),
-            "name": d.name,
-            "originalFilename": d.original_filename,
-            "fileType": d.file_type,
-            "fileSize": d.file_size,
-            "status": d.status,
-            "sectionName": d.section_name,
-            "documentType": d.document_type,
-            "uploadedAt": d.uploaded_at.isoformat() if d.uploaded_at else None,
-            "createdAt": d.created_at.isoformat(),
-        }
-        for d in documents
-    ]
+    if user:
+        # Get most recent filing for this user
+        filing = db.query(Filing).filter(
+            Filing.user_id == user.id
+        ).order_by(Filing.filing_year.desc()).first()
+        
+        if filing:
+            # Get T1 form for this filing
+            t1_form = db.query(T1Form).filter(T1Form.filing_id == filing.id).first()
+            if t1_form:
+                # Get T1 answers for this form
+                t1_answers = db.query(T1Answer).filter(T1Answer.t1_form_id == t1_form.id).all()
+                
+                # Convert answers to the format expected by frontend
+                answers_list = []
+                for answer in t1_answers:
+                    # Determine which value field to use
+                    value = None
+                    if answer.value_boolean is not None:
+                        value = answer.value_boolean
+                    elif answer.value_text is not None:
+                        value = answer.value_text
+                    elif answer.value_numeric is not None:
+                        value = answer.value_numeric
+                    elif answer.value_date is not None:
+                        value = answer.value_date.isoformat()
+                    elif answer.value_array is not None:
+                        value = answer.value_array
+                    
+                    answers_list.append({
+                        "field_key": answer.field_key,
+                        "value": value
+                    })
+                
+                t1_data = {
+                    "id": str(t1_form.id),
+                    "filingYear": filing.filing_year,
+                    "status": t1_form.status,
+                    "statusDisplay": STATUS_DISPLAY_NAMES.get(t1_form.status, t1_form.status),
+                    "paymentStatus": "pending",  # Not stored in t1_form
+                    "submittedAt": t1_form.submitted_at.isoformat() if t1_form.submitted_at else None,
+                    "updatedAt": t1_form.updated_at.isoformat(),
+                    "completionPercentage": t1_form.completion_percentage,
+                    "isLocked": t1_form.is_locked,
+                    "answers": answers_list,
+                    "formData": t1_form.form_data if hasattr(t1_form, 'form_data') else {}
+                }
     
-    # Get payments
-    payments = db.query(Payment).filter(Payment.client_id == client.id).all()
-    payments_data = [
-        {
-            "id": str(p.id),
-            "amount": p.amount,
-            "method": p.method,
-            "status": p.status,
-            "note": p.note,
-            "createdAt": p.created_at.isoformat(),
-        }
-        for p in payments
-    ]
+    # Get documents via filing_id
+    documents_data = []
+    if user and filing:
+        documents = db.query(Document).filter(Document.filing_id == filing.id).all()
+        documents_data = [
+            {
+                "id": str(d.id),
+                "name": d.name,
+                "originalFilename": d.original_filename,
+                "fileType": d.file_type,
+                "fileSize": d.file_size,
+                "status": d.status,
+                "sectionName": d.section_name,
+                "documentType": d.document_type,
+                "uploadedAt": d.uploaded_at.isoformat() if d.uploaded_at else None,
+                "createdAt": d.created_at.isoformat(),
+            }
+            for d in documents
+        ]
     
-    # Get chat messages
-    chat_messages = db.query(ChatMessage).filter(
-        ChatMessage.user_id == client.user_id
-    ).order_by(ChatMessage.created_at.desc()).limit(50).all()
+    # Get payments via filing_id
+    payments_data = []
+    if user and filing:
+        payments = db.query(Payment).filter(Payment.filing_id == filing.id).all()
+        payments_data = [
+            {
+                "id": str(p.id),
+                "amount": p.amount,
+                "method": p.method,
+                "status": "paid",  # Payment status not stored in table
+                "note": p.note,
+                "createdAt": p.created_at.isoformat(),
+            }
+            for p in payments
+        ]
     
-    chat_data = [
-        {
-            "id": str(m.id),
-            "senderRole": m.sender_role,
-            "message": m.message,
-            "createdAt": m.created_at.isoformat(),
-            "readByClient": m.read_by_client,
-            "readByAdmin": m.read_by_admin,
-        }
-        for m in chat_messages
-    ]
+    # Get chat messages via user_id (DISABLED - chat_messages table doesn't exist)
+    # TODO: Replace with email_messages or remove if not needed
+    chat_data = []
+    # if user:
+    #     chat_messages = db.query(ChatMessage).filter(
+    #         ChatMessage.user_id == user.id
+    #     ).order_by(ChatMessage.created_at.desc()).limit(50).all()
+    #     
+    #     chat_data = [
+    #         {
+    #             "id": str(m.id),
+    #             "senderRole": m.sender_role,
+    #             "message": m.message,
+    #             "createdAt": m.created_at.isoformat(),
+    #             "readByClient": m.read_by_client,
+    #             "readByAdmin": m.read_by_admin,
+    #         }
+    #         for m in chat_messages
+    #     ]
     
     return ClientDetailResponse(
         id=str(client.id),

@@ -20,7 +20,8 @@
 - **Database:** `CA_Project`  
 - **Config:** `services/admin-api/.env`
   ```
-  DATABASE_URL=postgresql+asyncpg://postgres:Kushal07@localhost:5432/CA_Project
+  DATABASE_URL=postgresql://postgres:password@database-1.ct2g4wqam4oi.ca-central-1.rds.amazonaws.com:5432/postgres
+
   ```
 - **Status:** ✅ Connected to CA_Project
 
@@ -29,7 +30,8 @@
 - **Database:** `CA_Project` (Just fixed!)
 - **Config:** `tax-hub-dashboard-admin/backend/.env`
   ```
-  DATABASE_URL=postgresql+asyncpg://postgres:Kushal07@localhost:5432/CA_Project
+  DATABASE_URL=postgresql://postgres:password@database-1.ct2g4wqam4oi.ca-central-1.rds.amazonaws.com:5432/postgres
+
   ```
 - **Status:** ✅ Connected to CA_Project
 

@@ -57,10 +57,7 @@ class DocumentStatus(str, enum.Enum):
     REUPLOAD_REQUESTED = "reupload_requested"
 
 
-class T1FormStatus(str, enum.Enum):
-    """T1 form status"""
-    DRAFT = "draft"
-    SUBMITTED = "submitted"
+# T1FormStatus enum moved to line 360+ to avoid duplication
 
 
 class NotificationType(str, enum.Enum):
@@ -139,7 +136,7 @@ class Filing(Base):
     # Relationships
     user = relationship("User", back_populates="filings")
     admin_assignments = relationship("AdminFilingAssignment", back_populates="filing", cascade="all, delete-orphan")
-    t1_forms = relationship("T1Form", back_populates="filing", cascade="all, delete-orphan")
+    # t1_form relationship defined by backref in T1Form class (line 388)
     documents = relationship("Document", back_populates="filing", cascade="all, delete-orphan")
     payments = relationship("Payment", back_populates="filing", cascade="all, delete-orphan")
     notifications = relationship("Notification", back_populates="filing", cascade="all, delete-orphan")
@@ -172,30 +169,7 @@ class AdminFilingAssignment(Base):
     )
 
 
-class T1Form(Base):
-    """T1 tax form (one per filing, JSONB for flexibility)"""
-    __tablename__ = "t1_forms"
-    
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    filing_id = Column(UUID(as_uuid=True), ForeignKey("filings.id"), nullable=False, index=True)
-    
-    status = Column(String(20), nullable=False, default=T1FormStatus.DRAFT.value, index=True)
-    
-    # JSONB for complete form data (matches Flutter frontend structure)
-    form_data = Column(JSONB, nullable=False, default=dict)
-    
-    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
-    submitted_at = Column(DateTime(timezone=True), nullable=True)
-    
-    # Relationships
-    filing = relationship("Filing", back_populates="t1_forms")
-    
-    # Indexes
-    __table_args__ = (
-        Index('idx_t1_form_filing', 'filing_id'),
-        Index('idx_t1_form_data', 'form_data', postgresql_using='gin'),
-    )
+# T1Form moved to line 366+ to avoid duplication
 
 
 class Document(Base):
@@ -450,12 +424,8 @@ class T1SectionProgress(Base):
     __table_args__ = (
         Index('idx_t1_sections_progress_t1_form_id', 't1_form_id'),
         Index('idx_t1_sections_progress_reviewed_by', 'reviewed_by'),
-        {'extend_existing': True}
-    )
-
-    __table_args__ = (
-        Index('idx_t1_sections_progress_form_id', 't1_form_id'),
-        Index('idx_t1_sections_progress_reviewed', 'is_reviewed'),
+        Index('idx_t1_sections_progress_form_id', 't1_form_id'),  # Merged duplicate
+        Index('idx_t1_sections_progress_reviewed', 'is_reviewed'),  # Merged duplicate
         {'extend_existing': True}
     )
 

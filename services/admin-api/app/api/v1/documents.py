@@ -23,17 +23,35 @@ async def get_documents(
     status_filter: Optional[str] = Query(None, alias="status"),
     search: Optional[str] = None,
     client_id: Optional[UUID] = Query(None),
+    filing_id: Optional[UUID] = Query(None),
     db: AsyncSession = Depends(get_db),
     current_admin = Depends(get_current_admin)
 ):
-    """Get all documents with filters"""
-    query = select(Document).options(selectinload(Document.client))
+    """Get all documents with filters - client_id is actually user_id"""
+    query = select(Document)
     
     conditions = []
     if status_filter:
         conditions.append(Document.status == status_filter)
+    
+    # client_id is actually user_id - need to join with filings
     if client_id:
-        conditions.append(Document.client_id == client_id)
+        # Use text for subquery to avoid needing Filing model
+        from sqlalchemy import text as sql_text
+        filing_ids_result = await db.execute(
+            sql_text("SELECT id FROM filings WHERE user_id = :user_id"),
+            {"user_id": str(client_id)}
+        )
+        filing_ids = [row[0] for row in filing_ids_result]
+        if filing_ids:
+            conditions.append(Document.filing_id.in_(filing_ids))
+        else:
+            # No filings for this user, return empty
+            conditions.append(Document.filing_id == None)
+    
+    if filing_id:
+        conditions.append(Document.filing_id == filing_id)
+    
     if search:
         conditions.append(
             or_(
@@ -58,9 +76,20 @@ async def get_documents(
     # Format response
     doc_responses = []
     for doc in documents:
-        doc_dict = DocumentResponse.model_validate(doc).model_dump()
-        if doc.client:
-            doc_dict["client_name"] = doc.client.name
+        # Map Document model fields to DocumentResponse schema
+        doc_dict = {
+            "id": doc.id,
+            "name": doc.name,
+            "type": doc.file_type,  # Map file_type to type
+            "status": doc.status,
+            "client_id": doc.filing_id,  # Use filing_id as client_id for now
+            "client_name": None,
+            "version": 1,  # Default version
+            "uploaded_at": doc.uploaded_at,
+            "notes": doc.notes,
+            "created_at": doc.created_at,
+            "updated_at": doc.updated_at
+        }
         doc_responses.append(DocumentResponse(**doc_dict))
     
     return DocumentListResponse(documents=doc_responses, total=total)

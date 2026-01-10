@@ -206,7 +206,7 @@ start_all_services() {
         export $(cat .env | grep -v '^#' | xargs)
     fi
     
-    export DATABASE_URL="${DATABASE_URL:-postgresql+asyncpg://postgres:Kushal07@localhost:5432/taxease_db}"
+    export DATABASE_URL="${DATABASE_URL:-postgresql+asyncpg://postgres:Diamondaccount321@database-1.ct2g4wqam4oi.ca-central-1.rds.amazonaws.com:5432/postgres}"
     export ADMIN_API_BASE_URL="${ADMIN_API_BASE_URL:-http://localhost:8002/api/v1}"
     export STORAGE_BASE_DIR="${STORAGE_BASE_DIR:-$CLIENT_BACKEND_DIR/storage/uploads}"
     
@@ -252,7 +252,7 @@ start_all_services() {
         export $(cat .env | grep -v '^#' | xargs)
     fi
     
-    export DATABASE_URL="${DATABASE_URL:-postgresql+asyncpg://postgres:Kushal07@localhost:5432/taxease_db}"
+    export DATABASE_URL="${DATABASE_URL:-postgresql+asyncpg://postgres:Diamondaccount321@database-1.ct2g4wqam4oi.ca-central-1.rds.amazonaws.com:5432/postgres}"
     
     echo -e "${YELLOW}Starting admin backend...${NC}"
     nohup uvicorn app.main:app --host 0.0.0.0 --port 8002 > "$BASE_DIR/logs/admin-backend.log" 2>&1 &

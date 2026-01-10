@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     
     # Database - Using same database as client backend
     DATABASE_URL: str = Field(
-        default="postgresql+asyncpg://postgres:Kushal07@localhost:5432/taxease_db",
+        default="postgresql+asyncpg://postgres:Diamondaccount321@database-1.ct2g4wqam4oi.ca-central-1.rds.amazonaws.com:5432/postgres",
         env="DATABASE_URL"
     )
     
