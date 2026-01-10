@@ -15,6 +15,7 @@ from sqlalchemy.orm import Session
 from database import Client, Document
 from backend.app.database import get_db
 from backend.app.utils.encryption import encrypt_file_content, decrypt_file_content
+from backend.app.utils.s3_storage import get_storage_service
 
 # Load .env from project root
 project_root = Path(__file__).parent.parent.parent.parent
@@ -23,14 +24,11 @@ load_dotenv(dotenv_path=env_path)
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
-STORAGE_PATH = os.getenv("STORAGE_PATH", "./storage/uploads")
 MAX_FILE_SIZE_MB = int(os.getenv("MAX_FILE_SIZE_MB", "10"))
 MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024
 
 # Allowed file types
 ALLOWED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png", ".doc", ".docx", ".xls", ".xlsx", ".txt"}
-
-os.makedirs(STORAGE_PATH, exist_ok=True)
 
 
 class DocumentResponse(BaseModel):
@@ -99,17 +97,28 @@ async def upload_document(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Encryption failed: {str(e)}")
     
-    # Generate file path
+    # Generate file key for storage
     file_id = str(uuid.uuid4())
     stored_filename = f"{file_id}{ext}.enc"  # .enc extension for encrypted files
-    file_path = os.path.join(STORAGE_PATH, stored_filename)
+    file_key = f"documents/{stored_filename}"
     
-    # Save encrypted file to disk
+    # Upload to S3 or local storage
     try:
-        with open(file_path, "wb") as f:
-            f.write(encrypted_content)
+        storage_service = get_storage_service()
+        storage_path = storage_service.upload_file(
+            file_content=encrypted_content,
+            file_key=file_key,
+            content_type=file.content_type,
+            metadata={
+                'original_filename': file.filename,
+                'client_id': client_id,
+                'encrypted': 'true',
+                'section': section or '',
+                'document_type': document_type
+            }
+        )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to save file: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to upload file: {str(e)}")
     
     # Create document record in database
     document = Document(
@@ -118,7 +127,7 @@ async def upload_document(
         original_filename=file.filename,
         file_type=ext[1:] if ext else "unknown",
         file_size=len(content),  # Store original size, not encrypted size
-        file_path=file_path,
+        file_path=storage_path,  # S3 key or local path
         section_name=section,
         document_type=document_type,
         status="pending",
@@ -157,14 +166,14 @@ async def download_document(
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
     
-    # Read encrypted file
+    # Download from S3 or local storage
     try:
-        with open(document.file_path, "rb") as f:
-            encrypted_content = f.read()
+        storage_service = get_storage_service()
+        encrypted_content = storage_service.download_file(document.file_path)
     except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="File not found on disk")
+        raise HTTPException(status_code=404, detail="File not found")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to read file: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to download file: {str(e)}")
     
     # Decrypt file content
     try:
@@ -229,10 +238,10 @@ def delete_document(
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
     
-    # Delete file from disk
+    # Delete file from S3 or local storage
     try:
-        if os.path.exists(document.file_path):
-            os.remove(document.file_path)
+        storage_service = get_storage_service()
+        storage_service.delete_file(document.file_path)
     except Exception as e:
         # Log error but continue with DB deletion
         print(f"Warning: Failed to delete file {document.file_path}: {e}")
