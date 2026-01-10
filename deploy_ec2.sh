@@ -15,9 +15,13 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-PROJECT_DIR="/opt/taxease"
-VENV_DIR="$PROJECT_DIR/venv"
-LOG_DIR="/var/log/taxease"
+# Use current directory if not specified
+if [ -z "$PROJECT_DIR" ]; then
+    PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+fi
+VENV_DIR="$PROJECT_DIR/backend/venv"
+LOG_DIR="$PROJECT_DIR/logs"
+MASTER_BACKEND_PORT=8000
 ADMIN_API_PORT=8001
 CLIENT_API_PORT=8002
 
@@ -182,30 +186,16 @@ install_system_dependencies() {
 setup_project_directory() {
     print_header "STEP 3: Setting Up Project Directory"
     
-    if [ ! -d "$PROJECT_DIR" ]; then
-        print_status "Creating project directory: $PROJECT_DIR"
-        sudo mkdir -p "$PROJECT_DIR"
-        sudo chown $USER:$USER "$PROJECT_DIR"
-    fi
-    
-    # Copy project files if running from current directory
-    if [ "$(pwd)" != "$PROJECT_DIR" ]; then
-        print_status "Copying project files to $PROJECT_DIR..."
-        sudo rsync -av --exclude='venv' --exclude='__pycache__' --exclude='*.pyc' \
-            --exclude='node_modules' --exclude='.git' \
-            ./ "$PROJECT_DIR/"
-        sudo chown -R $USER:$USER "$PROJECT_DIR"
-    fi
+    print_status "Using current directory: $PROJECT_DIR"
+    cd "$PROJECT_DIR"
     
     # Create log directory
     if [ ! -d "$LOG_DIR" ]; then
         print_status "Creating log directory: $LOG_DIR"
-        sudo mkdir -p "$LOG_DIR"
-        sudo chown $USER:$USER "$LOG_DIR"
+        mkdir -p "$LOG_DIR"
     fi
     
-    cd "$PROJECT_DIR"
-    print_success "Project directory set up at $PROJECT_DIR"
+    print_success "Project directory ready at $PROJECT_DIR"
 }
 
 ##############################################################################
@@ -215,20 +205,22 @@ setup_virtual_environment() {
     print_header "STEP 4: Setting Up Virtual Environment"
     
     if [ -d "$VENV_DIR" ]; then
-        print_warning "Virtual environment already exists. Removing..."
-        rm -rf "$VENV_DIR"
+        print_status "Virtual environment already exists at $VENV_DIR"
+        print_status "Activating existing virtual environment..."
+        source "$VENV_DIR/bin/activate"
+        print_success "Virtual environment activated"
+    else
+        print_status "Creating virtual environment at $VENV_DIR..."
+        python3 -m venv "$VENV_DIR"
+        
+        print_status "Activating virtual environment..."
+        source "$VENV_DIR/bin/activate"
+        
+        print_status "Upgrading pip..."
+        pip install --upgrade pip setuptools wheel -q
+        
+        print_success "Virtual environment created and activated"
     fi
-    
-    print_status "Creating virtual environment..."
-    python3 -m venv "$VENV_DIR"
-    
-    print_status "Activating virtual environment..."
-    source "$VENV_DIR/bin/activate"
-    
-    print_status "Upgrading pip..."
-    pip install --upgrade pip setuptools wheel -q
-    
-    print_success "Virtual environment created and activated"
 }
 
 ##############################################################################
@@ -309,7 +301,30 @@ setup_systemd_services() {
     
     print_status "Creating systemd service files..."
     
-    # Admin API Service
+    # Master Backend Service (Port 8000)
+    sudo tee /etc/systemd/system/taxease-master-backend.service > /dev/null <<EOF
+[Unit]
+Description=Tax-Ease Master Backend API
+After=network.target postgresql.service redis.service
+
+[Service]
+Type=simple
+User=$USER
+WorkingDirectory=$PROJECT_DIR/backend
+Environment="PATH=$VENV_DIR/bin"
+Environment="PYTHONPATH=$PROJECT_DIR"
+EnvironmentFile=$PROJECT_DIR/.env
+ExecStart=$VENV_DIR/bin/uvicorn app.main:app --host 0.0.0.0 --port $MASTER_BACKEND_PORT --workers 2
+Restart=always
+RestartSec=10
+StandardOutput=append:$LOG_DIR/master-backend-8000.log
+StandardError=append:$LOG_DIR/master-backend-8000-error.log
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    
+    # Admin API Service (Port 8001)
     sudo tee /etc/systemd/system/taxease-admin-api.service > /dev/null <<EOF
 [Unit]
 Description=Tax-Ease Admin API
@@ -320,6 +335,7 @@ Type=simple
 User=$USER
 WorkingDirectory=$PROJECT_DIR/services/admin-api
 Environment="PATH=$VENV_DIR/bin"
+Environment="PYTHONPATH=$PROJECT_DIR"
 EnvironmentFile=$PROJECT_DIR/.env
 ExecStart=$VENV_DIR/bin/uvicorn app.main:app --host 0.0.0.0 --port $ADMIN_API_PORT --workers 2
 Restart=always
@@ -331,7 +347,7 @@ StandardError=append:$LOG_DIR/admin-api-error.log
 WantedBy=multi-user.target
 EOF
     
-    # Client Backend Service
+    # Client Backend Service (Port 8002)
     sudo tee /etc/systemd/system/taxease-client-api.service > /dev/null <<EOF
 [Unit]
 Description=Tax-Ease Client API
@@ -340,10 +356,11 @@ After=network.target postgresql.service redis.service
 [Service]
 Type=simple
 User=$USER
-WorkingDirectory=$PROJECT_DIR
+WorkingDirectory=$PROJECT_DIR/backend
 Environment="PATH=$VENV_DIR/bin"
+Environment="PYTHONPATH=$PROJECT_DIR"
 EnvironmentFile=$PROJECT_DIR/.env
-ExecStart=$VENV_DIR/bin/python3 -m uvicorn backend.app.main:app --host 0.0.0.0 --port $CLIENT_API_PORT --workers 2
+ExecStart=$VENV_DIR/bin/uvicorn app.main:app --host 0.0.0.0 --port $CLIENT_API_PORT --workers 2
 Restart=always
 RestartSec=10
 StandardOutput=append:$LOG_DIR/client-api.log
@@ -370,30 +387,46 @@ start_services() {
         print_status "Starting Redis..."
         sudo systemctl start redis-server
         sudo systemctl enable redis-server
+    else
+        print_success "Redis is already running"
     fi
     
     # Stop services if already running
     print_status "Stopping existing services if any..."
+    sudo systemctl stop taxease-master-backend 2>/dev/null || true
     sudo systemctl stop taxease-admin-api 2>/dev/null || true
     sudo systemctl stop taxease-client-api 2>/dev/null || true
     
+    # Kill any processes on ports
+    print_status "Ensuring ports are free..."
+    lsof -ti:$MASTER_BACKEND_PORT | xargs -r kill -9 2>/dev/null || true
+    lsof -ti:$ADMIN_API_PORT | xargs -r kill -9 2>/dev/null || true
+    lsof -ti:$CLIENT_API_PORT | xargs -r kill -9 2>/dev/null || true
+    
     sleep 2
     
+    # Start Master Backend
+    print_status "Starting Master Backend service (port $MASTER_BACKEND_PORT)..."
+    sudo systemctl start taxease-master-backend
+    sudo systemctl enable taxease-master-backend
+    
+    sleep 3
+    
     # Start Admin API
-    print_status "Starting Admin API service..."
+    print_status "Starting Admin API service (port $ADMIN_API_PORT)..."
     sudo systemctl start taxease-admin-api
     sudo systemctl enable taxease-admin-api
     
     sleep 3
     
     # Start Client API
-    print_status "Starting Client API service..."
+    print_status "Starting Client API service (port $CLIENT_API_PORT)..."
     sudo systemctl start taxease-client-api
     sudo systemctl enable taxease-client-api
     
     sleep 3
     
-    print_success "All services started"
+    print_success "All services started and enabled for automatic startup"
 }
 
 ##############################################################################
@@ -403,24 +436,39 @@ perform_health_checks() {
     print_header "STEP 9: Performing Health Checks"
     
     # Check service status
+    print_status "Checking Master Backend status..."
+    if sudo systemctl is-active --quiet taxease-master-backend; then
+        print_success "Master Backend service is running (port $MASTER_BACKEND_PORT)"
+    else
+        print_error "Master Backend service failed to start"
+        sudo journalctl -u taxease-master-backend -n 20 --no-pager
+    fi
+    
     print_status "Checking Admin API status..."
     if sudo systemctl is-active --quiet taxease-admin-api; then
-        print_success "Admin API service is running"
+        print_success "Admin API service is running (port $ADMIN_API_PORT)"
     else
         print_error "Admin API service failed to start"
-        sudo systemctl status taxease-admin-api --no-pager
+        sudo journalctl -u taxease-admin-api -n 20 --no-pager
     fi
     
     print_status "Checking Client API status..."
     if sudo systemctl is-active --quiet taxease-client-api; then
-        print_success "Client API service is running"
+        print_success "Client API service is running (port $CLIENT_API_PORT)"
     else
         print_error "Client API service failed to start"
-        sudo systemctl status taxease-client-api --no-pager
+        sudo journalctl -u taxease-client-api -n 20 --no-pager
     fi
     
     # Check HTTP endpoints
     sleep 5
+    
+    print_status "Testing Master Backend endpoint..."
+    if curl -s -f http://localhost:$MASTER_BACKEND_PORT/health &> /dev/null; then
+        print_success "Master Backend is responding on port $MASTER_BACKEND_PORT"
+    else
+        print_warning "Master Backend not responding yet (may still be starting)"
+    fi
     
     print_status "Testing Admin API endpoint..."
     if curl -s -f http://localhost:$ADMIN_API_PORT/docs &> /dev/null; then
@@ -430,7 +478,7 @@ perform_health_checks() {
     fi
     
     print_status "Testing Client API endpoint..."
-    if curl -s -f http://localhost:$CLIENT_API_PORT/docs &> /dev/null; then
+    if curl -s -f http://localhost:$CLIENT_API_PORT/health &> /dev/null; then
         print_success "Client API is responding on port $CLIENT_API_PORT"
     else
         print_warning "Client API not responding yet (may still be starting)"
@@ -469,7 +517,7 @@ server {
 
     # Client API
     location /api/v1/ {
-        proxy_pass http://localhost:8002/api/v1/;
+        proxy_pass http://localhost:8000/api/v1/;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -514,30 +562,44 @@ display_summary() {
     echo -e "${GREEN}✅ Tax-Ease Backend Deployed Successfully${NC}"
     echo ""
     echo "Service Status:"
-    echo "  • Admin API:     $(systemctl is-active taxease-admin-api)"
-    echo "  • Client API:    $(systemctl is-active taxease-client-api)"
-    echo "  • Redis:         $(systemctl is-active redis-server)"
-    echo "  • Nginx:         $(systemctl is-active nginx)"
+    echo "  • Master Backend: $(systemctl is-active taxease-master-backend) (port $MASTER_BACKEND_PORT)"
+    echo "  • Admin API:      $(systemctl is-active taxease-admin-api) (port $ADMIN_API_PORT)"
+    echo "  • Client API:     $(systemctl is-active taxease-client-api) (port $CLIENT_API_PORT)"
+    echo "  • Redis:          $(systemctl is-active redis-server)"
+    echo "  • Nginx:          $(systemctl is-active nginx)"
+    echo ""
+    echo "🔄 All services will start automatically on system boot"
     echo ""
     echo "API Endpoints:"
-    echo "  • Admin API:     http://$(hostname -I | awk '{print $1}'):$ADMIN_API_PORT"
-    echo "  • Client API:    http://$(hostname -I | awk '{print $1}'):$CLIENT_API_PORT"
-    echo "  • Nginx Proxy:   http://$(hostname -I | awk '{print $1}')/"
+    echo "  • Master Backend: http://$(hostname -I | awk '{print $1}'):$MASTER_BACKEND_PORT"
+    echo "  • Admin API:      http://$(hostname -I | awk '{print $1}'):$ADMIN_API_PORT"
+    echo "  • Client API:     http://$(hostname -I | awk '{print $1}'):$CLIENT_API_PORT"
+    echo "  • Nginx Proxy:    http://$(hostname -I | awk '{print $1}')/"
     echo ""
     echo "Documentation:"
-    echo "  • Admin Docs:    http://$(hostname -I | awk '{print $1}'):$ADMIN_API_PORT/docs"
-    echo "  • Client Docs:   http://$(hostname -I | awk '{print $1}'):$CLIENT_API_PORT/docs"
+    echo "  • Master Docs:    http://$(hostname -I | awk '{print $1}'):$MASTER_BACKEND_PORT/docs"
+    echo "  • Admin Docs:     http://$(hostname -I | awk '{print $1}'):$ADMIN_API_PORT/docs"
+    echo "  • Client Docs:    http://$(hostname -I | awk '{print $1}'):$CLIENT_API_PORT/docs"
     echo ""
     echo "Useful Commands:"
+    echo "  • View Master logs:  sudo journalctl -u taxease-master-backend -f"
     echo "  • View Admin logs:   sudo journalctl -u taxease-admin-api -f"
     echo "  • View Client logs:  sudo journalctl -u taxease-client-api -f"
+    echo "  • Restart Master:    sudo systemctl restart taxease-master-backend"
     echo "  • Restart Admin:     sudo systemctl restart taxease-admin-api"
     echo "  • Restart Client:    sudo systemctl restart taxease-client-api"
+    echo "  • Restart all:       sudo systemctl restart taxease-*"
+    echo "  • Stop all:          sudo systemctl stop taxease-*"
     echo "  • Check status:      sudo systemctl status taxease-*"
     echo ""
     echo "Log Files:"
+    echo "  • $LOG_DIR/master-backend-8000.log"
     echo "  • $LOG_DIR/admin-api.log"
     echo "  • $LOG_DIR/client-api.log"
+    echo ""
+    echo "Database & Redis:"
+    echo "  • Database: AWS RDS PostgreSQL (configured in .env)"
+    echo "  • Redis:    localhost:6379 (running as system service)"
     echo ""
 }
 

@@ -107,8 +107,8 @@ def _validate_filing_uuid(filing_id: str) -> uuid.UUID:
         )
 
 
-def _get_t1_form_or_create(filing_id: uuid.UUID, user_id: uuid.UUID, db: Session) -> T1Form:
-    """Get or create T1 form for filing"""
+def _get_t1_form_or_create(filing_id: uuid.UUID, user_id: uuid.UUID, db: Session, auto_create: bool = False) -> T1Form:
+    """Get T1 form for filing, optionally create if not exists"""
     # Check if filing exists and belongs to user
     filing = db.query(Filing).filter(
         and_(Filing.id == filing_id, Filing.user_id == user_id)
@@ -120,13 +120,15 @@ def _get_t1_form_or_create(filing_id: uuid.UUID, user_id: uuid.UUID, db: Session
             detail=f"Filing {filing_id} not found or access denied"
         )
     
-    # Get or create T1 form
+    # Get T1 form
     t1_form = db.query(T1Form).filter(T1Form.filing_id == filing_id).first()
-    if not t1_form:
+    
+    # Only create if explicitly requested
+    if not t1_form and auto_create:
         t1_form = T1Form(
             id=uuid.uuid4(),
             filing_id=filing_id,
-            user_id=user_id,  # Required field
+            user_id=user_id,
             status='draft',
             is_locked=False,
             completion_percentage=0
@@ -134,6 +136,11 @@ def _get_t1_form_or_create(filing_id: uuid.UUID, user_id: uuid.UUID, db: Session
         db.add(t1_form)
         db.commit()
         db.refresh(t1_form)
+    elif not t1_form:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="T1 form not found for this filing. Create one first using POST /api/v1/t1-forms"
+        )
     
     return t1_form
 
@@ -228,11 +235,12 @@ async def save_draft_answers(
     - **Updates completion percentage**: Based on required fields filled
     
     **IMPORTANT**: filing_id must be a valid UUID returned from POST /api/v1/filings
+    **NOTE**: T1 form must be created first using POST /api/v1/t1-forms/create
     """
     require_email_verified(current_user)
     
     filing_uuid = _validate_filing_uuid(filing_id)
-    t1_form = _get_t1_form_or_create(filing_uuid, current_user.user_id, db)
+    t1_form = _get_t1_form_or_create(filing_uuid, current_user.user_id, db, auto_create=False)
     
     # Check if form is locked
     if t1_form.is_locked:
@@ -289,7 +297,7 @@ async def get_t1_draft(
     require_email_verified(current_user)
     
     filing_uuid = _validate_filing_uuid(filing_id)
-    t1_form = _get_t1_form_or_create(filing_uuid, current_user.user_id, db)
+    t1_form = _get_t1_form_or_create(filing_uuid, current_user.user_id, db, auto_create=False)
     
     # Fetch all answers
     answers_db = db.query(T1Answer).filter(T1Answer.t1_form_id == t1_form.id).all()
@@ -326,7 +334,7 @@ async def submit_t1_form(
     require_email_verified(current_user)
     
     filing_uuid = _validate_filing_uuid(filing_id)
-    t1_form = _get_t1_form_or_create(filing_uuid, current_user.user_id, db)
+    t1_form = _get_t1_form_or_create(filing_uuid, current_user.user_id, db, auto_create=False)
     
     # Check if already submitted
     if t1_form.status == 'submitted' and t1_form.is_locked:
@@ -399,7 +407,7 @@ async def get_required_documents(
     require_email_verified(current_user)
     
     filing_uuid = _validate_filing_uuid(filing_id)
-    t1_form = _get_t1_form_or_create(filing_uuid, current_user.user_id, db)
+    t1_form = _get_t1_form_or_create(filing_uuid, current_user.user_id, db, auto_create=False)
     
     # Get all answers
     answers_db = db.query(T1Answer).filter(T1Answer.t1_form_id == t1_form.id).all()
@@ -438,3 +446,175 @@ async def get_t1_structure():
     """
     validator = get_validation_engine()
     return validator.get_structure_json()
+
+
+@router.get("/user/{user_id}/forms", status_code=status.HTTP_200_OK)
+async def get_user_t1_forms(
+    user_id: str,
+    current_user: CurrentUser = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Get all T1 forms (drafts and submitted) for a specific user.
+    
+    - **User isolation**: Only returns forms belonging to the authenticated user
+    - **Security**: Users can only access their own forms
+    - **Returns**: All T1 forms with basic info (no detailed answers)
+    
+    **Response includes:**
+    - Form ID, Filing ID, Status, Completion %, Created/Updated timestamps
+    - Does NOT include detailed answers (use GET /api/v1/t1-forms/{id} for that)
+    """
+    require_email_verified(current_user)
+    
+    # Security: Users can only access their own forms
+    if str(current_user.user_id) != user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied: Cannot access other users' forms"
+        )
+    
+    # Get all T1 forms for this user
+    t1_forms = db.query(T1Form).filter(
+        T1Form.user_id == current_user.user_id
+    ).order_by(T1Form.created_at.desc()).all()
+    
+    forms_list = []
+    for form in t1_forms:
+        # Get filing info
+        filing = db.query(Filing).filter(Filing.id == form.filing_id).first()
+        
+        forms_list.append({
+            "id": str(form.id),
+            "filing_id": str(form.filing_id),
+            "filing_year": filing.filing_year if filing else None,
+            "status": form.status,
+            "is_locked": form.is_locked,
+            "completion_percentage": form.completion_percentage,
+            "submitted_at": form.submitted_at.isoformat() if form.submitted_at else None,
+            "created_at": form.created_at.isoformat(),
+            "updated_at": form.updated_at.isoformat()
+        })
+    
+    return {
+        "user_id": user_id,
+        "total_forms": len(forms_list),
+        "forms": forms_list
+    }
+
+
+@router.post("/create", status_code=status.HTTP_201_CREATED)
+async def create_t1_form(
+    filing_id: str,
+    current_user: CurrentUser = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Create a new T1 form draft for a filing.
+    
+    - **Explicit creation**: Form is not auto-created anymore
+    - **One per filing**: Each filing can have only one T1 form
+    - **Returns**: New T1 form with empty answers
+    
+    **Use this endpoint before saving any draft answers.**
+    """
+    require_email_verified(current_user)
+    
+    filing_uuid = _validate_filing_uuid(filing_id)
+    
+    # Check if filing exists and belongs to user
+    filing = db.query(Filing).filter(
+        and_(Filing.id == filing_uuid, Filing.user_id == current_user.user_id)
+    ).first()
+    
+    if not filing:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Filing {filing_id} not found or access denied"
+        )
+    
+    # Check if T1 form already exists
+    existing = db.query(T1Form).filter(T1Form.filing_id == filing_uuid).first()
+    if existing:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"T1 form already exists for this filing (ID: {existing.id})"
+        )
+    
+    # Create new T1 form
+    t1_form = T1Form(
+        id=uuid.uuid4(),
+        filing_id=filing_uuid,
+        user_id=current_user.user_id,
+        status='draft',
+        is_locked=False,
+        completion_percentage=0
+    )
+    db.add(t1_form)
+    db.commit()
+    db.refresh(t1_form)
+    
+    return {
+        "id": str(t1_form.id),
+        "filing_id": str(t1_form.filing_id),
+        "status": t1_form.status,
+        "completion_percentage": t1_form.completion_percentage,
+        "created_at": t1_form.created_at.isoformat(),
+        "message": "T1 form created successfully"
+    }
+
+
+@router.delete("/{t1_form_id}", status_code=status.HTTP_200_OK)
+async def delete_t1_form(
+    t1_form_id: str,
+    current_user: CurrentUser = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Delete a T1 form draft (only if not submitted).
+    
+    - **Draft only**: Can only delete forms with status='draft'
+    - **Cascade delete**: All answers and progress tracking will be deleted
+    - **Security**: Users can only delete their own forms
+    
+    **Cannot delete submitted forms** - contact admin to unlock first.
+    """
+    require_email_verified(current_user)
+    
+    # Validate UUID
+    try:
+        form_uuid = uuid.UUID(t1_form_id)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid T1 form ID format"
+        )
+    
+    # Get T1 form
+    t1_form = db.query(T1Form).filter(
+        and_(T1Form.id == form_uuid, T1Form.user_id == current_user.user_id)
+    ).first()
+    
+    if not t1_form:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="T1 form not found or access denied"
+        )
+    
+    # Check if form is submitted or locked
+    if t1_form.is_locked or t1_form.status != 'draft':
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Cannot delete {t1_form.status} T1 form. Only draft forms can be deleted."
+        )
+    
+    # Delete the form (cascade will delete answers and progress)
+    db.delete(t1_form)
+    db.commit()
+    
+    return {
+        "success": True,
+        "message": f"T1 form {t1_form_id} deleted successfully",
+        "deleted_form_id": t1_form_id
+    }
+

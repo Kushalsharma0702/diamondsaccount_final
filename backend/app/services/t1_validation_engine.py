@@ -375,10 +375,15 @@ class T1ValidationEngine:
         elif field_type == "phone":
             if not isinstance(value, str):
                 return False, f"{label}: Must be text"
-            # Canadian phone number validation (10 digits)
-            phone_pattern = r'^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$'
-            if not re.match(phone_pattern, value.replace(" ", "")):
-                return False, f"{label}: Invalid phone format (expected 10 digits)"
+            # Universal phone validation - accept international formats
+            # Allow: +1234567890, (123) 456-7890, 123-456-7890, 123.456.7890, etc.
+            # Length: 10-15 digits (international standard)
+            phone_digits = re.sub(r'[^0-9]', '', value)  # Extract only digits
+            if len(phone_digits) < 10 or len(phone_digits) > 15:
+                return False, f"{label}: Invalid phone format (expected 10-15 digits)"
+            # Optional: Validate starts with + for international format
+            if value.startswith('+') and len(phone_digits) < 11:
+                return False, f"{label}: International phone must have country code"
         
         elif field_type == "select":
             if not isinstance(value, str):
