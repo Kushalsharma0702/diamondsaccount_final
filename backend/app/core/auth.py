@@ -278,7 +278,12 @@ def is_public_endpoint(path: str) -> bool:
 # ============================================================================
 
 def generate_otp(length: int = 6) -> str:
-    """Generate random numeric OTP"""
+    """Generate random numeric OTP (or static OTP in development)"""
+    # Use static OTP in development mode
+    if os.getenv("DEVELOPMENT_MODE") == "true" or os.getenv("ENVIRONMENT") == "development":
+        static_otp = os.getenv("STATIC_OTP", "123456")
+        return static_otp
+    
     import secrets
     import string
     return ''.join(secrets.choice(string.digits) for _ in range(length))

@@ -21,7 +21,7 @@ import uuid
 from backend.app.core.auth import CurrentUser, get_current_user
 from backend.app.core.guards import require_email_verified
 from backend.app.services.t1_validation_engine import get_validation_engine
-from database.schemas_v2 import T1Form, T1Answer, T1SectionProgress, Filing, AuditLog
+from database.schemas_v2 import T1Form, T1Answer, T1SectionProgress, Filing
 from backend.app.database import get_db
 
 
@@ -233,14 +233,19 @@ async def save_draft_answers(
     - **Idempotent**: Can be called multiple times with same/different data
     - **Auto-save friendly**: No submission required
     - **Updates completion percentage**: Based on required fields filled
+    - **Auto-creates T1 form**: First call creates T1 form record automatically
     
     **IMPORTANT**: filing_id must be a valid UUID returned from POST /api/v1/filings
-    **NOTE**: T1 form must be created first using POST /api/v1/t1-forms/create
+    
+    **Workflow**: 
+    1. Frontend creates filing via POST /api/v1/filings
+    2. Frontend saves answers via POST /api/v1/t1-forms/{filing_id}/answers (creates T1 form on first call)
+    3. Subsequent calls update the same T1 form
     """
     require_email_verified(current_user)
     
     filing_uuid = _validate_filing_uuid(filing_id)
-    t1_form = _get_t1_form_or_create(filing_uuid, current_user.user_id, db, auto_create=False)
+    t1_form = _get_t1_form_or_create(filing_uuid, current_user.user_id, db, auto_create=True)
     
     # Check if form is locked
     if t1_form.is_locked:
@@ -293,11 +298,43 @@ async def get_t1_draft(
     Returns:
     - T1 form metadata (status, completion, timestamps)
     - Answers dictionary (field_key: value)
+    - Empty answers if T1 form doesn't exist yet (but filing exists)
+    
+    **Note**: If T1 form doesn't exist, returns a virtual draft with empty answers.
+    First POST to /answers will create the actual T1 form record.
     """
     require_email_verified(current_user)
     
     filing_uuid = _validate_filing_uuid(filing_id)
-    t1_form = _get_t1_form_or_create(filing_uuid, current_user.user_id, db, auto_create=False)
+    
+    # Check if filing exists first
+    filing = db.query(Filing).filter(
+        and_(Filing.id == filing_uuid, Filing.user_id == current_user.user_id)
+    ).first()
+    
+    if not filing:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Filing {filing_id} not found or access denied"
+        )
+    
+    # Check if T1 form exists
+    t1_form = db.query(T1Form).filter(T1Form.filing_id == filing_uuid).first()
+    
+    # If no T1 form yet, return virtual draft with empty answers
+    if not t1_form:
+        return T1FormResponse(
+            id=str(filing_uuid),  # Use filing_id as temp id
+            filing_id=str(filing_uuid),
+            form_version="2024",
+            status="draft",
+            is_locked=False,
+            completion_percentage=0,
+            submitted_at=None,
+            answers={},  # Empty answers
+            created_at=filing.created_at.isoformat(),
+            updated_at=filing.updated_at.isoformat()
+        )
     
     # Fetch all answers
     answers_db = db.query(T1Answer).filter(T1Answer.t1_form_id == t1_form.id).all()
@@ -334,7 +371,26 @@ async def submit_t1_form(
     require_email_verified(current_user)
     
     filing_uuid = _validate_filing_uuid(filing_id)
-    t1_form = _get_t1_form_or_create(filing_uuid, current_user.user_id, db, auto_create=False)
+    
+    # Check if filing exists
+    filing = db.query(Filing).filter(
+        and_(Filing.id == filing_uuid, Filing.user_id == current_user.user_id)
+    ).first()
+    
+    if not filing:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Filing {filing_id} not found or access denied"
+        )
+    
+    # Get T1 form
+    t1_form = db.query(T1Form).filter(T1Form.filing_id == filing_uuid).first()
+    
+    if not t1_form:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot submit T1 form: No answers have been saved yet. Please save answers first."
+        )
     
     # Check if already submitted
     if t1_form.status == 'submitted' and t1_form.is_locked:
@@ -368,19 +424,7 @@ async def submit_t1_form(
     t1_form.submitted_at = datetime.utcnow()
     t1_form.completion_percentage = 100
     
-    # Audit log
-    audit_entry = AuditLog(
-        id=uuid.uuid4(),
-        user_id=current_user.user_id,
-        action='T1_SUBMITTED',
-        entity_type='t1_forms',
-        entity_id=str(t1_form.id),
-        details={'filing_id': str(filing_uuid), 'form_version': t1_form.form_version},
-        ip_address=None,  # Will be populated by audit middleware
-        timestamp=datetime.utcnow()
-    )
-    db.add(audit_entry)
-    
+    # Commit changes (audit handled by middleware)
     db.commit()
     
     return SubmitT1Response(
@@ -403,15 +447,34 @@ async def get_required_documents(
     - **Conditional logic**: Documents computed from T1Structure.json rules
     - **Real-time**: Updates as user answers questionnaire
     - **Upload guidance**: Shows what user needs to provide
+    - **No T1 form**: Returns base required documents if no answers saved yet
     """
     require_email_verified(current_user)
     
     filing_uuid = _validate_filing_uuid(filing_id)
-    t1_form = _get_t1_form_or_create(filing_uuid, current_user.user_id, db, auto_create=False)
     
-    # Get all answers
-    answers_db = db.query(T1Answer).filter(T1Answer.t1_form_id == t1_form.id).all()
-    answers_dict = {ans.field_key: _deserialize_answer_value(ans) for ans in answers_db}
+    # Check if filing exists
+    filing = db.query(Filing).filter(
+        and_(Filing.id == filing_uuid, Filing.user_id == current_user.user_id)
+    ).first()
+    
+    if not filing:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Filing {filing_id} not found or access denied"
+        )
+    
+    # Get T1 form if exists
+    t1_form = db.query(T1Form).filter(T1Form.filing_id == filing_uuid).first()
+    
+    # Get answers (empty dict if no T1 form yet)
+    if t1_form:
+        answers_db = db.query(T1Answer).filter(T1Answer.t1_form_id == t1_form.id).all()
+        answers_dict = {ans.field_key: _deserialize_answer_value(ans) for ans in answers_db}
+        t1_form_id = str(t1_form.id)
+    else:
+        answers_dict = {}
+        t1_form_id = str(filing_uuid)  # Use filing_id as placeholder
     
     # Compute required documents
     validator = get_validation_engine()
@@ -429,7 +492,7 @@ async def get_required_documents(
     
     return RequiredDocumentsResponse(
         filing_id=filing_id,
-        t1_form_id=str(t1_form.id),
+        t1_form_id=t1_form_id,
         required_documents=docs_response
     )
 

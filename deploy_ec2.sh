@@ -231,23 +231,31 @@ install_python_dependencies() {
     
     source "$VENV_DIR/bin/activate"
     
+    # Fix any permission issues in the venv
+    print_status "Fixing virtual environment permissions..."
+    chmod -R u+w "$VENV_DIR" 2>/dev/null || true
+    
+    # Upgrade pip first
+    print_status "Upgrading pip, setuptools, and wheel..."
+    pip install --upgrade pip setuptools wheel
+    
     # Install backend dependencies
     if [ -f "backend/requirements.txt" ]; then
         print_status "Installing backend dependencies..."
-        pip install -r backend/requirements.txt
+        pip install --no-cache-dir -r backend/requirements.txt
         print_success "Backend dependencies installed"
     fi
     
     # Install admin-api dependencies
     if [ -f "services/admin-api/requirements.txt" ]; then
         print_status "Installing admin-api dependencies..."
-        pip install -r services/admin-api/requirements.txt
+        pip install --no-cache-dir -r services/admin-api/requirements.txt
         print_success "Admin API dependencies installed"
     fi
     
     # Install additional common packages
     print_status "Installing additional packages..."
-    pip install gunicorn python-multipart aiofiles
+    pip install --no-cache-dir gunicorn python-multipart aiofiles
     
     print_success "All Python dependencies installed"
 }
@@ -283,12 +291,41 @@ configure_environment() {
     
     print_success "Environment configuration validated"
     
-    # Test database connection
-    print_status "Testing database connection..."
-    if PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -c "SELECT 1" &> /dev/null; then
-        print_success "Database connection successful"
+    # Test database connection using Python (works better for remote RDS)
+    print_status "Testing AWS RDS database connection..."
+    python3 << 'PYTHON_EOF'
+import sys
+try:
+    import psycopg2
+    import os
+    
+    db_host = os.getenv("DB_HOST")
+    db_name = os.getenv("DB_NAME")
+    db_user = os.getenv("DB_USER")
+    db_password = os.getenv("DB_PASSWORD")
+    db_port = os.getenv("DB_PORT", "5432")
+    
+    conn = psycopg2.connect(
+        host=db_host,
+        database=db_name,
+        user=db_user,
+        password=db_password,
+        port=db_port,
+        connect_timeout=10
+    )
+    conn.close()
+    print("✓ Database connection successful")
+    sys.exit(0)
+except Exception as e:
+    print(f"✗ Database connection failed: {e}")
+    sys.exit(1)
+PYTHON_EOF
+    
+    if [ $? -eq 0 ]; then
+        print_success "AWS RDS database connection successful"
     else
-        print_error "Cannot connect to database at $DB_HOST"
+        print_error "Cannot connect to AWS RDS database"
+        print_warning "Please check your DATABASE_URL and network connectivity"
         print_warning "Services will start but may fail without database access"
     fi
 }

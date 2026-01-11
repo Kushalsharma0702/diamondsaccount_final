@@ -233,6 +233,10 @@ def check_otp_request_rate_limit(email: str, ip: str) -> None:
     
     Raises: HTTPException if rate limit exceeded
     """
+    # Skip rate limiting in development mode
+    if os.getenv("ENVIRONMENT") == "development":
+        return
+    
     limiter = RateLimiter()
     
     # Check email rate limit
@@ -278,6 +282,10 @@ def check_login_rate_limit(email: str, ip: str) -> None:
     
     Raises: HTTPException if rate limit exceeded
     """
+    # Skip rate limiting in development mode
+    if os.getenv("ENVIRONMENT") == "development":
+        return
+    
     limiter = RateLimiter()
     
     # Check email rate limit
