@@ -2640,21 +2640,3 @@ async def shutdown_event():
     """Cleanup on application shutdown"""
     logger.info("TaxEase API shutting down...")
 
-# ================================
-# MAIN ENTRY POINT
-# ================================
-
-if __name__ == "__main__":
-    print("🚀 Starting TaxEase Backend API...")
-    print("📊 API Documentation: http://localhost:8001/docs")
-    print("📚 ReDoc Documentation: http://localhost:8001/redoc")
-    print("🔍 Health Check: http://localhost:8001/health")
-    print("")
-    
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=8001,  # Changed to 8001 to avoid conflict with admin backend
-        reload=True,
-        log_level="info"
-    )
