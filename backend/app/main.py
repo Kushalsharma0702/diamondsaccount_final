@@ -28,6 +28,7 @@ from backend.app.routes_v2 import filings as filings_v2
 from backend.app.routes_v2 import documents as documents_v2
 from backend.app.routes_v2 import health as health_v2
 from backend.app.routes_v2 import t1_forms as t1_forms_v2
+from backend.app.routes_v2 import notifications as notifications_v2
 from backend.app.routes_v2.admin import t1_admin as t1_admin_v2
 from backend.app.routes import admin_auth
 
@@ -84,6 +85,7 @@ app.include_router(auth_v2.router, prefix="/api/v1")
 app.include_router(users_v2.router, prefix="/api/v1")
 app.include_router(filings_v2.router, prefix="/api/v1")
 app.include_router(documents_v2.router, prefix="/api/v1")
+app.include_router(notifications_v2.router, prefix="/api/v1/notifications")
 app.include_router(health_v2.router, prefix="/api/v1")
 app.include_router(t1_forms_v2.router)  # Already has /api/v1/t1-forms prefix
 app.include_router(t1_admin_v2.router)  # Already has /api/v1/admin prefix

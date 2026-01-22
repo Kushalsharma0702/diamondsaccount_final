@@ -68,6 +68,16 @@ class NotificationType(str, enum.Enum):
     GENERAL = "general"
 
 
+class DevicePlatform(str, enum.Enum):
+    """Device platform types"""
+    ANDROID = "android"
+    IOS = "ios"
+    WEB = "web"
+    MACOS = "macos"
+    WINDOWS = "windows"
+    LINUX = "linux"
+
+
 # ============================================================================
 # CORE TABLES
 # ============================================================================
@@ -268,6 +278,39 @@ class Notification(Base):
     __table_args__ = (
         Index('idx_notification_user_read', 'user_id', 'is_read'),
         Index('idx_notification_type', 'type'),
+    )
+
+
+class NotificationDeviceToken(Base):
+    """FCM device tokens for push notifications"""
+    __tablename__ = "notification_device_tokens"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
+    
+    # Token and device info
+    token = Column(String(500), nullable=False, unique=True, index=True)
+    platform = Column(SQLEnum(DevicePlatform), nullable=False)
+    device_id = Column(String(255), nullable=True)
+    
+    # Status
+    is_active = Column(Boolean, default=True, nullable=False)
+    
+    # Metadata
+    app_version = Column(String(50), nullable=True)
+    locale = Column(String(10), nullable=True)
+    
+    # Timestamps
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+    last_seen_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    
+    # Relationships
+    user = relationship("User")
+    
+    # Indexes
+    __table_args__ = (
+        Index('idx_device_token_user_active', 'user_id', 'is_active'),
     )
 
 

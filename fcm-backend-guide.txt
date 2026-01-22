@@ -1,0 +1,275 @@
+FCM BACKEND GUIDE
+==================
+
+Context
+-------
+
+The Flutter app (Android, iOS, Web) uses Firebase Cloud Messaging (FCM) only as a transport layer. All business logic and the source of truth for notifications live in the AWS backend. The app never generates notifications on its own.
+
+High-level flow
+---------------
+
+1. Flutter app requests notification permissions and retrieves an FCM device token.
+2. Flutter app calls a backend endpoint to register the device token for the authenticated user.
+3. Backend stores the token per user and device.
+4. When domain events happen (e.g. filing submitted, payment requested), backend decides which users/devices to notify.
+5. Backend sends notifications via FCM HTTP v1 API.
+6. Firebase delivers to devices. The Flutter app renders OS-level and in-app UI.
+
+This document describes what you (backend engineer) need to implement.
+
+1. API for registering device tokens
+-----------------------------------
+
+Endpoint
+  - Method: POST
+  - Path: /notifications/device-tokens (configurable; keep in sync with ApiEndpoints.DEVICE_TOKENS in the app)
+  - Auth: Required. Use the existing auth mechanism (e.g. JWT) to determine user_id.
+
+Request body (example)
+  {
+    "token": "<FCM-device-token>",
+    "platform": "android" | "ios" | "web" | "macos" | "windows" | "linux",
+    "device_id": "optional-stable-device-id"
+  }
+
+Semantics
+  - For the current authenticated user (user_id):
+      - If a record with this token already exists, update its platform/device_id/last_seen_at and mark is_active = true.
+      - Otherwise, create a new record.
+  - Never trust client-provided user_id; always derive it from auth.
+  - You may enforce uniqueness on token across all users to avoid accidental reassignment.
+
+Response
+  - 200 OK or 204 No Content on success.
+  - Standard 4xx/5xx codes on errors.
+
+2. Data model for device tokens
+-------------------------------
+
+Suggested table: notification_device_tokens
+
+Columns (suggested)
+  - id              : primary key (UUID or bigint)
+  - user_id         : FK to users table (required)
+  - token           : string (FCM device token, required)
+  - platform        : enum/string ("android", "ios", "web", ...)
+  - device_id       : nullable string – a stable ID from the client or generated server-side
+  - is_active       : boolean, default true
+  - created_at      : timestamp
+  - updated_at      : timestamp
+  - last_seen_at    : timestamp (last time the token was updated/used)
+  - app_version     : optional string
+  - locale          : optional string
+
+Indexes/constraints
+  - UNIQUE(token) OR UNIQUE(user_id, token) depending on how strict you want to be.
+  - Index on (user_id, is_active) for fast lookups.
+
+Lifecycle
+  - When a new token is registered, set is_active = true and last_seen_at = now().
+  - When sending via FCM produces NOT_FOUND or UNREGISTERED errors, mark is_active = false (soft delete).
+  - Periodically clean up long-inactive or invalid tokens.
+
+3. FCM HTTP v1 sender service
+-----------------------------
+
+You need a reusable service that sends FCM messages given a device token and a payload.
+
+3.1 Service account and configuration
+
+  - Create a Firebase service account with permission to send FCM messages (e.g. role: Firebase Admin or equivalent) in your GCP project that backs Firebase.
+  - Download the service account JSON.
+  - Store the entire JSON as a secure environment variable, e.g. FCM_SERVICE_ACCOUNT_JSON.
+  - DO NOT commit the JSON file to version control.
+
+3.2 Access token acquisition
+
+  - The FCM HTTP v1 API uses OAuth2 access tokens.
+  - Use your language’s Google auth library (examples: google-auth-library in Node.js, google-auth-library-python, etc.) to:
+      - Parse the service account JSON.
+      - Request an access token with scope: https://www.googleapis.com/auth/firebase.messaging
+
+Pseudocode (Node.js-style)
+
+  load serviceAccountJson from env FCM_SERVICE_ACCOUNT_JSON
+  projectId = serviceAccountJson.project_id
+
+  jwtClient = new JWT(
+    email = serviceAccountJson.client_email,
+    key = serviceAccountJson.private_key,
+    scopes = ["https://www.googleapis.com/auth/firebase.messaging"]
+  )
+
+  function getAccessToken():
+    { token } = jwtClient.authorize()
+    return token
+
+3.3 Send message
+
+  - Endpoint: POST https://fcm.googleapis.com/v1/projects/{projectId}/messages:send
+  - Headers:
+      Authorization: Bearer <access_token>
+      Content-Type: application/json; charset=utf-8
+
+  - Request body shape:
+    {
+      "message": {
+        "token": "<DEVICE_FCM_TOKEN>",
+        "notification": {
+          "title": "Title for system tray",
+          "body": "Body for system tray"
+        },
+        "data": {
+          "type": "filing_summary",     // or "documents", etc.
+          "filingId": "123",            // example custom field
+          "any_other": "..."            // all values must be strings
+        }
+      }
+    }
+
+  - The `notification` object controls what appears in the OS tray when the app is in background/terminated.
+  - The `data` object is read by the Flutter app to decide navigation and show in-app UI.
+
+3.4 Error handling
+
+  - If FCM returns errors like NOT_FOUND or UNREGISTERED, treat that token as invalid:
+      - Set is_active = false for that token in notification_device_tokens.
+  - For transient errors (e.g. 500, UNAVAILABLE), you may retry with backoff.
+
+4. Domain-level notification logic
+----------------------------------
+
+Your business logic should decide WHEN to send and WHAT to send.
+
+Typical events
+  - Filing created or submitted
+  - Payment requested or payment overdue
+  - Document upload requested/approved/rejected
+
+Per-event flow (example for "filing submitted")
+
+  1) Domain event fires with user_id and filing_id.
+  2) Query notification_device_tokens:
+        SELECT token, platform
+        FROM notification_device_tokens
+        WHERE user_id = :user_id AND is_active = true;
+  3) For each token:
+        - Build a message:
+            notification.title = "Filing submitted"
+            notification.body  = "Your tax filing #${filing_id} has been submitted."
+            data = {
+              "type": "filing_summary",
+              "filingId": String(filing_id)
+            }
+        - Call the FCM sender service.
+        - If the call fails with permanent token error, deactivate that token.
+
+You can abstract this into a reusable function, e.g. sendUserNotification(userId, payload).
+
+5. Payload conventions expected by the Flutter app
+--------------------------------------------------
+
+The Flutter NotificationService currently interprets FCM `data` payload like this:
+
+  - data.type = "filing_summary"
+      - App will navigate to route `/filing-summary?id=<filingId>`
+      - It expects a field `data.filingId` (string) to be present.
+
+  - data.type = "documents"
+      - App will navigate to `/documents`.
+
+  - Any other or missing type
+      - App will open the `/notifications` list screen.
+
+Guidelines
+  - Always include a `type` field in data.
+  - For routes that need an ID, include the appropriate key (`filingId`, etc.).
+  - All `data` values must be strings; convert IDs to strings on the backend.
+
+6. Example implementation snippet (Node.js / AWS Lambda style)
+--------------------------------------------------------------
+
+Below is an example of how a Lambda could send an FCM message. Adapt it to your stack (NestJS, Express, Django, etc.).
+
+  import {JWT} from 'google-auth-library';
+  import fetch from 'node-fetch';
+
+  const SCOPES = ['https://www.googleapis.com/auth/firebase.messaging'];
+
+  const serviceAccount = JSON.parse(process.env.FCM_SERVICE_ACCOUNT_JSON!);
+  const projectId = serviceAccount.project_id;
+
+  const jwtClient = new JWT({
+    email: serviceAccount.client_email,
+    key: serviceAccount.private_key,
+    scopes: SCOPES,
+  });
+
+  async function getAccessToken() {
+    const {token} = await jwtClient.authorize();
+    if (!token) throw new Error('Failed to obtain FCM access token');
+    return token;
+  }
+
+  async function sendFcmMessage(deviceToken, title, body, data) {
+    const accessToken = await getAccessToken();
+
+    const url = `https://fcm.googleapis.com/v1/projects/${projectId}/messages:send`;
+    const payload = {
+      message: {
+        token: deviceToken,
+        notification: { title, body },
+        data,
+      },
+    };
+
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error('Error sending FCM message', res.status, text);
+      throw new Error(`FCM error: ${res.statusText}`);
+    }
+  }
+
+7. Security considerations
+--------------------------
+
+  - Never expose the service account JSON or FCM server keys to the client apps.
+  - Only accept device token registration from authenticated clients.
+  - Validate platform values if you use an enum.
+  - Rate-limit notification sends if there is a risk of abuse.
+
+8. Performance considerations
+-----------------------------
+
+  - For high-volume sends (e.g. broadcast to many users), consider batching or using topics instead of individual tokens.
+  - For this app (user-specific notifications), per-device sends via the HTTP v1 API are usually fine.
+  - Use connection pooling and reuse access tokens until they expire to reduce latency.
+
+9. How this integrates with the Flutter app
+-------------------------------------------
+
+On the Flutter side:
+  - On startup, the app initialises FCM and obtains a device token.
+  - After login, it calls `NotificationService.instance.syncTokenWithBackend()` which hits POST /notifications/device-tokens.
+  - When the backend sends FCM messages, the app:
+      - Shows OS notifications.
+      - Shows an in-app toast using the same title/body.
+      - Stores a small in-memory list of recent notifications and shows them on the `/notifications` screen.
+      - Navigates to appropriate screens based on `data.type` and associated IDs.
+
+As long as you:
+  - Implement /notifications/device-tokens,
+  - Maintain `notification_device_tokens`, and
+  - Send FCM messages with the agreed `data` format,
+
+the entire notification pipeline will work end to end.
